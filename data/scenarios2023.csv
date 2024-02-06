@@ -1,0 +1,247 @@
+id,submission_id,scenathon_id,pathway,country_id,alpha3,iteration,tradeAdjusment,calibrationyear,GDP,Population,Diets,Share of food supply which is wasted,Share of consumption which is imported,Evolution of exports,Livestock productivity,Crop productivity,Land available for agricultural expansion,Afforestation,Ruminant density per hectare of pasture, Trade adjustment to ensure global trade balance,Level of activity of the population,Climate change,Protected areas expansion,Post-harvest losses,Biofuel demand,Evolution of prices,Global warming potential coefficient,Urban area expansion,Agroecological practices,Irrigation area
+911,290,16,CurrentTrend,18,GBR,2,No,2020,SSP2,UN_medium,NoChange,Current,I2,E3,UK_CT,UK_CT,FreeExpansion,UK_CT2,NoGrowth,No,Middle,NoChange,NoChange,NoChange,NoChange,Average,AR6,UK_CT,NoChange,NoGrowth
+914,289,16,CurrentTrend,15,RWA,2,No,2020,SSP2,UN_medium,NatHealthyDiet,Increased,I2,E3,HighGrowth,MiddleGrowth,FreeExpansion,BonnChallenge,BAUGrowth,No,Middle,NoChange,PAExpansion,NoChange,National,CurrentDollars,AR6,Current Trends,Organic,LowGrowth
+915,288,16,CurrentTrend,2,AUS,2,No,2020,IGR 2023,IGR 2023,Nochange,Scenathon2020_CurrentTrends,I2,Stable,Scenathon2020_CurrentTrends,LowGrowth,NoExpansion,Scenathon2020_CurrentTrends,Scenathon2020_CurrentTrends,No,Low,NoChange,NoChange,Scenathon2020_CurrentTrends,National,CurrentDollars,AR6,CurrentTrend,Advanced_Farming,NoGrowth
+917,287,16,CurrentTrend,19,USA,2,No,2020,SSP2,UN_nochange,FASOM $20/t,Current,I2,E6,BAUGrowth,HighGrowth,FreeExpansion,FASOM $20/tCO2,HighGrowth,No,Middle,NoChange,NoChange,NoChange,FASOM $20/t,Average,AR6,CurrentTrend,Mixed,NoGrowth
+918,286,16,CurrentTrend,57,TUR,2,No,2020,SSP2,UN_medium,NoChange,Current,I1,E3,BAUGrowth,MiddleGrowth,FreeExpansion,NeutralityCountry,BAUGrowth,No,Middle,NoChange,PAExpansion,NoChange,NoChange,Average,AR6,NoChange,Mixed,LowGrowth
+922,284,16,CurrentTrend,14,RUS,2,No,2020,SSP3,UN_medium,NoChange,Current,I3,E1,NoGrowth,MiddleGrowth,NoExpansion,NoAffor,NoGrowth,No,Low,NoChange,NoChange,NoChange,NoChange,CurrentDollars,AR6,NoChange,Mixed,LowGrowth
+923,283,16,CurrentTrend,40,R_SSA,2,No,2020,SSP2,UN_medium,FatDiet,Current,I2,E2,BAUGrowth,MiddleGrowth,FreeExpansion,BonnChallenge,Optimal,No,Middle,NoChange,NoChange,NoChange,NoChange,Average,AR6,CurrentTrend,NoChange,NoGrowth
+924,282,16,CurrentTrend,21,R_OEU,2,No,2020,SSP2,UN_medium,NoChange,Current,I2,E3,NoGrowth,NoGrowth,NoExpansion,BonnChallenge,NoGrowth,No,Middle,NoChange,NoChange,NoChange,NoChange,CurrentDollars,AR6,NoChange,NoChange,NoGrowth
+925,281,16,CurrentTrend,52,RMECAS,2,No,2020,SSP2,UN_medium,FatDiet,Current,I2,E2,BAUGrowth,LowGrowth,FreeExpansion,NoAffor,Optimal,No,Middle,NoChange,NoChange,NoChange,NoChange,CurrentDollars,AR6,UN_medium,Embed_nat,NoGrowth
+926,280,16,CurrentTrend,43,R_CSA,2,No,2020,SSP3,UN_low,FatDiet,Current,I1,E3,HighGrowth,HighGrowth,FreeExpansion,NoAffor,HighGrowth,No,Low,NoChange,NoChange,NoChange,NoChange,CurrentDollars,AR6,CurrentTrend,Mixed,LowGrowth
+927,279,16,CurrentTrend,41,R_ASP,2,No,2020,SSP1,UN_low,CurrentTrend,Increased,I2,E2,BAUGrowth,MiddleGrowth,FreeExpansion,NoAffor,LowGrowth,No,Middle,NoChange,NoChange,NoChange,OECD_AGLINK,Average,AR6,CurrentTrend,Organic,NoGrowth
+928,278,16,CurrentTrend,31,NOR,2,No,2020,SSP2,UN_medium,NoChange,Reduced,I2,E3,,LowGrowth,NoExpansion,NoAffor,NoGrowth,No,Middle,NoChange,PAExpansion,NoChange,OECD_AGLINK,Average,AR6,UN_medium,Mixed,LowGrowth
+929,277,16,CurrentTrend,13,MEX,2,No,2020,SSP2,UN_constantfertility,Current_INSP,Current,I2,E3,BAUGrowth,MiddleGrowth,NoDefor2030,ReforMex_BAU,BAUGrowth,No,Low,NoChange,PAExpansionCT,NoChange,NoChange,Average,AR6,CurrentTrend,Mixed_CT,NoGrowth
+932,276,16,CurrentTrend,9,IND,2,No,2020,SSP2,UN_constantfertility,No Change,Current,I2,E3,BAUGrowth,NoGrowth,FreeExpansion,NoAffor,BAUGrowth,No,Middle,NoChange,NoChange,NoChange,NoChange,CurrentDollars,AR6,CurrentTrend,NoChange,NoGrowth
+933,275,16,CurrentTrend,58,GRC,2,No,2020,SSP2,UN_nochange,NoChange,Current,I2,E3,BAUGrowth,NoGrowth,NoDefor2030,NoAffor,BAUGrowth,No,Middle,NoChange,NoChange,NoChange,NoChange,CurrentDollars,AR6,CurrentTrend,Diversified,NoGrowth
+934,273,16,CurrentTrend,17,FIN,2,No,2020,SSP2,UN_medium,CT_Diet,Current,"fruit_other: I2
+Rapeseed: I2
+Beef: I0.5
+Wheat: I0.5
+Chicken: I2","Barley: E0.5
+Milk: E1
+Rapeseed: E2
+Pork: E0.5
+Oats: E0.5","Pork: HighGrowth
+Beef: Decrease
+Milk: HighGrowth
+Chicken: LowGrowth
+Eggs: LowGrowth
+Mutton_goat: LowGrowth",CT_Cropprod,FreeExpansion,NoAffor,BAUGrowth,No,Middle,NoChange,NoChange,NoChange,National,Average,AR6,CurrentTrend,NoChange,NoGrowth
+935,272,16,CurrentTrend,8,ETH,2,No,2020,country_team,UN_high,FATDiet,Reduced,I1,E3,BAUGrowth,LowGrowth,FreeExpansion,NDC,BAUGrowth,No,Middle,NoChange,NoChange,Reduced,NoChange,CurrentDollars,AR6,UN_high,Diversified,LowGrowth
+938,271,16,CurrentTrend,55,DNK,2,No,2020,SSP3,UN_medium,NoChange,MyFoodLossScen,I3,E3,BAUGrowth,LowGrowth,NoExpansion,CurrentTrend,NoGrowth,No,Middle,NoChange,PAExpansion,NoChange,OECD_AGLINK,Average,AR6,UN_medium,Mixed,NoGrowth
+939,270,16,CurrentTrend,33,DEU,2,No,2020,SSP2,UN_medium,NoChange,Slow50,I2,E0,BAUGrowth,LowGrowth,NoExpansion,NoAffor,BAUGrowth,No,Middle,NoChange,NoChange,NoChange,OECD_AGLINK,Average,AR6,CurrentTrend,NoChange,NoGrowth
+940,269,16,CurrentTrend,7,COL,2,No,2020,SSP1,UN_medium,NatCurrentDiet,Current,I1,E3,BAUGrowth,LowGrowth,FreeExpansion,BonnChallenge,BAUGrowth,No,Low,NoChange,NoChange,NoChange,National,Custom,AR6,CurrentTrend,NoChange,NoGrowth
+941,268,16,CurrentTrend,5,CAN,2,No,2020,SSP1,UN_high,FatDiet,Current,I2,MyExportScen,NoGrowth,ReducedGrowth,FreeExpansion,NoAffor,NoGrowth,No,Low,NoChange,NoChange,NoChange,NoChange,Custom,AR6,CurrentTrend,Organic,LowGrowth
+942,267,16,CurrentTrend,3,BRA,2,No,2020,SSP2,UN_medium,FatDiet,Current,I2,E2,BAUGrowth,LowGrowth,FreeExpansion,NoAffor,BAUGrowth,No,Middle,NoChange,NoChange,NoChange,Andrade_low,Average,AR6,CurrentTrend,Diversified,NoGrowth
+943,270,18,GlobalSustainability,33,DEU,3,Yes,2020,SSP1,UN_medium,NatHealthyDiet,Rapid50,I3,Redux,HighGrowth,HighGrowth,NoExpansion,NoAffor,BAUGrowth,Yes,Middle,NoChange,PAAichi30,Reduced,OECD_AGLINK,Average,AR6,CurrentTrend,Mixed,HighGrowth
+944,270,17,NationalCommitments,33,DEU,3,Yes,2020,SSP2,UN_medium,SugarRedFat15,Rapid50,I3,Redux,BAUGrowth,MiddleGrowth,NoExpansion,NoAffor,HighGrowth,Yes,Middle,NoChange,PAAichi30,Reduced,National,Average,AR6,CurrentTrend,Organic,LowGrowth
+945,264,16,CurrentTrend,28,SWE,2,No,2020,SSP2,UN_medium,CurrentDiet,Current,I2,E3,BAUGrowth,LowGrowth,FreeExpansion,NoAffor,NoGrowth,No,Middle,NoChange,PAExpansion,NoChange,OECD_AGLINK,CurrentDollars,AR6,CurrentTrend,Cover_crops,NoGrowth
+946,263,16,CurrentTrend,44,R_NEU,2,No,2020,SSP2,UN_medium,NoChange,Current,I2,MyExportScen,NoGrowth,NoGrowth,NoDefor2030,BonnChallenge,NoGrowth,No,Middle,NoChange,NoChange,NoChange,NoChange,CurrentDollars,AR6,NoChange,NoChange,NoGrowth
+947,262,16,CurrentTrend,56,NPL,2,No,2020,SSP2,UN_high,CurrentDiet,Current,I1,E0,BAUGrowth,BAUGrowth,FreeExpansion,NoAffor,BAUGrowth,No,Middle,NoChange,PAExpansion,NoChange,NoChange,Average,AR6,SSP2,NoChange,LowGrowth
+948,261,16,CurrentTrend,10,IDN,2,No,2020,SSP3,Stat_IDN_ScenA,NoChange,Reduced,I4,E1,BAUGrowth,LowGrowth,FreeExpansion,BonnChallenge,NoGrowth,No,Middle,NoChange,NoChange,NoChange,OECD_AGLINK,CurrentDollars,AR6,CurrentTrend,NoChange,NoGrowth
+949,271,18,GlobalSustainability,55,DNK,3,Yes,2020,SSP3,UN_medium,EATLancetAverage,MyFoodLossScen,I3,E3,BAUGrowth,HighGrowth,NoExpansion,NationalCommitment,NoGrowth,Yes,Middle,NoChange,PAExpansion,NoChange,OECD_AGLINK,Average,AR6,UN_medium,Mixed,NoGrowth
+950,271,17,NationalCommitments,55,DNK,3,Yes,2020,SSP3,UN_medium,NoChange,MyFoodLossScen,I3,E3,NoGrowth,NoGrowth,NoExpansion,NationalCommitment,NoGrowth,Yes,Middle,NoChange,PAExpansion,NoChange,OECD_AGLINK,Average,AR6,UN_medium,Mixed,NoGrowth
+951,260,16,CurrentTrend,1,ARG,2,No,2020,SSP2,UN_medium,NoChange,Current,I3,E1,BAUGrowth,LowGrowth,FreeExpansion,NoAffor,BAUGrowth,No,Low,NoChange,NoChange,NoChange,NoChange,Average,AR6,UN_medium,NoChange,LowGrowth
+952,258,16,CurrentTrend,6,CHN,2,No,2020,SSP2,UN_low,CT_GLOBIOM,Current,CT_GLOBIOM,CT_GLOBIOM,CT_GLOBIOM,CT_GLOBIOM,FreeExpansion,territorial_planning,GLOBIOM,No,Middle,NoChange,PAExpansion,NoChange,OECD_AGLINK,Average,AR6,CurrentTrend,NoChange,CT_GLOBIOM
+953,272,18,GlobalSustainability,8,ETH,3,Yes,2020,country_team,UN_low,FATDiet,Reduced,I2,E1,HighGrowth,MiddleGrowth,NoDefor2030,BonnChallenge,HighGrowth,Yes,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,CurrentTrend,Diversified,HighGrowth
+954,272,17,NationalCommitments,8,ETH,3,Yes,2020,country_team,UN_low,FATDiet,Reduced,I3,E1,HighGrowth,MiddleGrowth,NoDefor2030,BonnChallenge,HighGrowth,Yes,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,CurrentTrend,Diversified,HighGrowth
+955,273,18,GlobalSustainability,17,FIN,3,Yes,2020,SSP1,UN_high,GS_Diet,Reduced,"fruit_other: I2
+vegetable_other: I2
+Apple: I0.5
+Chicken: I0.5
+Beef: I0.5","Barley: E0.5
+Milk: E2
+Rapeseed: E0.5
+Pork: E0.5
+Oats: E0.5","Pork: BAUGrowth
+Beef: Decrease
+Milk: LowGrowth
+Chicken: LowGrowth
+Eggs: LowGrowth
+Mutton_goat: LowGrowth",GS_Cropprod,NoDefor2030,HighTarget,BAUGrowth,Yes,Middle,NoChange,Target_30,NoChange,National,Average,AR6,CurrentTrend,Diversified,LowGrowth
+956,273,17,NationalCommitments,17,FIN,3,Yes,2020,SSP1,UN_high,NC_Diet,Reduced,"Fruit_other: I2
+vegetable_other: I2
+Beef: I0.5
+Chicken: I0.5
+Wheat: I2","Barley: E0.5
+Milk: E1.5
+Pork: E0.5
+Rapeseed: E2
+Oats: E0.5","Pork: Decrease
+Beef: Decrease
+Milk: LowGrowth
+Chicken: LowGrowth
+Eggs: LowGrowth
+Mutton_goat: LowGrowth",NC_Cropprod,FreeExpansion,LowTarget,BAUGrowth,Yes,Middle,NoChange,PAExpansion,NoChange,National,Average,AR6,CurrentTrend,Cover_crops,LowGrowth
+957,290,18,GlobalSustainability,18,GBR,3,Yes,2020,SSP2,UN_medium,6CB_High,UK_GS,I2,E3,UK_SP2,UK_GS,NoDefor,UK_GS,UK_SP1,Yes,Middle,NoChange,UK_GS,Halve_by_2030,OECD_AGLINK,Average,AR6,UK_SP2,Mixed,NoGrowth
+958,290,17,NationalCommitments,18,GBR,3,Yes,2020,SSP2,UN_medium,UK_NC,UK_NC,I2,E3,UK_SP1,UK_NC,FreeExpansion,UK_NC,UK_SP1,Yes,Middle,NoChange,UK_NC,Halve_by_2050,OECD_AGLINK,Average,AR6,UK_SP1,UK_NC,NoGrowth
+959,260,16,CurrentTrend,1,ARG,3,Yes,2020,SSP2,UN_medium,NoChange,Current,I3,E1,BAUGrowth,LowGrowth,FreeExpansion,NoAffor,BAUGrowth,Yes,Low,NoChange,NoChange,NoChange,NoChange,Average,AR6,UN_medium,NoChange,LowGrowth
+960,275,18,GlobalSustainability,58,GRC,3,Yes,2020,SSP3,UN_low,EATLancetAverage,Reduced,I2,E2,HighGrowth,HighGrowth,NoExpansion,BonnChallenge,NoGrowth,Yes,Low,NoChange,PAExpansion,Reduced,OECD_AGLINK,CurrentDollars,AR6,NoChange,Mixed,NoGrowth
+961,275,17,NationalCommitments,58,GRC,3,Yes,2020,SSP1,UN_medium,EATLancetAverage,Reduced,I3,E2,HighGrowth,HighGrowth,NoDefor2030,NoAffor,BAUGrowth,Yes,High,NoChange,PAExpansion,Reduced,OECD_AGLINK,CurrentDollars,AR6,NoChange,Organic,NoGrowth
+962,288,16,CurrentTrend,2,AUS,3,Yes,2020,IGR 2023,IGR 2023,Nochange,Scenathon2020_CurrentTrends,I2,Stable,Scenathon2020_CurrentTrends,LowGrowth,NoExpansion,Scenathon2020_CurrentTrends,Scenathon2020_CurrentTrends,No,Low,NoChange,NoChange,Scenathon2020_CurrentTrends,National,CurrentDollars,AR6,CurrentTrend,Advanced_Farming,NoGrowth
+963,261,18,GlobalSustainability,10,IDN,3,Yes,2020,SSP1,UN_medium,NoChange,Reduced,I4,E1,HighGrowth,HighGrowth,NoDefor2030,LTS_Affor,HighGrowth,Yes,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,CurrentDollars,AR6,NoChange,Mixed,HighGrowth
+964,261,17,NationalCommitments,10,IDN,3,Yes,2020,SSP2,Stat_IDN_ScenB,NoChange,Reduced,I4,E1,HighGrowth,HighGrowth,NoDefor2030,LTS_CritOnly,BAUGrowth,Yes,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,CurrentDollars,AR6,CurrentTrend,Mixed,LowGrowth
+965,267,16,CurrentTrend,3,BRA,3,Yes,2020,SSP2,UN_medium,FatDiet,Current,I2,E2,BAUGrowth,LowGrowth,FreeExpansion,NoAffor,BAUGrowth,Yes,Middle,NoChange,NoChange,NoChange,Andrade_low,Average,AR6,CurrentTrend,Diversified,NoGrowth
+966,276,18,GlobalSustainability,9,IND,3,Yes,2020,SSP1,UN_medium,EATLancetAverage,Reduced,I3,E2,HighGrowth,HighGrowth,NoDefor2030,BonnChallenge,BAUGrowth,Yes,Middle,NoChange,NoChange,Reduced,NoChange,CurrentDollars,AR6,UN_medium,NoChange,NoGrowth
+967,276,17,NationalCommitments,9,IND,3,Yes,2020,SSP1,UN_low,ICMR_NIN,Reduced,I3,E2,HighGrowth,HighGrowth,NoDefor2030,BonnChallenge,BAUGrowth,Yes,Middle,NoChange,NoChange,Reduced,NoChange,CurrentDollars,AR6,UN_low,NoChange,NoGrowth
+968,268,16,CurrentTrend,5,CAN,3,Yes,2020,SSP1,UN_high,FatDiet,Current,I2,MyExportScen,NoGrowth,ReducedGrowth,FreeExpansion,NoAffor,NoGrowth,Yes,Low,NoChange,NoChange,NoChange,NoChange,Custom,AR6,CurrentTrend,Organic,LowGrowth
+969,277,18,GlobalSustainability,13,MEX,3,Yes,2020,SSP2,UN_constantfertility,NatHealthy_INSP,Reduced,I2,E3,Silvopastoril,HighGrowth,NoExpansion,ReforMex_SUST,Silvopastoril,Yes,Middle,NoChange,PAExpansionSust,Reduced,NoChange,Average,AR6,CurrentTrend,Mixed_GS,NoGrowth
+970,277,17,NationalCommitments,13,MEX,3,Yes,2020,SSP2,UN_constantfertility,NatHealthy_INSP,Reduced,I3,E3,LowGrowth,LowGrowth,NoDefor2030,ReforMex_BAU,BAUGrowth,Yes,Low,NoChange,PAExpansionSust,Reduced,NoChange,Average,AR6,CurrentTrend,Mixed_NC,NoGrowth
+971,258,16,CurrentTrend,6,CHN,3,Yes,2020,SSP2,UN_low,CT_GLOBIOM,Current,CT_GLOBIOM,CT_GLOBIOM,CT_GLOBIOM,CT_GLOBIOM,FreeExpansion,territorial_planning,GLOBIOM,Yes,Middle,NoChange,PAExpansion,NoChange,OECD_AGLINK,Average,AR6,CurrentTrend,NoChange,CT_GLOBIOM
+972,269,16,CurrentTrend,7,COL,3,Yes,2020,SSP1,UN_medium,NatCurrentDiet,Current,I1,E3,BAUGrowth,LowGrowth,FreeExpansion,BonnChallenge,BAUGrowth,Yes,Low,NoChange,NoChange,NoChange,National,Custom,AR6,CurrentTrend,NoChange,NoGrowth
+973,278,18,GlobalSustainability,31,NOR,3,Yes,2020,SSP1,UN_low,HealthyDiet,StrongReduce,I3,E3,BAUGrowth,MiddleGrowth,NoExpansion,NoAffor,NoGrowth,Yes,High,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,UN_low,Mixed,LowGrowth
+974,278,17,NationalCommitments,31,NOR,3,Yes,2020,SSP1,UN_medium,HealthyDiet,StrongReduce,I3,E3,BAUGrowth,MiddleGrowth,NoExpansion,NoAffor,NoGrowth,Yes,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,UN_medium,Mixed,LowGrowth
+975,270,16,CurrentTrend,33,DEU,3,Yes,2020,SSP2,UN_medium,NoChange,Slow50,I2,E0,BAUGrowth,LowGrowth,NoExpansion,NoAffor,BAUGrowth,Yes,Middle,NoChange,NoChange,NoChange,OECD_AGLINK,Average,AR6,CurrentTrend,NoChange,NoGrowth
+976,262,18,GlobalSustainability,56,NPL,3,Yes,2020,SSP1,UN_constantfertility,EATLancetAverage,Reduced,I3,E3,HighGrowth,HighGrowth,FreeExpansion,GlobalSust,HighGrowth,Yes,Middle,NoChange,PAExpansion30,Reduced50,NoChange,Average,AR6,SSP2,NoChange,HighGrowth
+977,262,17,NationalCommitments,56,NPL,3,Yes,2020,SSP1,UN_constantfertility,ICMR_diet,Reduced,I4,E1,HighGrowth,LowGrowth,FreeExpansion,LowAffor,BAUGrowth,Yes,Middle,NoChange,PAExpansion30,Reduced50,NoChange,Average,AR6,SSP2,NoChange,LowGrowth
+978,271,16,CurrentTrend,55,DNK,3,Yes,2020,SSP3,UN_medium,NoChange,MyFoodLossScen,I3,E3,BAUGrowth,LowGrowth,NoExpansion,CurrentTrend,NoGrowth,Yes,Middle,NoChange,PAExpansion,NoChange,OECD_AGLINK,Average,AR6,UN_medium,Mixed,NoGrowth
+979,279,18,GlobalSustainability,41,R_ASP,3,Yes,2020,SSP2,UN_low,Sustainable,Reduced,I2,E1,HighGrowth,HighGrowth,NoDefor2030,BonnChallenge,BAUGrowth,Yes,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,UN_low,Mixed+,LowGrowth
+980,279,17,NationalCommitments,41,R_ASP,3,Yes,2020,SSP1,UN_low,NationalCom,Reduced,I2,E2,HighGrowth,HighGrowth,FreeExpansion,BonnChallenge,BAUGrowth,Yes,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,CurrentTrend,Mixed,LowGrowth
+981,272,16,CurrentTrend,8,ETH,3,Yes,2020,country_team,UN_high,FATDiet,Reduced,I1,E3,BAUGrowth,LowGrowth,FreeExpansion,NDC,BAUGrowth,Yes,Middle,NoChange,NoChange,Reduced,NoChange,CurrentDollars,AR6,UN_high,Diversified,LowGrowth
+982,273,16,CurrentTrend,17,FIN,3,Yes,2020,SSP2,UN_medium,CT_Diet,Current,"fruit_other: I2
+Rapeseed: I2
+Beef: I0.5
+Wheat: I0.5
+Chicken: I2","Barley: E0.5
+Milk: E1
+Rapeseed: E2
+Pork: E0.5
+Oats: E0.5","Pork: HighGrowth
+Beef: Decrease
+Milk: HighGrowth
+Chicken: LowGrowth
+Eggs: LowGrowth
+Mutton_goat: LowGrowth",CT_Cropprod,FreeExpansion,NoAffor,BAUGrowth,Yes,Middle,NoChange,NoChange,NoChange,National,Average,AR6,CurrentTrend,NoChange,NoGrowth
+983,280,18,GlobalSustainability,43,R_CSA,3,Yes,2020,SSP1,UN_low,EATLancetAverage,Reduced,I2,E3,HighGrowth,HighGrowth,NoDefor2030,BonnChallenge,HighGrowth,Yes,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,NoChange,Mixed,NoGrowth
+984,280,17,NationalCommitments,43,R_CSA,3,Yes,2020,SSP3,UN_low,FatDiet,Reduced,I2,E2,HighGrowth,HighGrowth,NoExpansion,BonnChallenge,HighGrowth,Yes,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,CurrentDollars,AR6,NoChange,Mixed,NoGrowth
+985,290,16,CurrentTrend,18,GBR,3,Yes,2020,SSP2,UN_medium,NoChange,Current,I2,E3,UK_CT,UK_CT,FreeExpansion,UK_CT2,NoGrowth,Yes,Middle,NoChange,NoChange,NoChange,NoChange,Average,AR6,UK_CT,NoChange,NoGrowth
+986,281,18,GlobalSustainability,52,RMECAS,3,Yes,2020,SSP2,UN_medium,EATLancetAverage,Reduced,I2,E2,HighGrowth,HighGrowth,NoDefor2030,BonnChallenge,Optimal,Yes,Middle,NoChange,PAExpansion,NoChange,OECD_AGLINK,CurrentDollars,AR6,UN_medium,Mixed,LowGrowth
+987,281,17,NationalCommitments,52,RMECAS,3,Yes,2020,SSP2,UN_medium,MyDiet,Current,I2,E2,LowGrowth,MiddleGrowth,NoDefor2050,BonnChallenge,Optimal,Yes,Middle,NoChange,NoChange,NoChange,OECD_AGLINK,CurrentDollars,AR6,UN_medium,Organic,LowGrowth
+988,275,16,CurrentTrend,58,GRC,3,Yes,2020,SSP2,UN_nochange,NoChange,Current,I2,E3,BAUGrowth,NoGrowth,NoDefor2030,NoAffor,BAUGrowth,Yes,Middle,NoChange,NoChange,NoChange,NoChange,CurrentDollars,AR6,CurrentTrend,Diversified,NoGrowth
+989,263,18,GlobalSustainability,44,R_NEU,3,Yes,2020,SSP2,UN_medium,EATLancetAverage,Reduced,I2,MyExportScen,BAUGrowth,MiddleGrowth,NoDefor2030,BonnChallenge,NoGrowth,Yes,Middle,NoChange,NoChange,NoChange,NoChange,Average,AR6,NoChange,NoChange,NoGrowth
+990,263,17,NationalCommitments,44,R_NEU,3,Yes,2020,SSP2,UN_medium,MyDiet,Reduced,I2,MyExportScen,BAUGrowth,MiddleGrowth,NoDefor2030,BonnChallenge,NoGrowth,Yes,Middle,NoChange,NoChange,NoChange,NoChange,Average,AR6,NoChange,NoChange,NoGrowth
+991,261,16,CurrentTrend,10,IDN,3,Yes,2020,SSP3,Stat_IDN_ScenA,NoChange,Reduced,I4,E1,BAUGrowth,LowGrowth,FreeExpansion,BonnChallenge,NoGrowth,Yes,Middle,NoChange,NoChange,NoChange,OECD_AGLINK,CurrentDollars,AR6,CurrentTrend,NoChange,NoGrowth
+992,282,18,GlobalSustainability,21,R_OEU,3,Yes,2020,SSP2,UN_medium,EATLancetAverage,MyFoodLossScen,MyImportScen,MyExportScen,BAUGrowth,MiddleGrowth,NoDefor2030,NoAffor,BAUGrowth,Yes,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,CurrentTrend,Mixed,NoGrowth
+993,282,17,NationalCommitments,21,R_OEU,3,Yes,2020,SSP2,UN_medium,MyDiet,MyFoodLossScen,MyImportScen,MyExportScen,BAUGrowth,MiddleGrowth,NoDefor2030,NoAffor,BAUGrowth,Yes,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,CurrentTrend,Mixed,NoGrowth
+994,276,16,CurrentTrend,9,IND,3,Yes,2020,SSP2,UN_constantfertility,No Change,Current,I2,E3,BAUGrowth,NoGrowth,FreeExpansion,NoAffor,BAUGrowth,Yes,Middle,NoChange,NoChange,NoChange,NoChange,CurrentDollars,AR6,CurrentTrend,NoChange,NoGrowth
+995,283,18,GlobalSustainability,40,R_SSA,3,Yes,2020,SSP1,UN_momentum,EATLancetAverage,Reduced,I3,MyExportScen,LowGrowth,MiddleGrowth,NoExpansion,BonnChallenge,Optimal,Yes,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,UN_momentum,Mixed,LowGrowth
+996,283,17,NationalCommitments,40,R_SSA,3,Yes,2020,SSP1,UN_medium,FatDiet,Current,I3,E2,HighGrowth,HighGrowth,FreeExpansion,GGWgrowth,Optimal,Yes,Middle,NoChange,PAExpansionNat,Reduced,OECD_AGLINK,Average,AR6,CurrentTrend,Diversified,HighGrowth
+997,277,16,CurrentTrend,13,MEX,3,Yes,2020,SSP2,UN_constantfertility,Current_INSP,Current,I2,E3,BAUGrowth,MiddleGrowth,NoDefor2030,ReforMex_BAU,BAUGrowth,Yes,Low,NoChange,PAExpansionCT,NoChange,NoChange,Average,AR6,CurrentTrend,Mixed_CT,NoGrowth
+998,278,16,CurrentTrend,31,NOR,3,Yes,2020,SSP2,UN_medium,NoChange,Reduced,I2,E3,BAUGrowth,LowGrowth,NoExpansion,NoAffor,NoGrowth,Yes,Middle,NoChange,PAExpansion,NoChange,OECD_AGLINK,Average,AR6,UN_medium,Mixed,LowGrowth
+999,284,18,GlobalSustainability,14,RUS,3,Yes,2020,SSP3,UN_medium,NoChange,Current,I3,E1,HighGrowth,HighGrowth,NoExpansion,NoAffor,NoGrowth,Yes,Low,NoChange,NoChange,NoChange,NoChange,CurrentDollars,AR6,NoChange,Mixed,HighGrowth
+1000,284,17,NationalCommitments,14,RUS,3,Yes,2020,SSP3,UN_high,NoChange,Current,I3,E1,LowGrowth,LowGrowth,FreeExpansion,NoAffor,NoGrowth,Yes,Low,NoChange,NoChange,NoChange,NoChange,CurrentDollars,AR6,NoChange,Mixed,HighGrowth
+1001,262,16,CurrentTrend,56,NPL,3,Yes,2020,SSP2,UN_high,CurrentDiet,Current,I1,E0,BAUGrowth,BAUGrowth,FreeExpansion,NoAffor,BAUGrowth,Yes,Middle,NoChange,PAExpansion,NoChange,NoChange,Average,AR6,SSP2,NoChange,LowGrowth
+1002,289,18,GlobalSustainability,15,RWA,3,Yes,2020,SSP1,UN_medium,NatHealthyDiet,Reduced,I2,E3,HighGrowth,MiddleGrowth,FreeExpansion,BonnChallenge,BAUGrowth,Yes,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,CurrentDollars,AR6,UN_medium,Organic,HighGrowth
+1003,289,17,NationalCommitments,15,RWA,3,Yes,2020,SSP2,UN_medium,NatHealthyDiet,Increased,I2,E3,HighGrowth,MiddleGrowth,FreeExpansion,BonnChallenge,BAUGrowth,Yes,Middle,NoChange,PAExpansion,Reduced,National,CurrentDollars,AR6,Current Trends,Cover_crops,LowGrowth
+1004,279,16,CurrentTrend,41,R_ASP,3,Yes,2020,SSP1,UN_low,CurrentTrend,Increased,I2,E2,BAUGrowth,MiddleGrowth,FreeExpansion,NoAffor,LowGrowth,Yes,Middle,NoChange,NoChange,NoChange,OECD_AGLINK,Average,AR6,CurrentTrend,Organic,NoGrowth
+1005,264,18,GlobalSustainability,28,SWE,3,Yes,2020,SSP1,UN_medium,LowRedMeatDiet,PublicStakeFL,I3,E0,HighGrowth,SustIntens,FreeExpansion,BonnChallenge,NoGrowth,Yes,Middle,NoChange,PATarget50,Reduced50,OECD_AGLINK,CurrentDollars,AR6,CurrentTrend,Mixed,LowGrowth
+1006,264,17,NationalCommitments,28,SWE,3,Yes,2020,SSP1,UN_medium,ReduceRedMeatDiet,Reduced,I4,E3,HighGrowth,SustIntens,FreeExpansion,LowAffor,NoGrowth,Yes,Middle,NoChange,PATarget30,Reduced,OECD_AGLINK,CurrentDollars,AR6,CurrentTrend,Mixed,LowGrowth
+1007,280,16,CurrentTrend,43,R_CSA,3,Yes,2020,SSP3,UN_low,FatDiet,Current,I1,E3,HighGrowth,HighGrowth,FreeExpansion,NoAffor,HighGrowth,Yes,Low,NoChange,NoChange,NoChange,NoChange,CurrentDollars,AR6,CurrentTrend,Mixed,LowGrowth
+1008,286,18,GlobalSustainability,57,TUR,3,Yes,2020,SSP3,UN_medium,NatHealthyDiet,Reduced,I3,MyExportScen,BAUGrowth,MiddleGrowth,NoDefor2030,NeutralityCountry,BAUGrowth,Yes,High,NoChange,PAExpansion,Reduced,OECD_AGLINK,Custom,AR6,UN_medium,Mixed,HighGrowth
+1009,281,16,CurrentTrend,52,RMECAS,3,Yes,2020,SSP2,UN_medium,FatDiet,Current,I2,E2,BAUGrowth,LowGrowth,FreeExpansion,NoAffor,Optimal,Yes,Middle,NoChange,NoChange,NoChange,NoChange,CurrentDollars,AR6,UN_medium,Embed_nat,NoGrowth
+1010,286,17,NationalCommitments,57,TUR,3,Yes,2020,SSP2,UN_medium,NatHealthyDiet,Reduced,MyImportScen,E2,BAUGrowth,MiddleGrowth,NoDefor2030,NeutralityCountry,BAUGrowth,Yes,Middle,NoChange,PAExpansion,Reduced,NoChange,CurrentDollars,AR6,CurrentTrend,Organic,HighGrowth
+1011,287,18,GlobalSustainability,19,USA,3,Yes,2020,SSP2,UN_nochange,HealthyDietUS_USDA,Reduced,I2,E3,BAUGrowth,HighGrowth,NoExpansion,Mid-century strategy report - Otherland,HighGrowth,Yes,Middle,NoChange,PAExpansion,Reduced,PATHWAYS_central,Average,AR6,CurrentTrend,Mixed,NoGrowth
+1012,263,16,CurrentTrend,44,R_NEU,3,Yes,2020,SSP2,UN_medium,NoChange,Current,I2,MyExportScen,NoGrowth,NoGrowth,NoDefor2030,BonnChallenge,NoGrowth,Yes,Middle,NoChange,NoChange,NoChange,NoChange,CurrentDollars,AR6,NoChange,NoChange,NoGrowth
+1013,287,17,NationalCommitments,19,USA,3,Yes,2020,SSP2,UN_nochange,HealthyDietUS_USDA,Reduced,I2,E3,BAUGrowth,HighGrowth,FreeExpansion,Mid-century strategy report - Otherland,HighGrowth,Yes,Middle,NoChange,PAExpansion,NoChange,FASOM $20/t,Average,AR6,CurrentTrend,Mixed,NoGrowth
+1014,282,16,CurrentTrend,21,R_OEU,3,Yes,2020,SSP2,UN_medium,NoChange,Current,I2,E3,NoGrowth,NoGrowth,NoExpansion,BonnChallenge,NoGrowth,Yes,Middle,NoChange,NoChange,NoChange,NoChange,CurrentDollars,AR6,NoChange,NoChange,NoGrowth
+1015,283,16,CurrentTrend,40,R_SSA,3,Yes,2020,SSP2,UN_medium,FatDiet,Current,I2,E2,BAUGrowth,MiddleGrowth,FreeExpansion,BonnChallenge,Optimal,Yes,Middle,NoChange,NoChange,NoChange,NoChange,Average,AR6,CurrentTrend,NoChange,NoGrowth
+1016,260,17,NationalCommitments,1,ARG,2,No,2020,SSP2,UN_medium,HealthyDiet,Current,I3,E3,HighGrowth,HighGrowth,NoDefor2030,BonnChallenge+,HighGrowth,No,Middle,NoChange,PAExpansion,NoChange,NoChange,Average,AR6,UN_medium,Reduce_till,LowGrowth
+1018,284,16,CurrentTrend,14,RUS,3,Yes,2020,SSP3,UN_medium,NoChange,Current,I3,E1,NoGrowth,MiddleGrowth,NoExpansion,NoAffor,NoGrowth,Yes,Low,NoChange,NoChange,NoChange,NoChange,CurrentDollars,AR6,NoChange,Mixed,LowGrowth
+1019,289,16,CurrentTrend,15,RWA,3,Yes,2020,SSP2,UN_medium,NatHealthyDiet,Increased,I2,E3,HighGrowth,MiddleGrowth,FreeExpansion,BonnChallenge,BAUGrowth,Yes,Middle,NoChange,PAExpansion,NoChange,National,CurrentDollars,AR6,Current Trends,Organic,LowGrowth
+1020,288,17,NationalCommitments,2,AUS,2,No,2020,IGR 2023,IGR 2023,Nochange,Scenathon2020_CurrentTrends,I2,Stable,Scenathon2020_CurrentTrends,MiddleGrowth,NoExpansion,Scenathon2020_CurrentTrends,Scenathon2020_CurrentTrends,No,Middle,NoChange,PAscen_NationalCommitment2030,Scenathon2020_CurrentTrends,National,CurrentDollars,AR6,IGR 2023,Advanced_Farming,NoGrowth
+1022,264,16,CurrentTrend,28,SWE,3,Yes,2020,SSP2,UN_medium,CurrentDiet,Current,I2,E3,BAUGrowth,LowGrowth,FreeExpansion,NoAffor,NoGrowth,Yes,Middle,NoChange,PAExpansion,NoChange,OECD_AGLINK,CurrentDollars,AR6,CurrentTrend,Cover_crops,NoGrowth
+1023,267,17,NationalCommitments,3,BRA,2,No,2020,SSP2,UN_medium,FatDiet,Reduced,I2,E2,HighGrowth,MiddleGrowth,NoDefor2030,BonnChallenge,HighGrowth,No,Middle,NoChange,PAExpansion,NoChange,Andrade_high,Average,AR6,CurrentTrend,Diversified,HighGrowth
+1025,286,16,CurrentTrend,57,TUR,3,Yes,2020,SSP2,UN_medium,NoChange,Current,I1,E3,BAUGrowth,MiddleGrowth,FreeExpansion,NeutralityCountry,BAUGrowth,Yes,Middle,NoChange,PAExpansion,NoChange,NoChange,Average,AR6,NoChange,Mixed,LowGrowth
+1026,268,17,NationalCommitments,5,CAN,2,No,2020,SSP1,UN_high,EATLancetAverage,Reduced,I2,MyExportScen2,NoGrowth,NoGrowth,NoDefor2030,BonnChallenge,NoGrowth,No,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Custom,AR6,CurrentTrend,Organic,LowGrowth
+1028,287,16,CurrentTrend,19,USA,3,Yes,2020,SSP2,UN_nochange,FASOM $20/t,Current,I2,E6,BAUGrowth,HighGrowth,FreeExpansion,FASOM $20/tCO2,HighGrowth,Yes,Middle,NoChange,NoChange,NoChange,FASOM $20/t,Average,AR6,CurrentTrend,Mixed,NoGrowth
+1029,258,17,NationalCommitments,6,CHN,2,No,2020,SSP2,UN_low,GlobalSustainability,GLOBIOMSust,Sustainability_GLOBIOM,Sustainability_GLOBIOM,Sustainability_GLOBIOM,Sustainability_GLOBIOM,FreeExpansion,territorial_planning,GLOBIOM,No,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,CurrentTrend,NoChange,Sustainability_GLOBIOM
+1031,269,17,NationalCommitments,7,COL,2,No,2020,SSP2,UN_medium,NatCurrentDiet,Reduced,I2,E2,LowGrowth,MiddleGrowth,NoDefor2030,BonnChallenge,HighGrowth,No,Middle,NoChange,PAExpansion,Reduced,National,Custom,AR6,UN_medium,Diversified,NoGrowth
+1033,270,17,NationalCommitments,33,DEU,2,No,2020,SSP2,UN_medium,SugarRedFat15,Rapid50,I3,Redux,BAUGrowth,MiddleGrowth,NoExpansion,NoAffor,HighGrowth,No,Middle,NoChange,PAAichi30,Reduced,National,Average,AR6,CurrentTrend,Organic,LowGrowth
+1037,271,17,NationalCommitments,55,DNK,2,No,2020,SSP3,UN_medium,NoChange,MyFoodLossScen,I3,E3,NoGrowth,NoGrowth,NoExpansion,NationalCommitment,NoGrowth,No,Middle,NoChange,PAExpansion,NoChange,OECD_AGLINK,Average,AR6,UN_medium,Mixed,NoGrowth
+1038,272,17,NationalCommitments,8,ETH,2,No,2020,country_team,UN_low,FATDiet,Reduced,I3,E1,HighGrowth,MiddleGrowth,NoDefor2030,BonnChallenge,HighGrowth,No,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,CurrentTrend,Diversified,HighGrowth
+1039,273,17,NationalCommitments,17,FIN,2,No,2020,SSP1,UN_high,NC_Diet,Reduced,"Fruit_other: I2
+vegetable_other: I2
+Beef: I0.5
+Chicken: I0.5
+Wheat: I2","Barley: E0.5
+Milk: E1.5
+Pork: E0.5
+Rapeseed: E2
+Oats: E0.5","Pork: Decrease
+Beef: Decrease
+Milk: LowGrowth
+Chicken: LowGrowth
+Eggs: LowGrowth
+Mutton_goat: LowGrowth",NC_Cropprod,FreeExpansion,LowTarget,BAUGrowth,No,Middle,NoChange,PAExpansion,NoChange,National,Average,AR6,CurrentTrend,Cover_crops,LowGrowth
+1040,290,17,NationalCommitments,18,GBR,2,No,2020,SSP2,UN_medium,UK_NC,UK_NC,I2,E3,UK_SP1,UK_NC,FreeExpansion,UK_NC,UK_SP1,No,Middle,NoChange,UK_NC,Halve_by_2050,OECD_AGLINK,Average,AR6,UK_SP1,UK_NC,NoGrowth
+1041,260,18,GlobalSustainability,1,ARG,2,No,2020,SSP2,UN_medium,HealthyDiet,Reduced,I1,E1,HighGrowth,HighGrowth,NoExpansion,BonnChallenge,HighGrowth,No,Middle,NoChange,PAExpansion,Reduced,NoChange,Average,AR6,NoChange,Mixed,LowGrowth
+1042,275,17,NationalCommitments,58,GRC,2,No,2020,SSP1,UN_medium,EATLancetAverage,Reduced,I3,E2,HighGrowth,HighGrowth,NoDefor2030,NoAffor,BAUGrowth,No,High,NoChange,PAExpansion,Reduced,OECD_AGLINK,CurrentDollars,AR6,NoChange,Organic,NoGrowth
+1043,288,18,GlobalSustainability,2,AUS,2,No,2020,IGR 2023,IGR 2023,EATLancetAverage,Scenathon2020_Sustainability,I2,Stable,Scenathon2020_Sustainability,HighGrowth,NoExpansion,Scenathon2020_Sustainability,Scenathon2020_Sustainability,No,High,NoChange,Pascen_NationalCommitment_lingrowth,Scenathon2020_Sustainability,National,CurrentDollars,AR6,IGR 2023,Advanced_Farming,NoGrowth
+1044,261,17,NationalCommitments,10,IDN,2,No,2020,SSP2,Stat_IDN_ScenB,NoChange,Reduced,I4,E1,HighGrowth,HighGrowth,NoDefor2030,LTS_CritOnly,BAUGrowth,No,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,CurrentDollars,AR6,CurrentTrend,Mixed,LowGrowth
+1045,267,18,GlobalSustainability,3,BRA,2,No,2020,SSP2,UN_low,EATLancetAverage,Reduced,I2,E2,HighGrowth,HighGrowth,NoDefor2030,BonnChallenge+,HighGrowth,No,Middle,NoChange,PAExpansion,Reduced,Andrade_high,Average,AR6,CurrentTrend,Diversified,HighGrowth
+1046,276,17,NationalCommitments,9,IND,2,No,2020,SSP1,UN_low,ICMR_NIN,Reduced,I3,E2,HighGrowth,HighGrowth,NoDefor2030,BonnChallenge,BAUGrowth,No,Middle,NoChange,NoChange,Reduced,NoChange,CurrentDollars,AR6,UN_low,NoChange,NoGrowth
+1047,277,17,NationalCommitments,13,MEX,2,No,2020,SSP2,UN_constantfertility,NatHealthy_INSP,Reduced,I3,E3,LowGrowth,LowGrowth,NoDefor2030,ReforMex_BAU,BAUGrowth,No,Low,NoChange,PAExpansionSust,Reduced,NoChange,Average,AR6,CurrentTrend,Mixed_NC,NoGrowth
+1048,278,17,NationalCommitments,31,NOR,2,No,2020,SSP1,UN_medium,HealthyDiet,StrongReduce,I3,E3,BAUGrowth,MiddleGrowth,NoExpansion,NoAffor,NoGrowth,No,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,UN_medium,Mixed,LowGrowth
+1049,262,17,NationalCommitments,56,NPL,2,No,2020,SSP1,UN_constantfertility,ICMR_diet,Reduced,I4,E1,HighGrowth,LowGrowth,FreeExpansion,LowAffor,BAUGrowth,No,Middle,NoChange,PAExpansion30,Reduced50,NoChange,Average,AR6,SSP2,NoChange,LowGrowth
+1050,279,17,NationalCommitments,41,R_ASP,2,No,2020,SSP1,UN_low,NationalCom,Reduced,I2,E2,HighGrowth,HighGrowth,FreeExpansion,BonnChallenge,BAUGrowth,No,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,CurrentTrend,Mixed,LowGrowth
+1051,280,17,NationalCommitments,43,R_CSA,2,No,2020,SSP3,UN_low,FatDiet,Reduced,I2,E2,HighGrowth,HighGrowth,NoExpansion,BonnChallenge,HighGrowth,No,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,CurrentDollars,AR6,NoChange,Mixed,NoGrowth
+1052,281,17,NationalCommitments,52,RMECAS,2,No,2020,SSP2,UN_medium,MyDiet,Current,I2,E2,LowGrowth,MiddleGrowth,NoDefor2050,BonnChallenge,Optimal,No,Middle,NoChange,NoChange,NoChange,OECD_AGLINK,CurrentDollars,AR6,UN_medium,Organic,LowGrowth
+1053,263,17,NationalCommitments,44,R_NEU,2,No,2020,SSP2,UN_medium,MyDiet,Reduced,I2,MyExportScen,BAUGrowth,MiddleGrowth,NoDefor2030,BonnChallenge,NoGrowth,No,Middle,NoChange,NoChange,NoChange,NoChange,Average,AR6,NoChange,NoChange,NoGrowth
+1054,282,17,NationalCommitments,21,R_OEU,2,No,2020,SSP2,UN_medium,MyDiet,MyFoodLossScen,MyImportScen,MyExportScen,BAUGrowth,MiddleGrowth,NoDefor2030,NoAffor,BAUGrowth,No,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,CurrentTrend,Mixed,NoGrowth
+1055,283,17,NationalCommitments,40,R_SSA,2,No,2020,SSP1,UN_medium,FatDiet,Current,I3,E2,HighGrowth,HighGrowth,FreeExpansion,GGWgrowth,Optimal,No,Middle,NoChange,PAExpansionNat,Reduced,OECD_AGLINK,Average,AR6,CurrentTrend,Diversified,HighGrowth
+1056,268,18,GlobalSustainability,5,CAN,2,No,2020,SSP1,UN_high,EATLancetAverage,MyFoodLossScen,I2,MyExportScen3,LowGrowth,HighGrowth,NoDefor2030,BonnChallenge+,NoGrowth,No,Middle,NoChange,PAExpansion2,MyPHLossScen,OECD_AGLINK,Custom,AR6,CurrentTrend,Organic,HighGrowth
+1057,284,17,NationalCommitments,14,RUS,2,No,2020,SSP3,UN_high,NoChange,Current,I3,E1,LowGrowth,LowGrowth,FreeExpansion,NoAffor,NoGrowth,No,Low,NoChange,NoChange,NoChange,NoChange,CurrentDollars,AR6,NoChange,Mixed,HighGrowth
+1058,258,18,GlobalSustainability,6,CHN,2,No,2020,SSP2,UN_low,GlobalSustainability,GLOBIOMSust,Sustainability_GLOBIOM,Sustainability_GLOBIOM,Sustainability_GLOBIOM,Sustainability_GLOBIOM,FreeExpansion,territorial_planning,GLOBIOM,No,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,CurrentTrend,NoChange,Sustainability_GLOBIOM
+1059,289,17,NationalCommitments,15,RWA,2,No,2020,SSP2,UN_medium,NatHealthyDiet,Increased,I2,E3,HighGrowth,MiddleGrowth,FreeExpansion,BonnChallenge,BAUGrowth,No,Middle,NoChange,PAExpansion,Reduced,National,CurrentDollars,AR6,Current Trends,Cover_crops,LowGrowth
+1060,269,18,GlobalSustainability,7,COL,2,No,2020,SSP2,UN_medium,EATLancetAverage,Reduced,I3,E1,HighGrowth,HighGrowth,NoDefor2030,BonnChallenge,HighGrowth,No,High,NoChange,PAExpansion,Reduced,National,Custom,AR6,UN_medium,Diversified,NoGrowth
+1061,264,17,NationalCommitments,28,SWE,2,No,2020,SSP1,UN_medium,ReduceRedMeatDiet,Reduced,I4,E3,HighGrowth,SustIntens,FreeExpansion,LowAffor,NoGrowth,No,Middle,NoChange,PATarget30,Reduced,OECD_AGLINK,CurrentDollars,AR6,CurrentTrend,Mixed,LowGrowth
+1062,270,18,GlobalSustainability,33,DEU,2,No,2020,SSP1,UN_medium,NatHealthyDiet,Rapid50,I3,Redux,HighGrowth,HighGrowth,NoExpansion,NoAffor,BAUGrowth,No,Middle,NoChange,PAAichi30,Reduced,OECD_AGLINK,Average,AR6,CurrentTrend,Mixed,HighGrowth
+1063,286,17,NationalCommitments,57,TUR,2,No,2020,SSP2,UN_medium,NatHealthyDiet,Reduced,MyImportScen,E2,BAUGrowth,MiddleGrowth,NoDefor2030,NeutralityCountry,BAUGrowth,No,Middle,NoChange,PAExpansion,Reduced,NoChange,CurrentDollars,AR6,CurrentTrend,Organic,HighGrowth
+1064,271,18,GlobalSustainability,55,DNK,2,No,2020,SSP3,UN_medium,EATLancetAverage,MyFoodLossScen,I3,E3,BAUGrowth,HighGrowth,NoExpansion,NationalCommitment,NoGrowth,No,Middle,NoChange,PAExpansion,NoChange,OECD_AGLINK,Average,AR6,UN_medium,Mixed,NoGrowth
+1065,287,17,NationalCommitments,19,USA,2,No,2020,SSP2,UN_nochange,HealthyDietUS_USDA,Reduced,I2,E3,BAUGrowth,HighGrowth,FreeExpansion,Mid-century strategy report - Otherland,HighGrowth,No,Middle,NoChange,PAExpansion,NoChange,FASOM $20/t,Average,AR6,CurrentTrend,Mixed,NoGrowth
+1066,272,18,GlobalSustainability,8,ETH,2,No,2020,country_team,UN_low,FATDiet,Reduced,I2,E1,HighGrowth,MiddleGrowth,NoDefor2030,BonnChallenge,HighGrowth,No,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,CurrentTrend,Diversified,HighGrowth
+1067,273,18,GlobalSustainability,17,FIN,2,No,2020,SSP1,UN_high,GS_Diet,Reduced,"fruit_other: I2
+vegetable_other: I2
+Apple: I0.5
+Chicken: I0.5
+Beef: I0.5","Barley: E0.5
+Milk: E2
+Rapeseed: E0.5
+Pork: E0.5
+Oats: E0.5","Pork: BAUGrowth
+Beef: Decrease
+Milk: LowGrowth
+Chicken: LowGrowth
+Eggs: LowGrowth
+Mutton_goat: LowGrowth",GS_Cropprod,NoDefor2030,HighTarget,BAUGrowth,No,Middle,NoChange,Target_30,NoChange,National,Average,AR6,CurrentTrend,Diversified,LowGrowth
+1068,260,17,NationalCommitments,1,ARG,3,Yes,2020,SSP2,UN_medium,HealthyDiet,Current,I3,E3,HighGrowth,HighGrowth,NoDefor2030,BonnChallenge+,HighGrowth,Yes,Middle,NoChange,PAExpansion,NoChange,NoChange,Average,AR6,UN_medium,Reduce_till,LowGrowth
+1069,290,18,GlobalSustainability,18,GBR,2,No,2020,SSP2,UN_medium,6CB_High,UK_GS,I2,E3,UK_SP2,UK_GS,NoDefor,UK_GS,UK_SP1,No,Middle,NoChange,UK_GS,Halve_by_2030,OECD_AGLINK,Average,AR6,UK_SP2,Mixed,NoGrowth
+1070,288,17,NationalCommitments,2,AUS,3,Yes,2020,IGR 2023,IGR 2023,Nochange,Scenathon2020_CurrentTrends,I2,Stable,Scenathon2020_CurrentTrends,MiddleGrowth,NoExpansion,Scenathon2020_CurrentTrends,Scenathon2020_CurrentTrends,No,Middle,NoChange,PAscen_NationalCommitment2030,Scenathon2020_CurrentTrends,National,CurrentDollars,AR6,IGR 2023,Advanced_Farming,NoGrowth
+1071,275,18,GlobalSustainability,58,GRC,2,No,2020,SSP3,UN_low,EATLancetAverage,Reduced,I2,E2,HighGrowth,HighGrowth,NoExpansion,BonnChallenge,NoGrowth,No,Low,NoChange,PAExpansion,Reduced,OECD_AGLINK,CurrentDollars,AR6,NoChange,Mixed,NoGrowth
+1072,267,17,NationalCommitments,3,BRA,3,Yes,2020,SSP2,UN_medium,FatDiet,Reduced,I2,E2,HighGrowth,MiddleGrowth,NoDefor2030,BonnChallenge,HighGrowth,Yes,Middle,NoChange,PAExpansion,NoChange,Andrade_high,Average,AR6,CurrentTrend,Diversified,HighGrowth
+1073,261,18,GlobalSustainability,10,IDN,2,No,2020,SSP1,UN_medium,NoChange,Reduced,I4,E1,HighGrowth,HighGrowth,NoDefor2030,LTS_Affor,HighGrowth,No,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,CurrentDollars,AR6,NoChange,Mixed,HighGrowth
+1074,268,17,NationalCommitments,5,CAN,3,Yes,2020,SSP1,UN_high,EATLancetAverage,Reduced,I2,MyExportScen2,NoGrowth,NoGrowth,NoDefor2030,BonnChallenge,NoGrowth,Yes,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Custom,AR6,CurrentTrend,Organic,LowGrowth
+1075,276,18,GlobalSustainability,9,IND,2,No,2020,SSP1,UN_medium,EATLancetAverage,Reduced,I3,E2,HighGrowth,HighGrowth,NoDefor2030,BonnChallenge,BAUGrowth,No,Middle,NoChange,NoChange,Reduced,NoChange,CurrentDollars,AR6,UN_medium,NoChange,NoGrowth
+1076,258,17,NationalCommitments,6,CHN,3,Yes,2020,SSP2,UN_low,GlobalSustainability,GLOBIOMSust,Sustainability_GLOBIOM,Sustainability_GLOBIOM,Sustainability_GLOBIOM,Sustainability_GLOBIOM,FreeExpansion,territorial_planning,GLOBIOM,Yes,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,CurrentTrend,NoChange,Sustainability_GLOBIOM
+1077,277,18,GlobalSustainability,13,MEX,2,No,2020,SSP2,UN_constantfertility,NatHealthy_INSP,Reduced,I2,E3,Silvopastoril,HighGrowth,NoExpansion,ReforMex_SUST,Silvopastoril,No,Middle,NoChange,PAExpansionSust,Reduced,NoChange,Average,AR6,CurrentTrend,Mixed_GS,NoGrowth
+1078,269,17,NationalCommitments,7,COL,3,Yes,2020,SSP2,UN_medium,NatCurrentDiet,Reduced,I2,E2,LowGrowth,MiddleGrowth,NoDefor2030,BonnChallenge,HighGrowth,Yes,Middle,NoChange,PAExpansion,Reduced,National,Custom,AR6,UN_medium,Diversified,NoGrowth
+1079,278,18,GlobalSustainability,31,NOR,2,No,2020,SSP1,UN_low,HealthyDiet,StrongReduce,I3,E3,BAUGrowth,MiddleGrowth,NoExpansion,NoAffor,NoGrowth,No,High,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,UN_low,Mixed,LowGrowth
+1080,262,18,GlobalSustainability,56,NPL,2,No,2020,SSP1,UN_constantfertility,EATLancetAverage,Reduced,I3,E3,HighGrowth,HighGrowth,FreeExpansion,GlobalSust,HighGrowth,No,Middle,NoChange,PAExpansion30,Reduced50,NoChange,Average,AR6,SSP2,NoChange,HighGrowth
+1081,260,18,GlobalSustainability,1,ARG,3,Yes,2020,SSP2,UN_medium,HealthyDiet,Reduced,I1,E1,HighGrowth,HighGrowth,NoExpansion,BonnChallenge,HighGrowth,Yes,Middle,NoChange,PAExpansion,Reduced,NoChange,Average,AR6,NoChange,Mixed,LowGrowth
+1082,279,18,GlobalSustainability,41,R_ASP,2,No,2020,SSP2,UN_low,Sustainable,Reduced,I2,E1,HighGrowth,HighGrowth,NoDefor2030,BonnChallenge,BAUGrowth,No,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,UN_low,Mixed+,LowGrowth
+1083,288,18,GlobalSustainability,2,AUS,3,Yes,2020,IGR 2023,IGR 2023,EATLancetAverage,Scenathon2020_Sustainability,I2,Stable,Scenathon2020_Sustainability,HighGrowth,NoExpansion,Scenathon2020_Sustainability,Scenathon2020_Sustainability,No,High,NoChange,Pascen_NationalCommitment_lingrowth,Scenathon2020_Sustainability,National,CurrentDollars,AR6,IGR 2023,Advanced_Farming,NoGrowth
+1084,280,18,GlobalSustainability,43,R_CSA,2,No,2020,SSP1,UN_low,EATLancetAverage,Reduced,I2,E3,HighGrowth,HighGrowth,NoDefor2030,BonnChallenge,HighGrowth,No,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,NoChange,Mixed,NoGrowth
+1085,267,18,GlobalSustainability,3,BRA,3,Yes,2020,SSP2,UN_low,EATLancetAverage,Reduced,I2,E2,HighGrowth,HighGrowth,NoDefor2030,BonnChallenge+,HighGrowth,Yes,Middle,NoChange,PAExpansion,Reduced,Andrade_high,Average,AR6,CurrentTrend,Diversified,HighGrowth
+1086,281,18,GlobalSustainability,52,RMECAS,2,No,2020,SSP2,UN_medium,EATLancetAverage,Reduced,I2,E2,HighGrowth,HighGrowth,NoDefor2030,BonnChallenge,Optimal,No,Middle,NoChange,PAExpansion,NoChange,OECD_AGLINK,CurrentDollars,AR6,UN_medium,Mixed,LowGrowth
+1087,263,18,GlobalSustainability,44,R_NEU,2,No,2020,SSP2,UN_medium,EATLancetAverage,Reduced,I2,MyExportScen,BAUGrowth,MiddleGrowth,NoDefor2030,BonnChallenge,NoGrowth,No,Middle,NoChange,NoChange,NoChange,NoChange,Average,AR6,NoChange,NoChange,NoGrowth
+1088,282,18,GlobalSustainability,21,R_OEU,2,No,2020,SSP2,UN_medium,EATLancetAverage,MyFoodLossScen,MyImportScen,MyExportScen,BAUGrowth,MiddleGrowth,NoDefor2030,NoAffor,BAUGrowth,No,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,CurrentTrend,Mixed,NoGrowth
+1089,283,18,GlobalSustainability,40,R_SSA,2,No,2020,SSP1,UN_momentum,EATLancetAverage,Reduced,I3,MyExportScen,LowGrowth,MiddleGrowth,NoExpansion,BonnChallenge,Optimal,No,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,UN_momentum,Mixed,LowGrowth
+1090,284,18,GlobalSustainability,14,RUS,2,No,2020,SSP3,UN_medium,NoChange,Current,I3,E1,HighGrowth,HighGrowth,NoExpansion,NoAffor,NoGrowth,No,Low,NoChange,NoChange,NoChange,NoChange,CurrentDollars,AR6,NoChange,Mixed,HighGrowth
+1091,268,18,GlobalSustainability,5,CAN,3,Yes,2020,SSP1,UN_high,EATLancetAverage,MyFoodLossScen,I2,MyExportScen3,LowGrowth,HighGrowth,NoDefor2030,BonnChallenge+,NoGrowth,Yes,Middle,NoChange,PAExpansion2,MyPHLossScen,OECD_AGLINK,Custom,AR6,CurrentTrend,Organic,HighGrowth
+1092,289,18,GlobalSustainability,15,RWA,2,No,2020,SSP1,UN_medium,NatHealthyDiet,Reduced,I2,E3,HighGrowth,MiddleGrowth,FreeExpansion,BonnChallenge,BAUGrowth,No,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,CurrentDollars,AR6,UN_medium,Organic,HighGrowth
+1093,258,18,GlobalSustainability,6,CHN,3,Yes,2020,SSP2,UN_low,GlobalSustainability,GLOBIOMSust,Sustainability_GLOBIOM,Sustainability_GLOBIOM,Sustainability_GLOBIOM,Sustainability_GLOBIOM,FreeExpansion,territorial_planning,GLOBIOM,Yes,Middle,NoChange,PAExpansion,Reduced,OECD_AGLINK,Average,AR6,CurrentTrend,NoChange,Sustainability_GLOBIOM
+1094,264,18,GlobalSustainability,28,SWE,2,No,2020,SSP1,UN_medium,LowRedMeatDiet,PublicStakeFL,I3,E0,HighGrowth,SustIntens,FreeExpansion,BonnChallenge,NoGrowth,No,Middle,NoChange,PATarget50,Reduced50,OECD_AGLINK,CurrentDollars,AR6,CurrentTrend,Mixed,LowGrowth
+1095,269,18,GlobalSustainability,7,COL,3,Yes,2020,SSP2,UN_medium,EATLancetAverage,Reduced,I3,E1,HighGrowth,HighGrowth,NoDefor2030,BonnChallenge,HighGrowth,Yes,High,NoChange,PAExpansion,Reduced,National,Custom,AR6,UN_medium,Diversified,NoGrowth
+1096,286,18,GlobalSustainability,57,TUR,2,No,2020,SSP3,UN_medium,NatHealthyDiet,Reduced,I3,MyExportScen,BAUGrowth,MiddleGrowth,NoDefor2030,NeutralityCountry,BAUGrowth,No,High,NoChange,PAExpansion,Reduced,OECD_AGLINK,Custom,AR6,UN_medium,Mixed,HighGrowth
+1097,287,18,GlobalSustainability,19,USA,2,No,2020,SSP2,UN_nochange,HealthyDietUS_USDA,Reduced,I2,E3,BAUGrowth,HighGrowth,NoExpansion,Mid-century strategy report - Otherland,HighGrowth,No,Middle,NoChange,PAExpansion,Reduced,PATHWAYS_central,Average,AR6,CurrentTrend,Mixed,NoGrowth
