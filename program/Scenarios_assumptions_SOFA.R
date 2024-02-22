@@ -38,7 +38,9 @@ mapping_F6 <- read_excel(here("data",  "DataForFoodFigures.xlsx"),
 db_scenarios <- read_excel(here("data", "scenarios2023.xlsx")) %>%
   select(pathway, country, `Scenario on Afforestation`)%>% 
   rename(ALPHA3 = country,
-         Pathway = pathway)
+         Pathway = pathway) %>% 
+  mutate(Pathway = recode(Pathway, "CurrentTrends" = "CurrentTrend")) %>% 
+  unique()
 
 
 
@@ -61,21 +63,34 @@ fao_prod$Area <- as.character(fao_prod$Area)
 fao_prod[which(fao_prod$Area == "United Kingdom of Great Britain and Northern Ireland"), "Area"] <- "United Kingdom"
 
 
+
+product_dt_prova <- left_join(product, df, by= c("country", "pathway", "Year")) %>% 
+  unique()
+
+# Identify duplicate rows in product
+product_duplicates <- product[duplicated(product[c("country", "pathway", "Year")]), ]
+
+# Identify duplicate rows in df
+df_duplicates <- df[duplicated(df[c("country", "pathway", "Year")]), ]
+
+
 product_dt <- left_join(product %>% 
-                          rename(alpha3 = country_id) %>% 
-                          mutate(alpha3 = as.character(alpha3)) %>% 
+                          # rename(alpha3 = country) %>% 
+                          # mutate(alpha3 = as.character(alpha3)) %>% 
                           select(#-id, 
                                  -iteration, 
                                  -scenathon_id), 
                         df %>% 
-                          rename(alpha3 = country) %>% 
+                          # rename(alpha3 = country) %>% 
                           select(#-id, 
                                  -iteration,
                                  -scenathon_id),
-                        by = c("alpha3", "pathway", "Year")) %>% 
-  rename(ALPHA3 = alpha3) %>% 
+                        by = c("country", "pathway", "Year")) %>% 
+  rename(ALPHA3 = country) %>% 
+  mutate(pathway = recode(pathway, "CurrentTrends" = "CurrentTrend")) %>% 
   left_join(mapping_ALPHA3) %>% 
-  mutate(ALPHA3 = gsub("R_", "", ALPHA3))
+  mutate(ALPHA3 = gsub("R_", "", ALPHA3)) %>% 
+  unique()
 
 
 ##Compute kcal/kg data from FAO 2020
@@ -91,7 +106,7 @@ df <- df %>%
   rename(Pathway = pathway)
 
 product <- product %>% 
-  rename(ALPHA3 = country_id)
+  rename(ALPHA3 = country)
 
 
 #Computing Kcal content per Kg
@@ -119,17 +134,22 @@ product_dt <- left_join(product_dt, df_fao, by = c("ALPHA3" = "ALPHA3", "Product
 df_change <- df %>% 
   slice(which(Year %in% c(2020, 2050))) %>% 
   select(ALPHA3, Pathway, Year, Population, kcal_targ) %>% 
+  unique() %>% 
   pivot_wider(names_from = Year,
               values_from = c(Population, kcal_targ)) %>% 
   mutate(Population_change = round(Population_2050/Population_2020, 2)) %>% 
   mutate(kcal_targ_change = round(kcal_targ_2050/kcal_targ_2020,2)) %>% 
   select(ALPHA3, Pathway, Population_change, kcal_targ_change) %>% 
   mutate(ALPHA3 = gsub("R_", "", ALPHA3)) %>% 
+  mutate(Pathway = recode(Pathway, "CurrentTrends" = "CurrentTrend")) %>% 
   data.frame()
+
+
 
 #Computing imports and exports quantity relatve changes 2020-2050, using Kcal per Kg to aggregate all products
 product_tot <- product_dt %>% 
   slice(which(Year %in% c(2020, 2050))) %>%
+  mutate(Pathway = recode(Pathway, "CurrentTrends" = "CurrentTrend")) %>% 
   mutate(Export_quantity = Export_quantity * kcal.kg) %>% 
   mutate(Import_quantity = Import_quantity * kcal.kg) %>% 
   group_by(ALPHA3, Pathway, Year) %>%
@@ -424,7 +444,7 @@ db_full_affor <- readxl::read_excel(here("data", "extracted", "20240221_Extracte
 #Extract the afforestation target
 db_full_afforestation_agg <- db_scenarios %>% 
   unique() %>% 
-  left_join(db_full_affor %>% rename(Year = year, Afforestation = afforscen)) %>% 
+  left_join(db_full_affor %>% rename(Year = year, `Scenario on Afforestation` = afforscen)) %>% 
   mutate(Year = as.numeric(Year)) %>% 
   mutate(NewForest = as.numeric(newforest)) %>% 
   select(ALPHA3, Pathway, Year, NewForest)
@@ -433,6 +453,7 @@ db_full_afforestation_agg <- db_scenarios %>%
 db_change_afforestation <- db_full_afforestation_agg %>% 
   mutate(var_pivot = paste0("affor_", Year)) %>% 
   select(var_pivot, Pathway, ALPHA3, NewForest) %>% 
+  dplyr::filter(!is.na(NewForest)) %>% 
   pivot_wider(names_from = var_pivot,
               values_from = c(NewForest)) %>% 
   mutate(Affor = round((affor_2050-affor_2020)/1000, 2)) %>% 
@@ -561,7 +582,7 @@ data_final_FABLE <- df_change %>%
   # left_join(db_change_Expansion) %>% 
   left_join(db_change_afforestation) %>% 
   left_join(db_change_foodwaste) %>% 
-  data.frame()
+  data.frame() 
 
 
 # plot --------------------------------------------------------------------
@@ -608,7 +629,7 @@ complete_data$ALPHA3 <- factor(as.character(complete_data$ALPHA3), levels = c("A
 
 
 data_SOFA <- complete_data %>% 
-  dplyr::filter(ALPHA3 %in% c("AUS", "BRA", "COL", "ETH", "IND", 
+  dplyr::filter(ALPHA3 %in% c("AUS", "BRA", "COL", "ETH", #"IND", 
                               "UK"))
 
 p_final_SOFA <-  ggplot() + 
