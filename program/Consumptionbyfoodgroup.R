@@ -1,4 +1,4 @@
-# Libraries ---------------------------------------------------------------
+# Libraries --------------------------------------------------------------
 library(here)
 library(dplyr)
 library(readr)
@@ -11,10 +11,10 @@ conflict_prefer("filter", "dplyr")
 
 here()
 
-country="AUS"
 #Data -------------------------------------------------------------------
-scenathon<- read_csv(here("data", "trade2023.csv")) %>% 
-  filter(TradeAdjusment == "Yes") %>% 
+scenathon<- read_csv(here("data", "FullProductDatabase.csv")) %>% 
+  rename(alpha3 = country, Pathway = pathway) %>% 
+  filter(iteration == "5") %>% 
   filter(Year %in% c("2020", "2030", "2050"))%>% 
   filter (alpha3 %in% c("AUS", "BRA", "COL", "ETH", "GBR")) %>% 
   select(alpha3,Pathway, Year, Product, kcalfeasprod)
@@ -31,17 +31,13 @@ consumption <- scenathon %>%
   mutate(total_kcal = sum(kcalfeasprod)) %>% 
   ungroup() %>%
   select(-Product, -kcalfeasprod) %>%
-  filter(alpha3 == country) %>%
+  # filter(alpha3 == country) %>%
   unique
 
 #Plot ---------------------------------------------------------
 
-consumption$Pathway <- factor(consumption$Pathway, levels = c("CurrentTrend", "NationalCommitments", "GlobalSustainability"))
-# 
-# PROVA <- ggplot(consumption, aes(x=Year, y = totalkcal)) +
-#   geom_bar(stat = "identity", position = "stack") 
-# 
-# PROVA
+consumption$Pathway <- factor(consumption$Pathway, levels = c("CurrentTrends", "NationalCommitments", "GlobalSustainability"))
+
 
 product_colors <- c(
   "BEVSPICES" = "#8B0000",    
@@ -82,38 +78,97 @@ product_labels <- c(
 
   
 
-p_consumption <- ggplot(consumption,  aes(x = as.factor(Year))) +
-  geom_bar(aes(y = kcalfeasprod_productgroup, fill = PROD_GROUP), stat = "identity", position = "stack") +
-  geom_hline(yintercept = 0, linetype = "solid") +
-  labs(
-    title = "Australia: Evolution of Consumption by Food Group",
-    x = "Year",
-    y = "Consumption (kcal)",
-    fill = "Food Group"
-  ) +
-  scale_y_continuous(breaks = seq(0, max(consumption$kcalfeasprod_productgroup + 2000), 250)) +
-  facet_grid(. ~ Pathway, scales = "free_y",
-             labeller = labeller(Pathway = c(
-               "CurrentTrend" = "Current Trend",
-               "NationalCommitments" = "National Commitments Pathway",
-               "GlobalSustainability" = "Global Sustainability Pathway"
-             ))) +
-  scale_fill_manual(values = product_colors, name = "Food Group", labels = product_labels) +  
-  theme_minimal() +
-  theme(
-    text = element_text(family = "Courier New", color = "black", size = 12, face = "bold"),
-    legend.title = element_text(family = "Courier New", color = "steelblue", size = 12, face = "bold"),
-    legend.text = element_text(family = "Courier New", size = 12),
-    plot.title = element_text(color = "steelblue", size = 14, face = "bold"),
-    axis.title.x = element_text(color = "steelblue", size = 12),
-    axis.title.y = element_text(color = "steelblue", size = 12)
-  )
+# p_consumption <- ggplot(consumption,  aes(x = as.factor(Year))) +
+#   geom_bar(aes(y = kcalfeasprod_productgroup, fill = PROD_GROUP), stat = "identity", position = "stack") +
+#   geom_hline(yintercept = 0, linetype = "solid") +
+#   labs(
+#     title = "Australia: Evolution of Consumption by Food Group",
+#     x = "Year",
+#     y = "Consumption (kcal)",
+#     fill = "Food Group"
+#   ) +
+#   scale_y_continuous(breaks = seq(0, max(consumption$kcalfeasprod_productgroup + 2000), 250)) +
+#   facet_grid(. ~ Pathway, scales = "free_y",
+#              labeller = labeller(Pathway = c(
+#                "CurrentTrend" = "Current Trend",
+#                "NationalCommitments" = "National Commitments Pathway",
+#                "GlobalSustainability" = "Global Sustainability Pathway"
+#              ))) +
+#   scale_fill_manual(values = product_colors, name = "Food Group", labels = product_labels) +  
+#   theme_minimal() +
+#   theme(
+#     text = element_text(family = "Courier New", color = "black", size = 12, face = "bold"),
+#     legend.title = element_text(family = "Courier New", color = "steelblue", size = 12, face = "bold"),
+#     legend.text = element_text(family = "Courier New", size = 12),
+#     plot.title = element_text(color = "steelblue", size = 14, face = "bold"),
+#     axis.title.x = element_text(color = "steelblue", size = 12),
+#     axis.title.y = element_text(color = "steelblue", size = 12)
+#   )
+# 
+# p_consumption
+# 
+# 
+# 
+# tiff(here("output", "figures",country, paste0(gsub("-", "",Sys.Date()), "_", "consumptionfoodgroup_pathway.tiff")),
+#      units = "in", height = 5, width = 14, res = 300)
+# plot(p_consumption)
+# dev.off()
+# 
+# 
+# 
 
-p_consumption
+
+
+# List of countries
+countries <- c("AUS", "BRA", "COL", "ETH", "GBR")
+countries_labels <-c(
+  "AUS" = "Australia", 
+  "BRA" = "Brazil", 
+  "COL" = "Colombia", 
+  "ETH" = "Ethiopia", 
+  "GBR" = "United Kingdom")
 
 
 
-tiff(here("output", "figures",country, paste0(gsub("-", "",Sys.Date()), "_", "consumptionfoodgroup_pathway.tiff")),
-     units = "in", height = 5, width = 14, res = 300)
-plot(p_consumption)
-dev.off()
+# Loop through each country
+
+for (country in countries) {
+
+  country_data <- subset(consumption, alpha3 == country)
+  
+  # Create ggplot for the specific country
+  p_consumption <- ggplot(country_data, aes(x = as.factor(Year))) +
+    geom_bar(aes(y = kcalfeasprod_productgroup, fill = PROD_GROUP), stat = "identity", position = "stack") +
+    geom_hline(yintercept = 0, linetype = "solid") +
+    labs(
+      title = paste(countries_labels[country], ": Evolution of Consumption by Food Group"),
+      x = "Year",
+      y = "Consumption (kcal)",
+      fill = "Food Group"
+    ) +
+    scale_y_continuous(breaks = seq(0, max(country_data$kcalfeasprod_productgroup + 2000), 250)) +
+    facet_grid(. ~ Pathway, scales = "free_y",
+               labeller = labeller(Pathway = c(
+                 "CurrentTrends" = "Current Trend",
+                 "NationalCommitments" = "National Commitments Pathway",
+                 "GlobalSustainability" = "Global Sustainability Pathway"
+               ))) +
+    scale_fill_manual(values = product_colors, name = "Food Group", labels = product_labels) +  
+    theme_minimal() +
+    theme(
+      text = element_text(family = "Courier New", color = "black", size = 12, face = "bold"),
+      legend.title = element_text(family = "Courier New", color = "steelblue", size = 12, face = "bold"),
+      legend.text = element_text(family = "Courier New", size = 12),
+      plot.title = element_text(color = "steelblue", size = 14, face = "bold"),
+      axis.title.x = element_text(color = "steelblue", size = 12),
+      axis.title.y = element_text(color = "steelblue", size = 12)
+    )
+  
+  # Save the plot as a TIFF file
+  tiff(here("output", "figures",country, paste0(gsub("-", "",Sys.Date()), "_", "consumptionfoodgroup_pathway.tiff")),
+       units = "in", height = 5, width = 14, res = 300)
+  print(p_consumption)
+  dev.off()
+}
+
+
