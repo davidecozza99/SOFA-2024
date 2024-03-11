@@ -54,160 +54,67 @@ brazil <- brazil_data %>%
   unique()
 
 
-# brazil <- brazil %>%
-#   group_by(Year) %>% 
-#   mutate(
-#     diff_CO2_final_NC = CO2[Pathway == "NC_final"] - CO2[Pathway == "Current Trend_Yes"],
-#     diff_CH4_final_NC = CH4[Pathway == "NC_final"] - CH4[Pathway == "Current Trend_Yes"],
-#     diff_N2O_final_NC = N2O[Pathway == "NC_final"] - N2O[Pathway == "Current Trend_Yes"],
-#     diff_kcal_feas_final_NC = kcal_feas[Pathway == "NC_final"] - kcal_feas[Pathway == "Current Trend_Yes"],
-#     diff_kcal_mder_final_NC = kcal_mder[Pathway == "NC_final"] - kcal_mder[Pathway == "Current Trend_Yes"],
-#     diff_ForestChange_final_NC = ForestChange[Pathway == "NC_final"] - ForestChange[Pathway == "Current Trend_Yes"],
-#     diff_NewForestChange_final_NC = NewForestChange[Pathway == "NC_final"] - NewForestChange[Pathway == "Current Trend_Yes"],
-#     diff_CalcFarmLabourFTE_final_NC = CalcFarmLabourFTE[Pathway == "NC_final"] - CalcFarmLabourFTE[Pathway == "Current Trend_Yes"],
-#     diff_LNPPMatureForest_final_NC = LNPPMatureForest[Pathway == "NC_final"] - LNPPMatureForest[Pathway == "Current Trend_Yes"],
-#     diff_LNPPMatureOtherLand_final_NC = LNPPMatureOtherLand[Pathway == "NC_final"] - LNPPMatureOtherLand[Pathway == "Current Trend_Yes"],
-#     diff_TotalN_final_NC = TotalN[Pathway == "NC_final"] - TotalN[Pathway == "Current Trend_Yes"],
-#     diff_CalcWFblue_final_NC = CalcWFblue[Pathway == "NC_final"] - CalcWFblue[Pathway == "Current Trend_Yes"]
-#   )
-# 
-# brazil <- brazil %>%
-#   group_by(Year) %>% 
-#   mutate(
-#     diff_CO2_final_GS = CO2[Pathway == "GS_final"] - CO2[Pathway == "Current Trend_Yes"],
-#     diff_CH4_final_GS = CH4[Pathway == "GS_final"] - CH4[Pathway == "Current Trend_Yes"],
-#     diff_N2O_final_GS = N2O[Pathway == "GS_final"] - N2O[Pathway == "Current Trend_Yes"],
-#     diff_kcal_feas_final_GS = kcal_feas[Pathway == "GS_final"] - kcal_feas[Pathway == "Current Trend_Yes"],
-#     diff_kcal_mder_final_GS = kcal_mder[Pathway == "GS_final"] - kcal_mder[Pathway == "Current Trend_Yes"],
-#     diff_ForestChange_final_GS = ForestChange[Pathway == "GS_final"] - ForestChange[Pathway == "Current Trend_Yes"],
-#     diff_NewForestChange_final_GS = NewForestChange[Pathway == "GS_final"] - NewForestChange[Pathway == "Current Trend_Yes"],
-#     diff_CalcFarmLabourFTE_final_GS = CalcFarmLabourFTE[Pathway == "GS_final"] - CalcFarmLabourFTE[Pathway == "Current Trend_Yes"],
-#     diff_LNPPMatureForest_final_GS = LNPPMatureForest[Pathway == "GS_final"] - LNPPMatureForest[Pathway == "Current Trend_Yes"],
-#     diff_LNPPMatureOtherLand_final_GS = LNPPMatureOtherLand[Pathway == "GS_final"] - LNPPMatureOtherLand[Pathway == "Current Trend_Yes"],
-#     diff_TotalN_final_GS = TotalN[Pathway == "GS_final"] - TotalN[Pathway == "Current Trend_Yes"],
-#     diff_CalcWFblue_final_GS = CalcWFblue[Pathway == "GS_final"] - CalcWFblue[Pathway == "Current Trend_Yes"]
-#   ) 
-
-# 
-# 
-# brazil <- brazil %>%
-#   group_by(Year) %>%
-#   mutate(
-#     diff_CO2 = ifelse(Pathway == "NC_final",
-#                       brazil$CO2[brazil$Pathway == "Current Trend_Yes"] - brazil$CO2[brazil$Pathway == "NC_final"],
-#                       diff_CO2)
-#   )
-# 
-# 
-# brazil <- brazil %>%
-# group_by (Year) %>% 
-#   mutate(
-#     diff_CO2 = ifelse(Pathway == "NC_final",
-#                       brazil$CO2[brazil$Pathway == "Current Trend_Yes"] - brazil$CO2[brazil$Pathway == "NC_final"], 
-#                       diff_CO2),
-#     diff_CH4 = ifelse(Pathway == "NC_final",
-#                       brazil$CH4[brazil$Pathway == "Current Trend_Yes"] - brazil$CH4[brazil$Pathway == "NC_final"], 
-#                       diff_CH4),
-#     diff_N2O = ifelse(Pathway == "NC_final",
-#                       brazil$N2O[brazil$Pathway == "Current Trend_Yes"] - brazil$N2O[brazil$Pathway == "NC_final"], 
-#                       diff_N2O),
-#     diff_kcal_feas = ifelse(Pathway == "NC_final",
-#                             brazil$kcal_feas[brazil$Pathway == "Current Trend_Yes"] - brazil$kcal_feas[brazil$Pathway == "NC_final"], 
-#                             diff_kcal_feas),
-#     diff_kcal_mder = ifelse(Pathway == "NC_final",
-#                             brazil$kcal_mder[brazil$Pathway == "Current Trend_Yes"] - brazil$kcal_mder[brazil$Pathway == "NC_final"],
-#                             diff_kcal_mder),
-#     diff_ForestChange = ifelse(Pathway == "NC_final",
-#                                brazil$ForestChange[brazil$Pathway == "Current Trend_Yes"] - brazil$ForestChange[brazil$Pathway == "NC_final"], 
-#                                diff_ForestChange),
-#     diff_NewForestChange = ifelse(Pathway == "NC_final",
-#                                   brazil$NewForestChange[brazil$Pathway == "Current Trend_Yes"] - brazil$NewForestChange[brazil$Pathway == "NC_final"],
-#                                   diff_NewForestChange),
-#     diff_CalcFarmLabourFTE = ifelse(Pathway == "NC_final",
-#                                     brazil$CalcFarmLabourFTE[brazil$Pathway == "Current Trend_Yes"] - brazil$CalcFarmLabourFTE[brazil$Pathway == "NC_final"],
-#                                     diff_CalcFarmLabourFTE),
-#     diff_LNPPMatureForest = ifelse(Pathway == "NC_final",
-#                                    brazil$LNPPMatureForest[brazil$Pathway == "Current Trend_Yes"] - brazil$LNPPMatureForest[brazil$Pathway == "NC_final"], 
-#                                    diff_LNPPMatureForest),
-#     diff_LNPPMatureOtherLand = ifelse(Pathway == "NC_final",
-#                                       brazil$LNPPMatureOtherLand[brazil$Pathway == "Current Trend_Yes"] - brazil$LNPPMatureOtherLand[brazil$Pathway == "NC_final"], 
-#                                       diff_LNPPMatureOtherLand),
-#     diff_TotalN = ifelse(Pathway == "NC_final",
-#                          brazil$TotalN[brazil$Pathway == "Current Trend_Yes"] - brazil$TotalN[brazil$Pathway == "NC_final"],
-#                          diff_TotalN),
-#     diff_CalcWFblue = ifelse(Pathway == "NC_final",
-#                              brazil$CalcWFblue[brazil$Pathway == "Current Trend_Yes"] - brazil$CalcWFblue,
-#                              diff_CalcWFblue)
-#   )
-# 
-
 
 
 # write_xlsx(brazil, here("data", "Decomposition", "brazil_deco2.xlsx"))
 
+brazil$scenarios <- substring(brazil_data$Pathway, 4)
 
 
 
+
+#Labelling --------------------------
 pathway_labels <- c(
-  "NC_foodwaste" = "Food Waste",    
-  "NC_live" = "Livestock Productivity",      
-  "NC_crop" = "Crop Productivity",         
-  "NC_agrexp" = "Agricultural Expansion",   
-  "NC_affor" = "Afforestation",        
-  "NC_rumdensity" = "Ruminant Density",         
-  "NC_pa" = "Protected Areas",          
-  "NC_biofuel" = "Biofuel",      
-  "NC_irri" = "Irrigation",        
-  "NC_final" = "Final",         
-  
-  "GS_pop" = "Population",
-  "GS_diet" = "Diet",
-  "GS_foodwaste" = "Food Waste",       
-  "GS_live" = "Livestock Productivity",        
-  "GS_crop" = "Crop Productivity",
-  "GS_agrexp" = "Agricultural Expansion",   
-  "GS_affor" = "Afforestation",        
-  "GS_rumdensity" = "Ruminant Density",        
-  "GS_popactivity" = "Population Activity",
-  "GS_pa" = "Protected Areas",      
-  "GS_postharvloss" = "Post Harvest Loss",
-  "GS_biofuel" = "Biofuel",
-  "GS_irri" = "Irrigation",
-  "GS_final" = "Final"
+  "GDP" = "GDP",
+  "pop" = "Population",
+  "diet" = "Diet",
+  "import" = "Import",
+  "export" = "Export",
+  "postharvloss" = "Post Harvest Loss",
+  "foodwaste" = "Food Waste",
+  "live" = "Livestock Productivity",
+  "crop" = "Crop Productivity",
+  "popactivity" = "Population Activity",
+  "agrexp" = "Agricultural Expansion",
+  "affor" = "Afforestation",
+  "urban" = "Urbanization",
+  "rumdensity" = "Ruminant Density",
+  "pa" = "Protected Areas",
+  "biofuel" = "Biofuel",
+  "agropra" = "Agroecological Practices",
+  "irri" = "Irrigation",
+  "final" = "Final",
+  "agroforestry" = "Agroforestry",
+  "grassland" = "Intensive/ Extensive grassland share",
+  "peatland" = "Peatland",
+  "live_rumdensity" = "Livestock productivity and Ruminant Density",
+  "tradeeffect" = "NC/GS Trade Adjustment effect")
+
+pathway_colors <- c(  
+  "GDP" = "yellow",  
+  "pop" = "grey",  
+  "diet" = "#00BFFF",  
+  "import" = "#98FB98",
+  "export" = "darkorange",  
+  "postharvloss" = "red",
+  "foodwaste" = "#4250A5",    
+  "live" = "#2F4F4F",  
+  "crop" = "#985AE0",  
+  "popactivity" = "#897E0B",
+  "agrexp" = "#D2691E",   
+  "affor" = "#228B22",  
+  "urban" = "#FF00FF",    
+  "rumdensity" = "green",         
+  "pa" = "#000080",        
+  "biofuel" = "#A52A2A",  
+  "agropra" = "#FFA07A",
+  "irri" = "#FFD700",  
+  "agroforestry" = "black",  
+  "grassland" = "grey",  
+  "peatland" = "#FF4500",
+  "live_rumdensity" = "#8B008B",
+  "tradeeffect" = "pink"
 )
-
-
-
-# Define the pathway colors
-pathway_colors <- c(
-  "NC_foodwaste" = "#8B0000",    
-  "NC_live" = "#006400",      
-  "NC_crop" = "#00008B",         
-  "NC_agrexp" = "#8B4513",   
-  "NC_affor" = "#8A2BE2",        
-  "NC_rumdensity" = "#FFD700",         
-  "NC_pa" = "#8FBC8F",          
-  "NC_biofuel" = "#A52A2A",      
-  "NC_irri" = "steelblue",        
-  "NC_final" = "#DC143C",         
-  
-  "GS_pop" = "#4B0082",
-  "GS_diet" = "#F17CB0",
-  "GS_foodwaste" = "#B22222",       
-  "GS_live" = "#006400",        
-  "GS_crop" = "#00008B",
-  "GS_agrexp" = "#8B4513",   
-  "GS_affor" = "#8A2BE2",        
-  "GS_rumdensity" = "#FFD700",        
-  "GS_popactivity" = "#00CED1",  
-  "GS_pa" = "#8FBC8F",      
-  "GS_postharvloss" = "#FF4500",  
-  "GS_biofuel" = "#A52A2A",
-  "GS_irri" = "steelblue",
-  "GS_final" = "#808080"
-)
-
-
 
 
 
@@ -216,24 +123,45 @@ element_labels <- c(
   "CH4" = "Methane (CH4) Emissions", 
   "N2O" = "Nitrous Oxide (N2O) Emissions", 
   "kcal_feas" = "Feasible Kcal", 
+  "kcal_plant" = "Feasible Kcal from Plant-based products",
+  "kcal_anim" = "Feasible Kcal from Animal-based products",
   "kcal_mder" = "MDER Kcal", 
   "ForestChange" = "Forest Change", 
-  "NewForestChange" = "New Forest Change", 
+  "Cropland_change" = "Cropland Change", 
+  "Pasture_change" = "Pasture Change", 
+  "OtherLand_change" = "Other Land Change", 
   "CalcFarmLabourFTE" = "Farm Labour FTE",
   "LNPPMatureForest" = "LNPP Mature Forest", 
   "LNPPMatureOtherLand" = "LNPP Mature Other Land", 
   "TotalN" = "Total Nitrogen", 
-  "CalcWFblue" = "Water Footprint"
+  "CalcWFblue" = "Water Irrigation Requirements"
 )
 
-
+units_labels <- c(
+  "CO2" = "(Mt CO2e per year)", 
+  "CH4" = "(Mt CO2e per year)", 
+  "N2O" = "(Mt CO2e per year)", 
+  "kcal_feas" = "(kcal per capita per day)", 
+  "kcal_plant" = "(kcal per capita per day)", 
+  "kcal_anim" = "(kcal per capita per day)",
+  "kcal_mder" = "(kcal per capita per day)", 
+  "ForestChange" = "(1000 ha per 5 year)", 
+  "Cropland_change" = "(1000 ha per 5 year)", 
+  "Pasture_change" = "(1000 ha per 5 year)", 
+  "OtherLand_change" = "(1000 ha per 5 year)", 
+  "CalcFarmLabourFTE" = "(1000 FTE workers)",
+  "LNPPMatureForest" = "(1000 ha)", 
+  "LNPPMatureOtherLand" = "(1000 ha)", 
+  "TotalN" = "(1000 tonnes)", 
+  "CalcWFblue" = "(1000 tonnes)"
+)
 
 # List of elements for decomposition analysis
 elements <- c("CH4"
-              # ,"CO2", "N2O", "kcal_feas", 
-              # "kcal_mder", "ForestChange", "NewForestChange", 
-              # "CalcFarmLabourFTE", "LNPPMatureForest", "LNPPMatureOtherLand", 
-              # "TotalN", "CalcWFblue"
+              ,"CO2", "N2O", "kcal_feas",
+              "kcal_mder", "ForestChange",
+              "CalcFarmLabourFTE", "LNPPMatureForest", "LNPPMatureOtherLand",
+              "TotalN", "CalcWFblue"
               )
 
 
@@ -242,10 +170,13 @@ elements <- c("CH4"
 brazil$Pathway_code <- factor(brazil$Pathway_code, levels = c("NC", "GS"))
 brazil <- brazil[complete.cases(brazil$Pathway_code), ]
 
-brazil <- brazil %>%  
-  mutate(Pathway = ifelse(Pathway == "NC_final", "Final_NC", Pathway)) %>% 
-  mutate(Pathway = ifelse(Pathway == "GS_final", "Final_GS", Pathway)) 
+# brazil <- brazil %>%  
+#   mutate(Pathway = ifelse(Pathway == "NC_final", "Final_NC", Pathway)) %>% 
+#   mutate(Pathway = ifelse(Pathway == "GS_final", "Final_GS", Pathway)) 
 
+# folder to store the plots
+figure_directory <- here("output", "decomposition", "BRA_othermethod", paste0(gsub("-", "", Sys.Date())))
+dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 
 
 # Loop through each element
@@ -257,34 +188,48 @@ for (element in elements) {
   # Create the plot
   current_plot <- brazil %>%
     group_by(Pathway_code) %>%
-    # filter(Pathway != "NC_final", Pathway != "GS_final") %>%
-    ggplot(aes(x = Year, y = !!sym(paste0("diff_", element)), fill = Pathway)) +
+    ggplot(aes(x = Year, y = !!sym(paste0("diff_", element)))) +
     geom_hline(yintercept = 0, linetype = "solid") +
-    geom_bar(stat = "identity") +
-    # geom_point(aes(y = ifelse(Pathway_code == "NC", !!sym(paste0("diff_", element, "_final_NC")), !!sym(paste0("diff_", element, "_final_GS"))),
-    #                shape = ifelse(Pathway_code == "NC", "NC_final", "GS_final")), size = 3) +
-    # 
+    geom_bar(stat = "identity", data = filter(brazil, !str_detect(Pathway, "complete")),
+             aes(fill = scenarios)) +
+    guides(fill = guide_legend(override.aes = list(shape = NA))) +
+    geom_point(data = filter(brazil, Pathway %in% c("NC_complete", "GS_complete")),
+               aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
+               size = 3, shape = 16) + 
+    # geom_point(data = filter(brazil, Pathway %in% c("NC_tradeeffect", "GS_tradeeffect")),
+    #            aes(y = !!sym(paste0("diff_", element)), x = Year, color = "NC/GS Trade adjustment effect on CT"),
+    #            size = 3, shape = 16, alpha =0.7) + 
+    scale_color_manual(values = c("black"), name = "",
+                       labels = c("All scenarios combined")) +
     labs(
-      title = paste("Decomposition analysis:", element_labels[element]),
+      title = paste("Decomposition analysis:\n",element_labels[element]),
       x = "Year",
-      y = paste("Absolute difference compared to Current Trend")
+      y = paste("Compared to Current Trend \n", units_labels[element])
     ) +
     facet_grid(. ~ Pathway_code, scales = "free_y",
                labeller = labeller(Pathway_code = c(
-                 "NC" = "National Commitments Pathway",
-                 "GS" = "Global Sustainability Pathway"
+                 "NC" = "National Commitments",
+                 "GS" = "Global Sustainability"
                ))) +
-    scale_fill_manual(values = pathway_colors, name = "Scenarios", labels = pathway_labels) +
+    scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "Scenarios", labels = pathway_labels[pathway_labels != "complete"]) +
     scale_x_continuous(breaks = unique(brazil$Year[!is.na(brazil[, paste0("diff_", element)])])) +
     theme_minimal() +
     theme(
-      text = element_text(family = "Courier New", color = "black", size = 12, face = "bold"),
-      legend.title = element_text(family = "Courier New", color = "steelblue", size = 12, face = "bold"),
-      legend.text = element_text(family = "Courier New", size = 12),
-      plot.title = element_text(color = "steelblue", size = 14, face = "bold"),
-      axis.title.x = element_text(color = "steelblue", size = 12),
-      axis.title.y = element_text(color = "steelblue", size = 12)
+      text = element_text(family = "Arial", color = "black", size = 18, face = "bold"),
+      legend.title = element_text(family = "Arial", color = "steelblue", size = 16, face = "bold"),
+      legend.text = element_text(family = "Arial", size = 18),
+      plot.title = element_text(color = "steelblue", size = 20, face = "bold"),
+      axis.title.x = element_text(color = "steelblue", size = 18),
+      axis.title.y = element_text(color = "steelblue", size = 18)
     )
+  # Save the current plot as TIFF
+  tiff(
+    filename = here(figure_directory, paste0(element, ".tiff")),
+    units = "in", height = 5, width = 14, res = 600
+  )
+  print(current_plot)
+  dev.off()
+  
   
   # Append the current plot to the list
   plots_list[[element]] <- current_plot
@@ -337,15 +282,8 @@ brazil_inverse <- brazil_data_inverse %>%
     diff_CalcWFblue = ifelse(Pathway %in% c("NC_final", "GS_final"), NA, CalcWFblue - lag(CalcWFblue))
   )
 
-# 
-# brazil <- brazil %>%
-#   group_by(Year) %>% 
-#   mutate(
-#     diff_CO2 = ifelse(Pathway == "NC_final"),
-#                   brazil$CO2[brazil$Pathway == "Current Trend_Yes"] - brazil$CO2[brazil$Pathway == "NC_final"],
-#                       diff_CO2)
-#   )
 
+brazil_inverse$scenarios <- substring(brazil_data_inverse$Pathway, 4)
 
 
 
@@ -358,6 +296,9 @@ brazil_inverse <- brazil_inverse %>%
   mutate(Pathway = ifelse(Pathway == "NC_final", "Final_NC", Pathway)) %>% 
   mutate(Pathway = ifelse(Pathway == "GS_final", "Final_GS", Pathway)) 
 
+# folder to store the plots
+figure_directory <- here("output", "decomposition", "BRA_othermethod_inverse", paste0(gsub("-", "", Sys.Date())))
+dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 
 
 # Loop through each element
@@ -370,35 +311,47 @@ for (element in elements) {
   # Create the plot
   current_plot_inverse <- brazil_inverse %>%
     group_by(Pathway_code) %>%
-    # filter(Pathway != "NC_final", Pathway != "GS_final") %>%
-    ggplot(aes(x = Year, y = !!sym(paste0("diff_", element)), fill = Pathway)) +
+    ggplot(aes(x = Year, y = !!sym(paste0("diff_", element)))) +
     geom_hline(yintercept = 0, linetype = "solid") +
-    geom_bar(stat = "identity") +
-    # geom_point(data = filter(brazil, Pathway %in% c("Final_NC", "Final_GS")),
-    #            aes(x = Year, y = !!sym(paste0("diff_", element))),
-    #            color = "red", size = 3, shape = 16) + 
+    geom_bar(stat = "identity", data = filter(brazil_inverse, !str_detect(Pathway, "complete")),
+             aes(fill = scenarios)) +
+    guides(fill = guide_legend(override.aes = list(shape = NA))) +
+    geom_point(data = filter(brazil_inverse, Pathway %in% c("NC_complete", "GS_complete")),
+               aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
+               size = 3, shape = 16) + 
+    # geom_point(data = filter(brazil_inverse, Pathway %in% c("NC_tradeeffect", "GS_tradeeffect")),
+    #            aes(y = !!sym(paste0("diff_", element)), x = Year, color = "NC/GS Trade adjustment effect on CT"),
+    #            size = 3, shape = 16, alpha =0.7) + 
+    scale_color_manual(values = c("black"), name = "",
+                       labels = c("All scenarios combined")) +
     labs(
-      title = paste("INVERSE Decomposition analysis:", element_labels[element]),
+      title = paste("Decomposition analysis:\n",element_labels[element]),
       x = "Year",
-      y = paste("Absolute difference compared to Current Trend")
+      y = paste("Compared to Current Trend \n", units_labels[element])
     ) +
     facet_grid(. ~ Pathway_code, scales = "free_y",
                labeller = labeller(Pathway_code = c(
-                 "NC" = "National Commitments Pathway",
-                 "GS" = "Global Sustainability Pathway"
+                 "NC" = "National Commitments",
+                 "GS" = "Global Sustainability"
                ))) +
-    scale_fill_manual(values = pathway_colors, name = "Scenarios", labels = pathway_labels) +
-    scale_x_continuous(breaks = unique(brazil$Year[!is.na(brazil[, paste0("diff_", element)])])) +
+    scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "Scenarios", labels = pathway_labels[pathway_labels != "complete"]) +
+    scale_x_continuous(breaks = unique(brazil_inverse$Year[!is.na(brazil_inverse[, paste0("diff_", element)])])) +
     theme_minimal() +
     theme(
-      text = element_text(family = "Courier New", color = "black", size = 12, face = "bold"),
-      legend.title = element_text(family = "Courier New", color = "steelblue", size = 12, face = "bold"),
-      legend.text = element_text(family = "Courier New", size = 12),
-      plot.title = element_text(color = "steelblue", size = 14, face = "bold"),
-      axis.title.x = element_text(color = "steelblue", size = 12),
-      axis.title.y = element_text(color = "steelblue", size = 12)
+      text = element_text(family = "Arial", color = "black", size = 18, face = "bold"),
+      legend.title = element_text(family = "Arial", color = "steelblue", size = 16, face = "bold"),
+      legend.text = element_text(family = "Arial", size = 18),
+      plot.title = element_text(color = "steelblue", size = 20, face = "bold"),
+      axis.title.x = element_text(color = "steelblue", size = 18),
+      axis.title.y = element_text(color = "steelblue", size = 18)
     )
-  
+  # Save the current plot as TIFF
+  tiff(
+    filename = here(figure_directory, paste0(element, ".tiff")),
+    units = "in", height = 5, width = 14, res = 600
+  )
+  print(current_plot_inverse)
+  dev.off()
   # Append the current plot to the list
   plots_list_inverse[[element]] <- current_plot_inverse
 }

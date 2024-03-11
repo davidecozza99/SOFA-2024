@@ -13,8 +13,9 @@ here()
 
 
 #Data ---------------------------------------------------------------
-kcal<- read_csv(here("data", "extracted_indicator2023.csv")) %>% 
-  filter(TradeAdjusment == "Yes") %>% 
+kcal<- read_csv(here("data", "FullDataBase.csv")) %>% 
+  rename(alpha3 = country, Year = year) %>% 
+  mutate(pathway = recode(pathway, "NationalCommitment" = "NationalCommitments")) %>% 
   filter(Year %in% c("2020", "2030", "2050"))%>% 
   filter (alpha3 %in% c("AUS", "BRA", "COL", "ETH", "GBR")) %>% 
   select(alpha3,pathway, Year, kcal_feas, kcal_mder)
@@ -22,7 +23,7 @@ kcal<- read_csv(here("data", "extracted_indicator2023.csv")) %>%
 
 
 # Plot Pathway  ----------------------------------------------------------------
-kcal$pathway <- factor(kcal$pathway, levels = c("CurrentTrend", "NationalCommitments", "GlobalSustainability"))
+kcal$pathway <- factor(kcal$pathway, levels = c("CurrentTrends", "NationalCommitments", "GlobalSustainability"))
 countries <- c("AUS", "BRA", "COL", "ETH", "GBR")
 countries_labels <-c(
   "AUS" = "Australia", 
@@ -49,7 +50,7 @@ for (country in countries) {
     ) +
     scale_y_continuous(breaks = seq(0, max(country_data$kcal_feas + 250), 200)) +
     facet_grid(. ~ pathway, scales = "free_y",
-               labeller = labeller(pathway = c("CurrentTrend" = "Current Trend",
+               labeller = labeller(pathway = c("CurrentTrends" = "Current Trend",
                                                "NationalCommitments" = "National Commitments Pathway",
                                                "GlobalSustainability" = "Global Sustainability Pathway"))) +
     theme_minimal() +

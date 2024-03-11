@@ -12,18 +12,13 @@ conflict_prefer("filter", "dplyr")
 here()
 
 #Data ---------------------------------------------------------------
-FTE<- read_csv(here("data", "extracted_indicator2023.csv")) %>% 
-  filter(TradeAdjusment == "Yes") %>% 
+FTE<- read_csv(here("data", "FullDataBase.csv")) %>% 
+  rename(alpha3 = country, , Year = year, CalcFarmLabourFTE = calcfarmlabourfte) %>% 
+  mutate(pathway = recode(pathway, "NationalCommitment" = "NationalCommitments")) %>% 
+  filter(iteration == "5") %>% 
   filter(Year %in% c("2020", "2030", "2050"))%>% 
   filter (alpha3 %in% c("AUS", "BRA", "COL", "ETH", "GBR")) %>% 
   select(alpha3, Year, pathway, CalcFarmLabourFTE)
-
-
-#Pathway selection ---------------------------------------------------------------
-# 
-# FTE <- scenathon %>% 
-#   filter(alpha3 == country)
-# 
 
 
 
@@ -60,6 +55,8 @@ FTE<- read_csv(here("data", "extracted_indicator2023.csv")) %>%
 
 
 #Plot Pathway ---------------------------------------------------------------
+FTE$pathway <- factor(FTE$pathway, levels = c("CurrentTrends", "NationalCommitments", "GlobalSustainability"))
+
 countries <- c("AUS", "BRA", "COL", "ETH", "GBR")
 countries_labels <-c(
   "AUS" = "Australia", 
@@ -68,7 +65,6 @@ countries_labels <-c(
   "ETH" = "Ethiopia", 
   "GBR" = "United Kingdom")
 
-FTE$pathway <- factor(FTE$pathway, levels = c("CurrentTrends", "NationalCommitments", "GlobalSustainability"))
 
 
 for (country in countries) {
@@ -87,12 +83,12 @@ for (country in countries) {
       y = "Farm Labour FTE",
       fill = ""
     ) +
-    scale_y_continuous(breaks = seq(floor(-max(abs(country_data$CalcFarmLabourFTE))/5)*5,
-                                    ceiling(max(abs(country_data$CalcFarmLabourFTE))/5)*5,
-                                    5),
-                       labels = scales::comma_format()) + 
+    # scale_y_continuous(breaks = seq(floor(-max(abs(country_data$CalcFarmLabourFTE))/5)*5,
+    #                                 ceiling(max(abs(country_data$CalcFarmLabourFTE))/5)*5,
+    #                                 5),
+                       # labels = scales::comma_format()) +
     facet_grid(. ~ pathway, scales = "free_y",
-               labeller = labeller(pathway = c("CurrentTrend" = "Current Trend",
+               labeller = labeller(pathway = c("CurrentTrends" = "Current Trend",
                                                "NationalCommitments" = "National Commitments Pathway",
                                                "GlobalSustainability" = "Global Sustainability Pathway"))) +
     theme_minimal() +

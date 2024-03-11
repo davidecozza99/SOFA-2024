@@ -13,7 +13,8 @@ here()
 
 #Data -------------------------------------------------------------------
 scenathon<- read_csv(here("data", "FullProductDatabase.csv")) %>% 
-  rename(alpha3 = country, Pathway = pathway) %>% 
+  rename(alpha3 = country, Pathway = pathway, Year = year, Product = product ) %>% 
+  mutate(Pathway = recode(Pathway, "NationalCommitment" = "NationalCommitments")) %>% 
   filter(iteration == "5") %>% 
   filter(Year %in% c("2020", "2030", "2050"))%>% 
   filter (alpha3 %in% c("AUS", "BRA", "COL", "ETH", "GBR")) %>% 
@@ -77,46 +78,6 @@ product_labels <- c(
 )
 
   
-
-# p_consumption <- ggplot(consumption,  aes(x = as.factor(Year))) +
-#   geom_bar(aes(y = kcalfeasprod_productgroup, fill = PROD_GROUP), stat = "identity", position = "stack") +
-#   geom_hline(yintercept = 0, linetype = "solid") +
-#   labs(
-#     title = "Australia: Evolution of Consumption by Food Group",
-#     x = "Year",
-#     y = "Consumption (kcal)",
-#     fill = "Food Group"
-#   ) +
-#   scale_y_continuous(breaks = seq(0, max(consumption$kcalfeasprod_productgroup + 2000), 250)) +
-#   facet_grid(. ~ Pathway, scales = "free_y",
-#              labeller = labeller(Pathway = c(
-#                "CurrentTrend" = "Current Trend",
-#                "NationalCommitments" = "National Commitments Pathway",
-#                "GlobalSustainability" = "Global Sustainability Pathway"
-#              ))) +
-#   scale_fill_manual(values = product_colors, name = "Food Group", labels = product_labels) +  
-#   theme_minimal() +
-#   theme(
-#     text = element_text(family = "Courier New", color = "black", size = 12, face = "bold"),
-#     legend.title = element_text(family = "Courier New", color = "steelblue", size = 12, face = "bold"),
-#     legend.text = element_text(family = "Courier New", size = 12),
-#     plot.title = element_text(color = "steelblue", size = 14, face = "bold"),
-#     axis.title.x = element_text(color = "steelblue", size = 12),
-#     axis.title.y = element_text(color = "steelblue", size = 12)
-#   )
-# 
-# p_consumption
-# 
-# 
-# 
-# tiff(here("output", "figures",country, paste0(gsub("-", "",Sys.Date()), "_", "consumptionfoodgroup_pathway.tiff")),
-#      units = "in", height = 5, width = 14, res = 300)
-# plot(p_consumption)
-# dev.off()
-# 
-# 
-# 
-
 
 
 # List of countries
