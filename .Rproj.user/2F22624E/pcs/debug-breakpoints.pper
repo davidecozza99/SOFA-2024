@@ -122,21 +122,6 @@
                 "package_name": ""
             },
             {
-                "id": 19,
-                "path": "C:/Users/Davide/SDSN Dropbox/Davide Cozza/SDSN Internship/GitHub/SOFA 2024/program/Consumptionbyfoodgroup.R",
-                "line_number": 96,
-                "function_steps": "",
-                "function_name": "toplevel",
-                "state": 1,
-                "editor_state": 1,
-                "editor_line_number": 96,
-                "is_pending_debug_completion": false,
-                "needs_updated_steps": true,
-                "type": 1,
-                "is_package_breakpoint": false,
-                "package_name": ""
-            },
-            {
                 "id": 22,
                 "path": "C:/Users/Davide/SDSN Dropbox/Davide Cozza/SDSN Internship/GitHub/SOFA 2024/program/Deforestation_afforestation.R",
                 "line_number": 41,
