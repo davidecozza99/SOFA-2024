@@ -13,7 +13,7 @@ here()
 
 
 #Data ---------------------------------------------------------------
-kcal<- read_csv(here("data", "FullDataBase.csv")) %>% 
+kcal<- read_csv(here("data", "20240319_extracted_indicator.csv")) %>% 
   rename(alpha3 = country, Year = year) %>% 
   mutate(pathway = recode(pathway, "NationalCommitment" = "NationalCommitments")) %>% 
   filter(Year %in% c("2020", "2030", "2050"))%>% 
@@ -46,7 +46,7 @@ for (country in countries) {
     labs(
       title = paste(countries_labels[country], ": Kcal Consumption compared to MDER"),
       x = "Year",
-      y = "Kcal"
+      y = "Kcal/cap/day"
     ) +
     scale_y_continuous(breaks = seq(0, max(country_data$kcal_feas + 250), 200)) +
     facet_grid(. ~ pathway, scales = "free_y",
@@ -73,4 +73,4 @@ for (country in countries) {
   print(p_pathway)
   dev.off()
 }
-
+p_pathway

@@ -59,12 +59,6 @@ fao_prod[which(fao_prod$Area == "United Kingdom of Great Britain and Northern Ir
 
 
 
-# # Identify duplicate rows in product
-# product_duplicates <- product[duplicated(product[c("country", "pathway", "Year")]), ]
-# 
-# # Identify duplicate rows in df
-# df_duplicates <- df[duplicated(df[c("country", "pathway", "Year")]), ]
-# 
 
 product_dt <- left_join(product %>% 
                           # rename(alpha3 = country) %>% 
@@ -119,9 +113,6 @@ df_fao <- (df_fao %>%
 
 product_df <- left_join(product_dt, df_fao, by = c("ALPHA3" = "ALPHA3", "product" = "FPRODUCT")) %>%
   rename(Pathway = pathway)
-
-
-
 
 
 #####################  
@@ -580,7 +571,7 @@ db_change_foodwaste <- db_change_foodwaste %>%
 
 
 
-# Protected Areas -----------------------------------------------------------   ##### NEED TO CHANGE NAME FROM PAareaTarget TO PAareatarget for Colombia #######
+# Protected Areas -----------------------------------------------------------  ##### NEED TO CHANGE NAME FROM PAareaTarget TO PAareatarget for Colombia #######
 #Extracting data from the Calculators - only run when needed
 db_pa <- data.frame()
 
@@ -602,8 +593,7 @@ db_pa <- data.frame()
     colnames(data) <- data[1,]
     data <- data[-1,]
     data <- data.frame(data[rowSums(is.na(data)) != ncol(data), ])
-    PAareaTarget
-    
+
   data <- data %>%
     slice(which(Year %in% c(2020, 2050))) %>%
     select(LCAgg, Year, PAareatarget) %>%
@@ -653,6 +643,111 @@ db_change_pa <- db_pa %>%
   mutate(pa = round((as.numeric(Total_PA[Year == "2050"]) - as.numeric(Total_PA[Year == "2020"])) / as.numeric(Total_PA[Year == "2020"]), digits = 2)) %>% 
   select(-Year, -Total_PA) %>% 
   unique()
+
+
+
+#Post-harvest losses --------------------------------------
+
+################ Computing aggregated product production by crop/livestock for Post-harvest losses ###########
+mapping_crop_live<- read_excel(here("data", "mapping_product_group.xlsx"), 
+                               sheet = "Sheet2") %>% 
+  rename(product = PRODUCT)
+
+product_by_type <- product %>% 
+  inner_join (mapping_crop_live, by ="product") %>% 
+  filter(Lprod_group %in% c("crop", "livestock")) %>% 
+  group_by(year, pathway, ALPHA3, Lprod_group) %>% 
+  mutate(production = sum(prodq_feas)) %>% 
+  filter(year %in% c(2020, 2050)) %>% 
+  select (-product) %>% 
+  select(-import_quantity:-PROD_GROUP, -scenathon_id, -pathway_id, -submission_id, -iteration, -tradeadjusment, -country_id ) %>%
+  unique() %>% 
+  mutate(year = as.character(year)) %>% 
+  mutate(pathway = recode(pathway, "CurrentTrends" = "CurrentTrend")) %>% 
+  mutate(pathway = recode(pathway, "NationalCommitment" = "NationalCommitments")) 
+
+  
+  
+
+
+#Extracting data from the Calculators - only run when needed
+# db_ph_loss <- data.frame()
+# 
+# 
+# for (cur_file in file_SOFA){
+#   data <- read_excel(here("data", "TradeAdjustedCalcs", cur_file),
+#                      sheet = "SCENARIOS definition",
+#                      range = "FA1:OK100")
+#   index <- which(data == "TABLE: PHLossTarget_def", arr.ind = TRUE)
+#   
+#   if (plyr::empty(index)) {
+#     index <- which(data == "Table: PHLossTarget_def", arr.ind = TRUE)
+#   }
+#   
+#   
+#   if(!plyr::empty(index)){
+#     data <- data[c(index[1,1]:nrow(data))+ +ifelse(grepl("ETH", cur_file), 8, 9),
+#                  c(index[1,2]:(index[1,2]+6))]
+#     colnames(data) <- data[1,]
+#     data <- data[-1,]
+#     data <- data.frame(data[rowSums(is.na(data)) != ncol(data), ])
+#   
+#     
+#     data <- data %>%
+#       slice(which(Year %in% c(2020, 2050))) %>%
+#       select(Sector, Year, Target2050) %>%
+#       # mutate(ALPHA3 = str_sub(cur_file, 15, 17)) %>%
+#       mutate(ALPHA3 = ifelse(grepl("AUS", cur_file),
+#                              "AUS", 
+#                              ifelse(grepl("BRA", cur_file),
+#                                     "BRA",
+#                                     ifelse(grepl("COL",cur_file),
+#                                            "COL",
+#                                            ifelse(grepl("ETH", cur_file),
+#                                                   "ETH",
+#                                                   ifelse(grepl("GBR", cur_file),
+#                                                          "GBR",
+#                                                          "IND")))))) %>% 
+#       mutate(Pathway = ifelse(grepl("Current", cur_file),
+#                               "CurrentTrend",
+#                               ifelse(grepl("National", cur_file),
+#                                      "NationalCommitments",
+#                                      "GlobalSustainability"))) %>%
+#       unique()
+#     
+#   }
+#   db_ph_loss <- db_ph_loss %>%
+#     rbind.data.frame(data)%>%
+#     mutate(ALPHA3 = gsub("_", "", ALPHA3))
+#   
+# }
+
+
+# write.xlsx(db_ph_loss %>% data.frame(), file = here("data", "extracted", paste0(gsub("-", "",Sys.Date()), "_ExtractedPh_loss.xlsx")), row.names = F)
+
+
+
+#Reading extracted data
+db_ph_loss <- readxl::read_excel(here("data", "extracted", "20240312_ExtractedPh_loss.xlsx")) %>% 
+  rename(Lprod_group = Sector, year = Year, pathway=Pathway) %>% 
+  mutate(year = as.character(year)) %>% 
+  mutate(Lprod_group = recode(Lprod_group, "Crops" = "crop")) %>% 
+  mutate(Lprod_group = recode(Lprod_group, "Livestock" = "livestock"))  
+  
+
+
+db_ph_loss_change <- db_ph_loss %>% 
+  left_join(product_by_type, by = c("Lprod_group", "ALPHA3", "year", "pathway")) %>% 
+  group_by(ALPHA3, pathway) %>% 
+  mutate(postharv_loss= round((as.numeric(Total_PA[Year == "2050"]) - as.numeric(Total_PA[Year == "2020"])) / as.numeric(Total_PA[Year == "2020"]), digits = 2)) %>% 
+  select(-Year, -Total_PA) %>% 
+  unique()
+
+
+
+
+
+
 
 
 

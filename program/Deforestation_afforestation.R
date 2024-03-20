@@ -11,8 +11,8 @@ conflict_prefer("filter", "dplyr")
 here()
 
 #Data ---------------------------------------------------------------
-deforestation<- read_csv(here("data", "FullDataBase.csv")) %>%
-  rename(alpha3 = country, , Year = year,  ForestChange=forestchange, NewForestChange = newforestchange ) %>% 
+deforestation<- read_csv(here("data", "20240319_extracted_indicator.csv")) %>%
+  rename(alpha3 = country, , Year = year,  ForestChange=forestchange, NewForestChange = newforestchange) %>% 
   mutate(pathway = recode(pathway, "NationalCommitment" = "NationalCommitments")) %>% 
   filter(iteration == "5") %>% 
   filter(Year %in% c("2020", "2030", "2050"))%>% 

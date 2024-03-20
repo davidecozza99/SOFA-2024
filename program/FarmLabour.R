@@ -12,45 +12,13 @@ conflict_prefer("filter", "dplyr")
 here()
 
 #Data ---------------------------------------------------------------
-FTE<- read_csv(here("data", "FullDataBase.csv")) %>% 
+FTE<- read_csv(here("data", "20240319_extracted_indicator.csv")) %>% 
   rename(alpha3 = country, , Year = year, CalcFarmLabourFTE = calcfarmlabourfte) %>% 
   mutate(pathway = recode(pathway, "NationalCommitment" = "NationalCommitments")) %>% 
   filter(iteration == "5") %>% 
   filter(Year %in% c("2020", "2030", "2050"))%>% 
   filter (alpha3 %in% c("AUS", "BRA", "COL", "ETH", "GBR")) %>% 
   select(alpha3, Year, pathway, CalcFarmLabourFTE)
-
-
-
-#Plot Pathway ---------------------------------------------------------------
-
-
-# p_pathway <- ggplot(FTE, aes(x = as.factor(Year))) +
-#   geom_bar(aes(y = CalcFarmLabourFTE, fill = "Total FTE's"), stat = "identity", position = "dodge") +
-#   geom_hline(yintercept = 0, linetype = "solid") +
-#   scale_fill_manual(values = c("Total FTE's" = "forestgreen"),
-#                     name = "") +
-#   labs(title = "UK: Farm Labour FTE",
-#        x = "Year") +
-#   scale_y_continuous(breaks = seq(floor(-max(abs(FTE$CalcFarmLabourFTE))/5)*5,
-#                                   ceiling(max(abs(FTE$CalcFarmLabourFTE))/5)*5,
-#                                   5),
-#                      labels = scales::comma_format()) + 
-#   facet_grid(. ~ pathway, scales = "free_y",
-#              labeller = labeller(pathway = c("CurrentTrend" = "Current Trend",
-#                                              "NationalCommitments" = "National Commitments Pathway",
-#                                              "GlobalSustainability" = "Global Sustainability Pathway"))) +
-#   
-#   theme_minimal() +
-#   theme(text = element_text(family = "Courier New", color = "black", size = 12, face = "bold"),
-#         legend.title = element_text(family = "Courier New", color = "steelblue", size = 12, face = "bold"),  
-#         legend.text = element_text(family = "Courier New", size = 12),
-#         plot.title = element_text(color = "steelblue", size = 14, face = "bold"),
-#         axis.title.x = element_text(color = "steelblue", size = 12),
-#         axis.title.y = element_blank())  # Remove y-axis title
-# 
-# print(p_pathway)
-
 
 
 
@@ -80,13 +48,8 @@ for (country in countries) {
     labs(
       title = paste(countries_labels[country], ": Farm Labour FTE"),
       x = "Year",
-      y = "Farm Labour FTE",
-      fill = ""
+      y = "1000 FTE workers"
     ) +
-    # scale_y_continuous(breaks = seq(floor(-max(abs(country_data$CalcFarmLabourFTE))/5)*5,
-    #                                 ceiling(max(abs(country_data$CalcFarmLabourFTE))/5)*5,
-    #                                 5),
-                       # labels = scales::comma_format()) +
     facet_grid(. ~ pathway, scales = "free_y",
                labeller = labeller(pathway = c("CurrentTrends" = "Current Trend",
                                                "NationalCommitments" = "National Commitments Pathway",
@@ -98,7 +61,8 @@ for (country in countries) {
       legend.text = element_text(family = "Courier New", size = 12),
       plot.title = element_text(color = "steelblue", size = 14, face = "bold"),
       axis.title.x = element_text(color = "steelblue", size = 12),
-      axis.title.y = element_blank()  # Remove y-axis title
+      axis.title.y = element_text(color = "steelblue", size = 12),
+      
     )
   
   # Save the plot as a TIFF file
@@ -107,3 +71,5 @@ for (country in countries) {
   print(p_pathway)
   dev.off()
 }
+
+p_pathway

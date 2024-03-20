@@ -12,7 +12,7 @@ conflict_prefer("filter", "dplyr")
 here()
 
 #Data ---------------------------------------------------------------
-water<- read_csv(here("data", "FullDataBase.csv")) %>% 
+water<- read_csv(here("data", "20240319_extracted_indicator.csv")) %>% 
   rename(alpha3 = country, Year = year) %>% 
   filter(iteration == "5") %>%
   mutate(pathway = recode(pathway, "NationalCommitment" = "NationalCommitments")) %>% 
@@ -37,15 +37,15 @@ for (country in countries) {
   
   # Create ggplot for the specific country
   p_pathway <- ggplot(country_data, aes(x = Year)) +
-    geom_line(aes(y = calcwfblue, color = "Water Use"), size = 1.0) +
+    geom_line(aes(y = calcwfblue, color = "Water Use for Irrigation"), size = 1.5) +
     geom_hline(yintercept = 0, linetype = "solid") +
     ggtitle(paste(country, ": Water Use for Irrigation")) +
-    scale_color_manual(values = c("Water Use" = "#8da0cb"),
+    scale_color_manual(values = c("Water Use for Irrigation" = "#8da0cb"),
                        name = "") +  
     labs(
       title = paste(countries_labels[country], ": Water Use for Irrigation"),
       x = "Year",
-      y = "million cubic metres"
+      y = "Million cubic metres"
     ) +
     scale_x_continuous(breaks = c(2020, 2030, 2040, 2050)) +
     # scale_y_continuous(breaks = seq(0, max(country_data$calcwfblue), 100)) +

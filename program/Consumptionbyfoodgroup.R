@@ -12,8 +12,8 @@ conflict_prefer("filter", "dplyr")
 here()
 
 #Data -------------------------------------------------------------------
-scenathon<- read_csv(here("data", "FullProductDatabase.csv")) %>% 
-  rename(alpha3 = country, Pathway = pathway, Year = year, Product = product ) %>% 
+scenathon<- read_csv(here("data", "20240319_extracted_trade.csv")) %>% 
+  rename(alpha3 = country, Pathway = pathway, Year = year, Product = product) %>% 
   mutate(Pathway = recode(Pathway, "NationalCommitment" = "NationalCommitments")) %>% 
   filter(iteration == "5") %>% 
   filter(Year %in% c("2020", "2030", "2050"))%>% 
@@ -132,4 +132,5 @@ for (country in countries) {
   dev.off()
 }
 
+print(p_consumption)
 

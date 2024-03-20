@@ -12,11 +12,11 @@ conflict_prefer("filter", "dplyr")
 here()
 
 #Data ---------------------------------------------------------------
-scenathon<- read_csv(here("data", "FullDataBase.csv")) %>% 
+scenathon<- read_csv(here("data", "20240319_extracted_indicator.csv")) %>% 
   rename(alpha3 = country, Year = year) %>% 
   mutate(pathway = recode(pathway, "NationalCommitment" = "NationalCommitments")) %>% 
   filter(iteration == "5") %>%
-  filter(Year %in% c("2020", "2030", "2050"))%>% 
+  filter(Year %in% c("2020", "2030", "2040", "2050"))%>% 
   filter (alpha3 %in% c("AUS", "BRA", "COL", "ETH", "GBR")) %>% 
   select(alpha3,pathway, Year, calccropn2o, calccropch4, calccropco2, calcliven2o, calclivech4, calcdeforco2, calcotherlucco2, calcsequestco2)
 
@@ -71,7 +71,7 @@ for (country in countries) {
       axis.title.x = element_text(color = "steelblue", size = 12),
       axis.title.y = element_text(color = "steelblue", size = 12)
     ) +
-    scale_x_continuous(breaks = c(2020, 2030, 2050)) +
+    scale_x_continuous(breaks = c(2020, 2030,2040, 2050)) 
     # scale_y_continuous(breaks = seq(floor(-max(abs(country_data$CO2), abs(country_data$CH4), abs(country_data$N2O))/10)*10,
     #                                 ceiling(max(abs(country_data$CO2), abs(country_data$CH4), abs(country_data$N2O))/10)*10,
     #                                 10))
@@ -82,5 +82,5 @@ for (country in countries) {
   print(p_pathway3)
   dev.off()
 }
-
+p_pathway3
 
