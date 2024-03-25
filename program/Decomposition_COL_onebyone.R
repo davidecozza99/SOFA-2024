@@ -19,7 +19,7 @@ here()
 
 #Data -------------------------------------------------------------------
  
-col_data <- read_xlsx(here("data", "report_COL_20240306_10H35.xlsx"), sheet = "Indicators") %>% 
+col_data <- read_xlsx(here("data", "report_COL_20240325_11H51.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
   select(Pathway, Year, kcal_feas, 
          ForestChange, CalcCropland, CalcPasture, CalcOtherLand, 
@@ -48,7 +48,7 @@ col_data$Pathway[col_data$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradee
 
 
 # Commodities -----------------------------
-col_comm <- read_xlsx(here("data", "report_COL_20240306_10H35.xlsx"), sheet = "Commodities") %>% 
+col_comm <- read_xlsx(here("data", "report_COL_20240325_11H51.xlsx"), sheet = "Commodities") %>% 
   rename(Pathway = `Current Trend`) %>% 
   filter(Year %in% c("2030", "2050"))%>% 
   select(Location, Pathway, Year, Product, kcalfeasprod)
