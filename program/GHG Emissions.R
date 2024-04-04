@@ -237,11 +237,11 @@ for (current_pathway in unique_pathways) {
       axis.title.x = element_text(color = "steelblue", size = 12),
       axis.title.y = element_text(color = "steelblue", size = 12)
     )
-  # plot_list[[current_pathway]] <- p
+    plot_list[[current_pathway]] <- p
 }
 
 p
-# grid.arrange(grobs = plot_list, ncol = 1)
+ grid.arrange(grobs = plot_list, ncol = 3)
 
 
 
