@@ -19,7 +19,7 @@ here()
 
 #Data -------------------------------------------------------------------
  
-col_data <- read_xlsx(here("data", "report_COL_20240325_11H51.xlsx"), sheet = "Indicators") %>% 
+col_data <- read_xlsx(here("data", "report_COL_20240325_15H07.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
   select(Pathway, Year, kcal_feas, 
          ForestChange, CalcCropland, CalcPasture, CalcOtherLand, 
@@ -48,7 +48,7 @@ col_data$Pathway[col_data$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradee
 
 
 # Commodities -----------------------------
-col_comm <- read_xlsx(here("data", "report_COL_20240325_11H51.xlsx"), sheet = "Commodities") %>% 
+col_comm <- read_xlsx(here("data", "report_COL_20240325_15H07.xlsx"), sheet = "Commodities") %>% 
   rename(Pathway = `Current Trend`) %>% 
   filter(Year %in% c("2030", "2050"))%>% 
   select(Location, Pathway, Year, Product, kcalfeasprod)
@@ -136,6 +136,7 @@ pathway_labels <- c(
   "grassland" = "Intensive/ Extensive grassland share",
   "peatland" = "Peatland",
   "live_rumdensity" = "Livestock productivity and Ruminant Density",
+  "pop_urban" = "Population and Urbanization",
   "tradeeffect" = "NC/GS Trade Adjustment effect")
 
 
@@ -162,6 +163,7 @@ pathway_colors <- c(
   "grassland" = "grey",  
   "peatland" = "#FF4500",
   "live_rumdensity" = "#8B008B",
+  "pop_urban" = "#FF00FF",
   "tradeeffect" = "pink"
 )
 
@@ -275,7 +277,7 @@ for (element in elements) {
   )
   print(current_plot)
   dev.off()
-  # 
+  # # 
   # Append the current plot to the list
   plots_list[[element]] <- current_plot
 }

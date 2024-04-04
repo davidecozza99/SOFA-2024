@@ -22,16 +22,14 @@ here()
 aus_data <- read_xlsx(here("data", "report_AUS_20240306_9H01.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
   filter(Pathway %in% c("Current Trend_Yes", "NationalCommitments", "GlobalSustainability", "GS_diet", "GS_affor", "GS_live_rumdensity"))
-
   
 bra_data <- read_xlsx(here("data", "report_BRA_20240306_10H44.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
   filter(Pathway %in% c("Current Trend_Yes", "NationalCommitments", "GlobalSustainability", "GS_agrexp", "GS_diet", "GS_crop"))
 
-col_data <- read_xlsx(here("data", "report_COL_20240306_10H35.xlsx"), sheet = "Indicators") %>% 
+col_data <- read_xlsx(here("data", "report_COL_20240325_15H07.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
-  filter(Pathway %in% c("Current Trend_Yes", "NationalCommitments", "GlobalSustainability", "GS_diet", "GS_crop"))
-
+  filter(Pathway %in% c("Current Trend_Yes", "NationalCommitments", "GlobalSustainability", "GS_diet", "GS_crop", "GS_pop_urban"))
   
 eth_data <- read_xlsx(here("data", "report_ETH_20240306_8H55.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
@@ -50,7 +48,7 @@ all_data <- aus_data %>%
   bind_rows(gbr_data)
 
 all_data <- all_data %>% 
-  select(Pathway, Location, Year, kcal_feas, kcal_PoU,
+  select(Pathway, Location, Population, Year, kcal_feas, kcal_PoU,
          ForestChange, CalcCropland, CalcPasture, CalcOtherLand, 
          CalcFarmLabourFTE,
          CalcCropN2O, CalcCropCH4, CalcCropCO2, CalcLiveN2O, CalcLiveCH4, CalcDeforCO2, CalcOtherLUCCO2, CalcSequestCO2,
@@ -72,7 +70,7 @@ all_data <- all_data %>%
 # Commodities -----------------------------
 aus_comm <- read_xlsx(here("data", "report_AUS_20240306_9H01.xlsx"), sheet = "Commodities")
 bra_comm <- read_xlsx(here("data", "report_BRA_20240306_10H44.xlsx"), sheet = "Commodities") 
-col_comm <- read_xlsx(here("data", "report_COL_20240306_10H35.xlsx"), sheet = "Commodities")  
+col_comm <- read_xlsx(here("data", "report_COL_20240325_15H07.xlsx"), sheet = "Commodities")  
 eth_comm <- read_xlsx(here("data", "report_ETH_20240306_8H55.xlsx"), sheet = "Commodities")  
 gbr_comm <- read_xlsx(here("data", "report_GBR_20240306_10H43.xlsx"), sheet = "Commodities")  
 
@@ -86,11 +84,6 @@ all_comm <- aus_comm %>%
   rename(Pathway = `Current Trend`) %>% 
   # filter(Year %in% c("2030", "2050"))%>% 
   select(Location, Pathway, Year, Product, kcalfeasprod)
-
-
-ind_comm <- ind_comm %>%
-  select(country, pathway_id, year, product, kcalfeasprod)
-
 
 
 mapping<- read_excel(here("data", "mapping_product_group.xlsx")) %>% 
@@ -144,11 +137,9 @@ all_kcal_eat_final <- all_kcal_eat %>%
 
 #Final Database ---------------------------------------
 
-
 all_data <- left_join(all_data, all_kcal_eat_final, by = c("Pathway", "Location", "Year")) %>%
-  unique() %>% 
+  unique() %>%
   mutate(Pathway = recode(Pathway, "Current Trend_Yes" = "Current Trend"))
-
 
 
 #Save
