@@ -233,7 +233,7 @@ db_change_Live_Prod <- db_full_agg %>%
 
 
 
-# Ruminent density -------------------------------------------------------- OKAY
+# Ruminant density -------------------------------------------------------- OKAY
 
 #Extracting data from the Calculators - only run when needed 
 # 
