@@ -726,26 +726,26 @@ product_by_type <- product %>%
 # write.xlsx(db_ph_loss %>% data.frame(), file = here("data", "extracted", paste0(gsub("-", "",Sys.Date()), "_ExtractedPh_loss.xlsx")), row.names = F)
 
 
-
-#Reading extracted data
-db_ph_loss <- readxl::read_excel(here("data", "extracted", "20240312_ExtractedPh_loss.xlsx")) %>% 
-  rename(Lprod_group = Sector, year = Year, pathway=Pathway) %>% 
-  mutate(year = as.character(year)) %>% 
-  mutate(Lprod_group = recode(Lprod_group, "Crops" = "crop")) %>% 
-  mutate(Lprod_group = recode(Lprod_group, "Livestock" = "livestock"))  
-  
-
-
-db_ph_loss_change <- db_ph_loss %>% 
-  left_join(product_by_type, by = c("Lprod_group", "ALPHA3", "year", "pathway")) %>% 
-  group_by(ALPHA3, pathway) %>% 
-  mutate(postharv_loss= round((as.numeric(Total_PA[Year == "2050"]) - as.numeric(Total_PA[Year == "2020"])) / as.numeric(Total_PA[Year == "2020"]), digits = 2)) %>% 
-  select(-Year, -Total_PA) %>% 
-  unique()
-
-
-
-
+# 
+# #Reading extracted data
+# db_ph_loss <- readxl::read_excel(here("data", "extracted", "20240312_ExtractedPh_loss.xlsx")) %>% 
+#   rename(Lprod_group = Sector, year = Year, pathway=Pathway) %>% 
+#   mutate(year = as.character(year)) %>% 
+#   mutate(Lprod_group = recode(Lprod_group, "Crops" = "crop")) %>% 
+#   mutate(Lprod_group = recode(Lprod_group, "Livestock" = "livestock"))  
+#   
+# 
+# 
+# db_ph_loss_change <- db_ph_loss %>% 
+#   left_join(product_by_type, by = c("Lprod_group", "ALPHA3", "year", "pathway")) %>% 
+#   group_by(ALPHA3, pathway) %>% 
+#   mutate(postharv_loss= round((as.numeric(Total_PA[Year == "2050"]) - as.numeric(Total_PA[Year == "2020"])) / as.numeric(Total_PA[Year == "2020"]), digits = 2)) %>% 
+#   select(-Year, -Total_PA) %>% 
+#   unique()
+# 
+# 
+# 
+# 
 
 
 

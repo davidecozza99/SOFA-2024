@@ -150,6 +150,36 @@
                 "type": 1,
                 "is_package_breakpoint": false,
                 "package_name": ""
+            },
+            {
+                "id": 24,
+                "path": "C:/Users/Davide/Desktop/GitHub/SOFA 2024/program/GHG Emissions.R",
+                "line_number": 114,
+                "function_steps": "",
+                "function_name": "toplevel",
+                "state": 1,
+                "editor_state": 1,
+                "editor_line_number": 114,
+                "is_pending_debug_completion": false,
+                "needs_updated_steps": false,
+                "type": 1,
+                "is_package_breakpoint": false,
+                "package_name": ""
+            },
+            {
+                "id": 25,
+                "path": "C:/Users/Davide/Desktop/GitHub/SOFA 2024/program/decomposition_finaldatabase.R",
+                "line_number": 156,
+                "function_steps": "",
+                "function_name": "toplevel",
+                "state": 1,
+                "editor_state": 1,
+                "editor_line_number": 156,
+                "is_pending_debug_completion": false,
+                "needs_updated_steps": true,
+                "type": 1,
+                "is_package_breakpoint": false,
+                "package_name": ""
             }
         ]
     }
