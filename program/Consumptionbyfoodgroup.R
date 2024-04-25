@@ -34,7 +34,6 @@ consumption <- scenathon %>%
   select(-Product, -kcalfeasprod) %>%
   # filter(alpha3 == country) %>%
   unique
-
 #Plot ---------------------------------------------------------
 
 consumption$Pathway <- factor(consumption$Pathway, levels = c("CurrentTrends", "NationalCommitments", "GlobalSustainability"))
@@ -126,11 +125,49 @@ for (country in countries) {
     )
   
   # Save the plot as a TIFF file
-  tiff(here("output", "figures",country, paste0(gsub("-", "",Sys.Date()), "_", "consumptionfoodgroup_pathway.tiff")),
-       units = "in", height = 5, width = 14, res = 300)
-  print(p_consumption)
-  dev.off()
+  # tiff(here("output", "figures",country, paste0(gsub("-", "",Sys.Date()), "_", "consumptionfoodgroup_pathway.tiff")),
+  #      units = "in", height = 5, width = 14, res = 300)
+  # print(p_consumption)
+  # dev.off()
 }
 
 print(p_consumption)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Data -------------------------------------------------------------------
+scenathon<- read_csv(here("data", "20240319_extracted_trade.csv")) %>% 
+  rename(alpha3 = country, Pathway = pathway, Year = year, Product = product) %>% 
+  mutate(Pathway = recode(Pathway, "NationalCommitment" = "NationalCommitments")) %>% 
+  filter(iteration == "5") %>% 
+  filter(Year %in% c("2020", "2050"))%>% 
+  filter (alpha3 %in% c("AUS", "BRA", "COL", "ETH", "GBR")) %>% 
+  select(alpha3,Pathway, Year, Product, kcalfeasprod) %>% 
+  filter(Pathway == "CurrentTrends")
+
+
+
+
+
+
+
+
+
+
+
 

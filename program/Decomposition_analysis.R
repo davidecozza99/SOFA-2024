@@ -9,6 +9,9 @@ library(ggplot2)
 library(hrbrthemes)
 library(stringr)
 library(writexl)
+library(RColorBrewer)
+library(tidyr)
+
 
 conflict_prefer("filter", "dplyr")
 conflicts_prefer(dplyr::lag)
@@ -16,8 +19,10 @@ conflicts_prefer(dplyr::lag)
 here()
 
 #Data -------------------------------------------------------------------
+# old: report_BRA_20240224_12H29
 
-brazil_data <- read_xlsx(here("data", "report_BRA_20240224_12H29.xlsx"), sheet = "Indicators") %>% 
+
+brazil_data <- read_xlsx(here("data", "report_BRA_20240424_10H17_cumulative.xlsx"), sheet = "Indicators") %>% 
   filter(Year %in% c("2030", "2050")) %>% 
   rename(Pathway = `Current Trend`) %>% 
   select(Pathway, Year, kcal_feas, 
@@ -51,7 +56,8 @@ brazil <- brazil_data %>%
     diff_TotalN = ifelse(Pathway %in% c("NC_final", "GS_final"), NA, TotalN - lag(TotalN)),
     diff_CalcWFblue = ifelse(Pathway %in% c("NC_final", "GS_final"), NA, CalcWFblue - lag(CalcWFblue))
   ) %>% 
-  unique()
+  unique() %>% 
+  select(Year, Pathway, CO2, diff_CO2 )
 
 
 
@@ -223,13 +229,13 @@ for (element in elements) {
       axis.title.y = element_text(color = "steelblue", size = 18)
     )
   # Save the current plot as TIFF
-  tiff(
-    filename = here(figure_directory, paste0(element, ".tiff")),
-    units = "in", height = 5, width = 14, res = 600
-  )
-  print(current_plot)
-  dev.off()
-  
+  # tiff(
+  #   filename = here(figure_directory, paste0(element, ".tiff")),
+  #   units = "in", height = 5, width = 14, res = 600
+  # )
+  # print(current_plot)
+  # dev.off()
+  # 
   
   # Append the current plot to the list
   plots_list[[element]] <- current_plot
@@ -248,7 +254,7 @@ plots_list
 
 
 
-brazil_data_inverse <- read_xlsx(here("data", "report_BRA_20240226_12H38_inverse.xlsx"), sheet = "Indicators") %>% 
+brazil_data_inverse <- read_xlsx(here("data", "report_BRA_20240424_11H45_cumulative_inverse.xlsx"), sheet = "Indicators") %>% 
   filter(Year %in% c("2030", "2050")) %>% 
   rename(Pathway = `Current Trend`) %>% 
   select(Pathway, Year, kcal_feas, 
@@ -363,28 +369,3 @@ plots_list_inverse
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# tiff(here("output", "figures",country, paste0(gsub("-", "",Sys.Date()), "_", "consumptionfoodgroup_pathway.tiff")),
-#      units = "in", height = 5, width = 14, res = 300)
-# plot(p_consumption)
-# dev.off()

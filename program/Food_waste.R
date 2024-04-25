@@ -115,54 +115,54 @@ df_fao <- (df_fao %>%
 
 
 # pdty_livestock ----------------------------------------------------------
-
-db_full <- data.frame()
-
-for (cur_file in file){
-  #extract the righ sheet in Calculator
-  data <- read_excel(here("data", "SOFA extraction", cur_file),
-                     sheet = "2_calc_livestock",
-                     range = "A30:Z173")
-
-  #Colnames are lower in the SWE calculator
-  if(grepl("SWE", cur_file)){
-  data <- read_excel(here("data", "Calcs", cur_file),
-                       sheet = "2_calc_livestock",
-                       range = "A31:Z174")
-  }
-
-  data <- data %>%
-    slice(which(herdcount == 1)) %>%
-    slice(which(YEAR %in% c(2020, 2050))) %>%
-    select(YEAR, ANIMAL, FPRODUCT, herd, pdtyanim)  %>%
-    mutate(Pathway = ifelse(grepl("affor", cur_file),
-                            "GS_affor",
-                            ifelse(grepl("diet", cur_file),
-                                   "GS_diet", 
-                                   ifelse(grepl("liverum", cur_file),
-                                                     "GS_live_rum", 
-                                          ifelse(grepl("agrexp", cur_file),
-                                                                       "GS_agrexp",
-                                                 ifelse(grepl("crop", cur_file),
-                                                        "GS_crop", 
-                                                               ifelse(grepl("popurban", cur_file),
-                                                                      "GS_pop_urban",
-                                                                      ifelse(grepl("pop", cur_file),
-                                                                             "GS_pop",
-                                   "GS_foodwaste")))))))) %>% 
-  mutate(ALPHA3 = ifelse(grepl("AUS", cur_file), "AUS",
-                         ifelse(grepl("BRA", cur_file), "BRA",
-                                ifelse(grepl("COL", cur_file), "COL",
-                                       ifelse(grepl("ETH", cur_file), "ETH",
-                                              ifelse(grepl("GBR", cur_file), "GBR", ALPHA3))))))
-    
-
-  db_full <- db_full %>%
-    rbind.data.frame(data)
-
-
-}
-write.xlsx(db_full %>% data.frame(), file = here("data", "extracted", paste0(gsub("-", "",Sys.Date()), "_SOFAPathways_live.xlsx")), row.names = F)
+# 
+# db_full <- data.frame()
+# 
+# for (cur_file in file){
+#   #extract the righ sheet in Calculator
+#   data <- read_excel(here("data", "SOFA extraction", cur_file),
+#                      sheet = "2_calc_livestock",
+#                      range = "A30:Z173")
+# 
+#   #Colnames are lower in the SWE calculator
+#   if(grepl("SWE", cur_file)){
+#   data <- read_excel(here("data", "Calcs", cur_file),
+#                        sheet = "2_calc_livestock",
+#                        range = "A31:Z174")
+#   }
+# 
+#   data <- data %>%
+#     slice(which(herdcount == 1)) %>%
+#     slice(which(YEAR %in% c(2020, 2050))) %>%
+#     select(YEAR, ANIMAL, FPRODUCT, herd, pdtyanim)  %>%
+#     mutate(Pathway = ifelse(grepl("affor", cur_file),
+#                             "GS_affor",
+#                             ifelse(grepl("diet", cur_file),
+#                                    "GS_diet", 
+#                                    ifelse(grepl("liverum", cur_file),
+#                                                      "GS_live_rum", 
+#                                           ifelse(grepl("agrexp", cur_file),
+#                                                                        "GS_agrexp",
+#                                                  ifelse(grepl("crop", cur_file),
+#                                                         "GS_crop", 
+#                                                                ifelse(grepl("popurban", cur_file),
+#                                                                       "GS_pop_urban",
+#                                                                       ifelse(grepl("pop", cur_file),
+#                                                                              "GS_pop",
+#                                    "GS_foodwaste")))))))) %>% 
+#   mutate(ALPHA3 = ifelse(grepl("AUS", cur_file), "AUS",
+#                          ifelse(grepl("BRA", cur_file), "BRA",
+#                                 ifelse(grepl("COL", cur_file), "COL",
+#                                        ifelse(grepl("ETH", cur_file), "ETH",
+#                                               ifelse(grepl("GBR", cur_file), "GBR", ALPHA3))))))
+#     
+# 
+#   db_full <- db_full %>%
+#     rbind.data.frame(data)
+# 
+# 
+# }
+# write.xlsx(db_full %>% data.frame(), file = here("data", "extracted", paste0(gsub("-", "",Sys.Date()), "_SOFAPathways_live.xlsx")), row.names = F)
 db_full <- readxl::read_excel(here("data", "extracted", "20240423_SOFAPathways_live.xlsx"))
 
 #Computing Livestock productivity in t/TLU
@@ -202,52 +202,52 @@ write.xlsx(db_change_Live_Prod, file = here("data", "extracted", paste0(gsub("-"
 
 
 # Crops productivity ------------------------------------------------------
-
-db_full_crop <- data.frame()
-
-for (cur_file in file){
-  #???print(cur_file)
-  #???Extract the right sheet from calculators
-  data <- read_excel(here("data", "SOFA extraction", cur_file),
-                     sheet = "3_calc_crops",
-                     range = "G28:AE798")
-  # if(grepl("SWE", cur_file)){
-  # data <- read_excel(here("data", "Calcs", cur_file),
-  #                      sheet = "2_calc_livestock",
-  #                      range = "BH31:BU75")
-  # }
-
-  data <- data %>%
-    slice(which(YEAR %in% c(2020, 2050))) %>%
-    select(YEAR, CROP, Harvarea, Pdty) %>%
-    mutate(Pathway = ifelse(grepl("affor", cur_file),
-                            "GS_affor",
-                            ifelse(grepl("diet", cur_file),
-                                   "GS_diet", 
-                                   ifelse(grepl("liverum", cur_file),
-                                          "GS_live_rum", 
-                                          ifelse(grepl("agrexp", cur_file),
-                                                 "GS_agrexp",
-                                                 ifelse(grepl("crop", cur_file),
-                                                        "GS_crop", 
-                                                        ifelse(grepl("popurban", cur_file),
-                                                               "GS_pop_urban",
-                                                               ifelse(grepl("pop", cur_file),
-                                                                      "GS_pop",
-                                                                      "GS_foodwaste")))))))) %>% 
-    mutate(ALPHA3 = ifelse(grepl("AUS", cur_file), "AUS",
-                           ifelse(grepl("BRA", cur_file), "BRA",
-                                  ifelse(grepl("COL", cur_file), "COL",
-                                         ifelse(grepl("ETH", cur_file), "ETH",
-                                                ifelse(grepl("GBR", cur_file), "GBR", ALPHA3)))))) %>% 
-    unique()
-
-  db_full_crop <- db_full_crop %>%
-    rbind.data.frame(data) %>%
-    data.frame()
-}
-
-write.xlsx(db_full_crop, file = here("data", "extracted", paste0(gsub("-", "",Sys.Date()), "_SOFAPathways_crop.xlsx")), row.names = F)
+# 
+# db_full_crop <- data.frame()
+# 
+# for (cur_file in file){
+#   #???print(cur_file)
+#   #???Extract the right sheet from calculators
+#   data <- read_excel(here("data", "SOFA extraction", cur_file),
+#                      sheet = "3_calc_crops",
+#                      range = "G28:AE798")
+#   # if(grepl("SWE", cur_file)){
+#   # data <- read_excel(here("data", "Calcs", cur_file),
+#   #                      sheet = "2_calc_livestock",
+#   #                      range = "BH31:BU75")
+#   # }
+# 
+#   data <- data %>%
+#     slice(which(YEAR %in% c(2020, 2050))) %>%
+#     select(YEAR, CROP, Harvarea, Pdty) %>%
+#     mutate(Pathway = ifelse(grepl("affor", cur_file),
+#                             "GS_affor",
+#                             ifelse(grepl("diet", cur_file),
+#                                    "GS_diet", 
+#                                    ifelse(grepl("liverum", cur_file),
+#                                           "GS_live_rum", 
+#                                           ifelse(grepl("agrexp", cur_file),
+#                                                  "GS_agrexp",
+#                                                  ifelse(grepl("crop", cur_file),
+#                                                         "GS_crop", 
+#                                                         ifelse(grepl("popurban", cur_file),
+#                                                                "GS_pop_urban",
+#                                                                ifelse(grepl("pop", cur_file),
+#                                                                       "GS_pop",
+#                                                                       "GS_foodwaste")))))))) %>% 
+#     mutate(ALPHA3 = ifelse(grepl("AUS", cur_file), "AUS",
+#                            ifelse(grepl("BRA", cur_file), "BRA",
+#                                   ifelse(grepl("COL", cur_file), "COL",
+#                                          ifelse(grepl("ETH", cur_file), "ETH",
+#                                                 ifelse(grepl("GBR", cur_file), "GBR", ALPHA3)))))) %>% 
+#     unique()
+# 
+#   db_full_crop <- db_full_crop %>%
+#     rbind.data.frame(data) %>%
+#     data.frame()
+# }
+# 
+# write.xlsx(db_full_crop, file = here("data", "extracted", paste0(gsub("-", "",Sys.Date()), "_SOFAPathways_crop.xlsx")), row.names = F)
 db_full_crop <- readxl::read_excel(here("data", "extracted", "20240423_SOFAPathways_crop.xlsx"))
 
 db_full_crop_agg <- db_full_crop %>%
@@ -329,6 +329,8 @@ for (cur_file in file){
 
 
 
+  
+  
   data <- data %>%
     select(year, food_waste, LOSS_SCEN, fproduct, prodgroup) %>%
     mutate(Pathway = ifelse(grepl("affor", cur_file),
@@ -345,12 +347,23 @@ for (cur_file in file){
                                                                "GS_pop_urban",
                                                                ifelse(grepl("pop", cur_file),
                                                                       "GS_pop",
-                                                                      "GS_foodwaste")))))))) %>% 
+                                                                      ifelse(grepl("foodwaste"," cur_file"),
+                                                                      "GS_foodwaste",
+                                                                      ifelse(grepl("Current", cur_file),
+                                                                                              "CurrentTrend",
+                                                                                              ifelse(grepl("National", cur_file),
+                                                                                                     "NationalCommitments",
+                                                                                                     "GlobalSustainability"))))))))))) %>% 
     mutate(ALPHA3 = ifelse(grepl("AUS", cur_file), "AUS",
                            ifelse(grepl("BRA", cur_file), "BRA",
                                   ifelse(grepl("COL", cur_file), "COL",
                                          ifelse(grepl("ETH", cur_file), "ETH",
-                                                ifelse(grepl("GBR", cur_file), "GBR", ALPHA3)))))) %>%
+                                                ifelse(grepl("GBR", cur_file), "GBR", 
+                                                       ifelse(grepl("Current", cur_file),
+                                                                  str_sub(cur_file, 40, 42),
+                                                                             ifelse(grepl("National", cur_file), 
+                                                                                    str_sub(cur_file, 46, 48),
+                                                                                    str_sub(cur_file, 47, 49))))))))) %>%
     unique()
 
   db_full_waste <- db_full_waste %>%
@@ -387,43 +400,6 @@ write.xlsx(db_full_waste_final, file = here("data", "extracted", paste0(gsub("-"
 
 
 
-
-
-
-
-
-
-
-#Computing weighted Food waste: share of product kcal content to total Kcal content
-db_change_foodwaste <- db_full_waste %>%
-  left_join(df_fao) %>%
-  dplyr::filter(!is.na(kcal)) %>%
-  group_by(year, ALPHA3, Pathway) %>% 
-  mutate(total_kcal = sum(kcal, na.rm = TRUE)) %>%
-  mutate(weight =  100 * kcal / total_kcal) %>%
-  ungroup() %>%
-  group_by(ALPHA3, Pathway, FPRODUCT) %>% 
-  mutate(food_waste_weighted = food_waste * weight)
-
-
-#Computing share of food waste relative change 2020 - 2050 
-db_change_foodwaste <- db_change_foodwaste %>%
-  select(year, ALPHA3, Pathway, FPRODUCT, food_waste_weighted) %>% 
-  pivot_wider(names_from = year, names_glue = "Foodwaste_{year}", values_from = food_waste_weighted) %>% 
-  mutate(Foodwaste_change = Foodwaste_2050 / Foodwaste_2020) %>% 
-  group_by(ALPHA3, Pathway) %>% 
-  mutate(Foodwaste_change = mean(Foodwaste_change, na.rm = TRUE)) %>%
-  select(-FPRODUCT, -Foodwaste_2020, -Foodwaste_2050) %>% 
-  ungroup() %>% 
-  distinct() %>% 
-  mutate(ALPHA3 = ifelse(ALPHA3 == "ASP", "R_ASP",
-                         ifelse(ALPHA3 == "CSA", "R_CSA",
-                                ifelse(ALPHA3 == "NEU", "R_NEU",
-                                       ifelse(ALPHA3 == "OEU", "R_OEU",
-                                              ifelse(ALPHA3 == "SSA", "R_SSA",
-                                                     ifelse(ALPHA3 == "NMC", "R_NMC", ALPHA3)))))))
-
-# Protected Areas -
 
 
 
