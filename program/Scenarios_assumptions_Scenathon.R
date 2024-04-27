@@ -723,57 +723,57 @@ total_land <- df %>%
 
 
 #Extracting data from the Calculators - only run when needed
-# 
-# db_pa <- data.frame()
-# 
-# for (cur_file in file){
-#   data <- read_excel(here("data", "Calcs", cur_file),
-#                      sheet = "SCENARIOS definition",
-#                      range = "GA1:KA1000")
-#   index <- which(data == "TABLE: Patarget_def", arr.ind = TRUE)
-# 
-#   if (plyr::empty(index)) {
-#     index <- which(data == "TABLE: PATarget_def", arr.ind = TRUE)
-#   }
-# 
-# 
-#   if(!plyr::empty(index)){
-#     data <- data[c(index[1,1]:nrow(data)) + ifelse(grepl("ETH", cur_file), 8,
-#                                                   ifelse(grepl("CAN", cur_file), 8, 9)),
-#                  c(index[1,2]:(index[1,2]+8))]
-#     colnames(data) <- data[1,]
-#     data <- data[-1,]
-#     data <- data.frame(data[rowSums(is.na(data)) != ncol(data), ])
-# 
-#     data <- data %>%
-#       slice(which(Year %in% c(2020, 2050))) %>%
-#       rename_all(.funs = tolower) %>%
-#       select(lcagg, year, paareatarget) %>%
-#       mutate(ALPHA3 = ifelse(grepl("Current", cur_file),
-#                              str_sub(cur_file, 40, 42),
-#                              ifelse(grepl("National", cur_file), str_sub(cur_file, 46, 48),
-#                                     str_sub(cur_file, 47, 49)))) %>%
-#       mutate(ALPHA3 = ifelse(ALPHA3 == "R_A", "R_ASP",
-#                              ifelse(ALPHA3 == "R_C", "R_CSA",
-#                                     ifelse(ALPHA3 == "R_N", "R_NEU",
-#                                            ifelse(ALPHA3 == "R_O", "R_OEU",
-#                                                   ifelse(ALPHA3 == "R_S", "R_SSA",
-#                                                          ifelse(ALPHA3 == "RME", "R_NMC", ALPHA3))))))) %>%
-#       mutate(Pathway = ifelse(grepl("Current", cur_file),
-#                               "CurrentTrend",
-#                               ifelse(grepl("National", cur_file),
-#                                      "NationalCommitments",
-#                                      "GlobalSustainability"))) %>%
-#       unique()
-#   }
-#   db_pa <- db_pa %>%
-#     rbind.data.frame(data)
-#   # %>%
-#   #   mutate(ALPHA3 = gsub("_", "", ALPHA3))
-# 
-# }
-# 
-# write.xlsx(db_pa %>% data.frame(), file = here("data", "extracted_scenathon", paste0(gsub("-", "",Sys.Date()), "_ExtractedPA.xlsx")), row.names = F)
+
+db_pa <- data.frame()
+
+for (cur_file in file){
+  data <- read_excel(here("data", "Calcs_new", cur_file),
+                     sheet = "SCENARIOS definition",
+                     range = "AA1:ZZ1000")
+  index <- which(data == "TABLE: Patarget_def", arr.ind = TRUE)
+
+  if (plyr::empty(index)) {
+    index <- which(data == "TABLE: PATarget_def", arr.ind = TRUE)
+  }
+
+
+  if(!plyr::empty(index)){
+    data <- data[c(index[1,1]:nrow(data)) + ifelse(grepl("ETH", cur_file), 8,
+                                                  ifelse(grepl("CAN", cur_file), 8, 9)),
+                 c(index[1,2]:(index[1,2]+8))]
+    colnames(data) <- data[1,]
+    data <- data[-1,]
+    data <- data.frame(data[rowSums(is.na(data)) != ncol(data), ])
+
+    data <- data %>%
+      slice(which(Year %in% c(2020, 2050))) %>%
+      rename_all(.funs = tolower) %>%
+      select(lcagg, year, paareatarget) %>%
+      mutate(ALPHA3 = ifelse(grepl("Current", cur_file),
+                             str_sub(cur_file, 40, 42),
+                             ifelse(grepl("National", cur_file), str_sub(cur_file, 46, 48),
+                                    str_sub(cur_file, 47, 49)))) %>%
+      mutate(ALPHA3 = ifelse(ALPHA3 == "R_A", "R_ASP",
+                             ifelse(ALPHA3 == "R_C", "R_CSA",
+                                    ifelse(ALPHA3 == "R_N", "R_NEU",
+                                           ifelse(ALPHA3 == "R_O", "R_OEU",
+                                                  ifelse(ALPHA3 == "R_S", "R_SSA",
+                                                         ifelse(ALPHA3 == "RME", "R_NMC", ALPHA3))))))) %>%
+      mutate(Pathway = ifelse(grepl("Current", cur_file),
+                              "CurrentTrend",
+                              ifelse(grepl("National", cur_file),
+                                     "NationalCommitments",
+                                     "GlobalSustainability"))) %>%
+      unique()
+  }
+  db_pa <- db_pa %>%
+    rbind.data.frame(data)
+  # %>%
+  #   mutate(ALPHA3 = gsub("_", "", ALPHA3))
+
+}
+
+write.xlsx(db_pa %>% data.frame(), file = here("data", "extracted_scenathon", paste0(gsub("-", "",Sys.Date()), "_ExtractedPA.xlsx")), row.names = F)
 
 ### Manually added values for MEX and SWE
 db_pa <- readxl::read_excel(here("data", "extracted_scenathon", "20240419_ExtractedPA.xlsx"))
