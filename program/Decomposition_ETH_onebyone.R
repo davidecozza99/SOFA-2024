@@ -19,7 +19,7 @@ here()
 
 #Data -------------------------------------------------------------------
 
-eth_data <- read_xlsx(here("data", "report_ETH_20240426_10H27.xlsx"), sheet = "Indicators") %>% 
+eth_data <- read_xlsx(here("data", "report_ETH_20240426_12H01.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
   select(Pathway, Year, kcal_feas, 
          ForestChange, CalcCropland, CalcPasture, CalcOtherLand, 
@@ -45,7 +45,7 @@ eth_data$Pathway[eth_data$Pathway == "Current Trend_Yes_NC_trade"] <- "NC_tradee
 eth_data$Pathway[eth_data$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradeeffect"
 
 # Commodities -----------------------------
-eth_comm <- read_xlsx(here("data", "report_ETH_20240426_10H27.xlsx"), sheet = "Commodities") %>%
+eth_comm <- read_xlsx(here("data", "report_ETH_20240426_12H01.xlsx"), sheet = "Commodities") %>%
   rename(Pathway = `Current Trend`) %>%
   filter(Year %in% c("2030", "2050"))%>%
   select(Location, Pathway, Year, Product, kcalfeasprod) %>%

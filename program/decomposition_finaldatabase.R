@@ -31,7 +31,7 @@ col_data <- read_xlsx(here("data", "report_COL_20240325_15H07.xlsx"), sheet = "I
   rename(Pathway = `Current Trend`) %>% 
   filter(Pathway %in% c("Current Trend_Yes", "NationalCommitments", "GlobalSustainability", "GS_diet", "GS_crop", "GS_pop_urban"))
   
-eth_data <- read_xlsx(here("data", "report_ETH_20240306_8H55.xlsx"), sheet = "Indicators") %>% 
+eth_data <- read_xlsx(here("data", "report_ETH_20240426_12H01.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
   filter(Pathway %in% c("Current Trend_Yes", "NationalCommitments", "GlobalSustainability", "GS_pop", "GS_agrexp", "GS_crop"))
 
@@ -74,7 +74,7 @@ all_data <- all_data %>%
 aus_comm <- read_xlsx(here("data", "report_AUS_20240306_9H01.xlsx"), sheet = "Commodities")
 bra_comm <- read_xlsx(here("data", "report_BRA_20240306_10H44.xlsx"), sheet = "Commodities") 
 col_comm <- read_xlsx(here("data", "report_COL_20240325_15H07.xlsx"), sheet = "Commodities")  
-eth_comm <- read_xlsx(here("data", "report_ETH_20240306_8H55.xlsx"), sheet = "Commodities")  
+eth_comm <- read_xlsx(here("data", "report_ETH_20240426_12H01.xlsx"), sheet = "Commodities")  
 gbr_comm <- read_xlsx(here("data", "report_GBR_20240306_10H43.xlsx"), sheet = "Commodities")  
 
 
@@ -112,41 +112,41 @@ all_data <- left_join(all_data, all_kcal_final %>% select(Pathway, Year, kcal_pl
 
 # 
 # #Creation of EAT_LANCET Kcal variables
-# 
-# mapping_eat<- read_excel(here("data", "mapping_product_group_EAT.xlsx")) %>% 
-#   rename(Product = PRODUCT) 
-# 
-# all_kcal_eat <- all_comm %>% 
-#   inner_join(mapping_eat, by ="Product") %>% 
-#   unique %>% 
-#   group_by(Pathway, Location, Year, EAT_foodgroup) %>% 
-#   mutate(kcal_eat = sum(kcalfeasprod)) %>% 
-#   select(-kcalfeasprod, -PROD_GROUP, -Product)
-# 
-# 
-# all_kcal_eat_final <- all_kcal_eat %>%
-#   pivot_wider(names_from = EAT_foodgroup, values_from = kcal_eat, values_fn = list(kcal_eat = function(x) x[which.min(!is.na(x))])) %>%
-#   rename(kcal_NotIdentifiedinEATLancet = "NA") %>%
-#   replace(is.na(.), 0)
-# 
-# 
-# all_kcal_eat_final <- all_kcal_eat %>%
-#   pivot_wider(names_from = EAT_foodgroup, values_from = kcal_eat, values_fn = list(kcal_eat = function(x) x[which.min(!is.na(x))])) %>%
-#   rename(kcal_NotIdentifiedinEATLancet = "NA") %>%
-#   rename_with(
-#     ~ if_else(. %in% c("Location", "Pathway", "Year", "kcal_NotIdentified_EATLancet"), ., paste0("kcal_", .,"_EATLancet")),
-#     -c(Location, Pathway, Year, kcal_NotIdentifiedinEATLancet)
-#   )
-# 
-# #Final Database ---------------------------------------
-# 
-# all_data <- left_join(all_data, all_kcal_eat_final, by = c("Pathway", "Location", "Year")) %>%
-#   unique() %>%
-#   mutate(Pathway = recode(Pathway, "Current Trend_Yes" = "Current Trend"))
-# 
-# 
-# #Save
-# write.xlsx(all_data, file = here("data", "Decomposition", "database_decomposition.xlsx"))
+
+mapping_eat<- read_excel(here("data", "mapping_product_group_EAT.xlsx")) %>%
+  rename(Product = PRODUCT)
+
+all_kcal_eat <- all_comm %>%
+  inner_join(mapping_eat, by ="Product") %>%
+  unique %>%
+  group_by(Pathway, Location, Year, EAT_foodgroup) %>%
+  mutate(kcal_eat = sum(kcalfeasprod)) %>%
+  select(-kcalfeasprod, -PROD_GROUP, -Product)
+
+
+all_kcal_eat_final <- all_kcal_eat %>%
+  pivot_wider(names_from = EAT_foodgroup, values_from = kcal_eat, values_fn = list(kcal_eat = function(x) x[which.min(!is.na(x))])) %>%
+  rename(kcal_NotIdentifiedinEATLancet = "NA") %>%
+  replace(is.na(.), 0)
+
+
+all_kcal_eat_final <- all_kcal_eat %>%
+  pivot_wider(names_from = EAT_foodgroup, values_from = kcal_eat, values_fn = list(kcal_eat = function(x) x[which.min(!is.na(x))])) %>%
+  rename(kcal_NotIdentifiedinEATLancet = "NA") %>%
+  rename_with(
+    ~ if_else(. %in% c("Location", "Pathway", "Year", "kcal_NotIdentified_EATLancet"), ., paste0("kcal_", .,"_EATLancet")),
+    -c(Location, Pathway, Year, kcal_NotIdentifiedinEATLancet)
+  )
+
+#Final Database ---------------------------------------
+
+all_data <- left_join(all_data, all_kcal_eat_final, by = c("Pathway", "Location", "Year")) %>%
+  unique() %>%
+  mutate(Pathway = recode(Pathway, "Current Trend_Yes" = "Current Trend"))
+
+
+#Save
+write.xlsx(all_data, file = here("data", "Decomposition", "database_decomposition_withETHnew.xlsx"))
 
 
 
@@ -185,7 +185,7 @@ all_data_fao_fbs <- left_join(all_data, all_kcal_fao_fbs_final, by = c("Pathway"
 
 
 #Save
-write.xlsx(all_data_fao_fbs, file = here("data", "Decomposition", "database_decomposition_newvariables_asked.xlsx"))
+write.xlsx(all_data_fao_fbs, file = here("data", "Decomposition", "database_decomposition_newvariables_asked_withETH.xlsx"))
 
 
 
