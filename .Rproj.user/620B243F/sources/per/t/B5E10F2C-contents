@@ -727,9 +727,9 @@ total_land <- df %>%
 # db_pa <- data.frame()
 # 
 # for (cur_file in file){
-#   data <- read_excel(here("data", "Calcs", cur_file),
+#   data <- read_excel(here("data", "Calcs_new", cur_file),
 #                      sheet = "SCENARIOS definition",
-#                      range = "GA1:KA1000")
+#                      range = "AA1:ZZ1000")
 #   index <- which(data == "TABLE: Patarget_def", arr.ind = TRUE)
 # 
 #   if (plyr::empty(index)) {
@@ -776,7 +776,7 @@ total_land <- df %>%
 # write.xlsx(db_pa %>% data.frame(), file = here("data", "extracted_scenathon", paste0(gsub("-", "",Sys.Date()), "_ExtractedPA.xlsx")), row.names = F)
 
 ### Manually added values for MEX and SWE
-db_pa <- readxl::read_excel(here("data", "extracted_scenathon", "20240419_ExtractedPA.xlsx"))
+db_pa <- readxl::read_excel(here("data", "extracted_scenathon", "20240427_ExtractedPA.xlsx"))
 
 db_change_pa <- db_pa %>%
   mutate(paareatarget = as.numeric(paareatarget)) %>%
@@ -953,9 +953,9 @@ var.labs <- c(
   Expansion_change ="Agricultural \nexpansion \n(i)",
   Export_quantity_change = "Exports \n(kcal)",
   Import_quantity_change = "Imports \n(kcal)",
-  Foodwaste_change = "Share of \n Food Waste",
+  Foodwaste_change = "Share of \n Food Waste \n(iii)",
   Affor = "Afforestation \n(Mha) \n(ii)",
-  pa= "Protected \n Areas"
+  pa= "Protected \n Areas \n(iv)"
 )
 
 
@@ -966,13 +966,19 @@ complete_data <- complete_data %>%
                          "UK",
                          ALPHA3))
 
-complete_data$ALPHA3 <- factor(as.character(complete_data$ALPHA3), levels = c("ARG", "AUS", "BRA", "CAN",
-                                                                              "CHN", "COL", "DEU", "DNK","ETH",
-                                                                              "FIN", "GRC","IDN", 'IND',
-                                                                              "MEX", "NPL", "NOR", "RUS",
-                                                                              "RWA", "SWE", "TUR", "UK", "USA",
-                                                                              "R_ASP", "R_CSA", "R_NEU", "R_NMC",
-                                                                              "R_OEU", "R_SSA"))
+# complete_data$ALPHA3 <- factor(as.character(complete_data$ALPHA3), levels = c("ARG", "AUS", "BRA", "CAN",
+#                                                                               "CHN", "COL", "DEU", "DNK","ETH",
+#                                                                               "FIN", "GRC","IDN", 'IND',
+#                                                                               "MEX", "NPL", "NOR", "RUS",
+#                                                                               "RWA", "SWE", "TUR", "UK", "USA",
+#                                                                               "R_ASP", "R_CSA", "R_NEU", "R_NMC",
+#                                                                               "R_OEU", "R_SSA"))
+
+complete_data <- complete_data %>%
+  dplyr::filter(ALPHA3 %in% c("AUS", "BRA", "COL", "ETH", "UK"))
+
+complete_data$ALPHA3 <- factor(as.character(complete_data$ALPHA3), levels = c( "AUS", "BRA", "COL", "ETH",
+                                                                             "UK"))
 
 
 ### Merge cluster data with complete_data
@@ -988,14 +994,28 @@ pathway_order <- c("CurrentTrend", "NationalCommitments", "GlobalSustainability"
 # cluster_labels <- c(`1` = "NOR, DNK, DEU", `2` = "ARG, AUS, GRC, \n MEX, R_NEU, R_OEU,\nRUS, TUR, USA", `3` = "AFRICA", 
 #                     `4` = "COL, IDN,\n NPL, R_ASP", `5` = "BRA, CAN, CHN,\n FIN, GBR, IND,\n R_CSA, RMECAS, SWE")
 
-complete_data_country <- complete_data %>% 
-  dplyr::filter(!ALPHA3 %in% c("R_ASP", "R_CSA", "R_NEU", "R_NMC",
-         "R_OEU", "R_SSA"))
-complete_data_region <- complete_data %>% 
-  dplyr::filter(ALPHA3 %in% c("R_ASP", "R_CSA", "R_NEU", "R_NMC",
-                        "R_OEU", "R_SSA"))
+# complete_data_country <- complete_data %>% 
+#   dplyr::filter(!ALPHA3 %in% c("R_ASP", "R_CSA", "R_NEU", "R_NMC",
+#          "R_OEU", "R_SSA"))
+# complete_data_region <- complete_data %>% 
+#   dplyr::filter(ALPHA3 %in% c("R_ASP", "R_CSA", "R_NEU", "R_NMC",
+#                         "R_OEU", "R_SSA"))
 
-p_final <- ggplot(complete_data_country, aes(y = value, x = reorder(Pathway, -as.numeric(factor(Pathway, levels = pathway_order))), group = ALPHA3, fill = sign)) +
+
+complete_data <- complete_data %>%
+  mutate(ALPHA3 = gsub("^R_", "", ALPHA3))  
+
+
+
+# # Reorder ALPHA3 with new levels
+# complete_data$ALPHA3 <- factor(complete_data$ALPHA3, levels = c("ARG", "AUS", "BRA", "CAN", "CHN", "COL", "DEU", "DNK", "ETH", "FIN", "GRC", "IDN", "IND", 
+#                                                                 "MEX", "NPL", "NOR", "RUS", "RWA", "SWE", "TUR", "UK", "USA", "ASP", "CSA", "NEU", "NMC", 
+#                                                                 "OEU", "SSA"))
+# 
+
+
+
+p_final <- ggplot(complete_data, aes(y = value, x = reorder(Pathway, -as.numeric(factor(Pathway, levels = pathway_order))), group = ALPHA3, fill = sign)) +
   geom_col(position = "dodge", show.legend = FALSE)+
   ylab("Relative change between 2020 and 2050 (2020=0)")+
   coord_flip()+
@@ -1010,8 +1030,6 @@ p_final <- ggplot(complete_data_country, aes(y = value, x = reorder(Pathway, -as
              drop = T,
              space = "fixed",
              scale = "free")+
-  # geom_text(aes(label = region_labels[ALPHA3], y = Inf, x = Inf), 
-  #           hjust = 1, vjust = 1, size = 4, fontface = "bold") +
   theme(
     panel.background = element_rect(fill = '#F2F2F2'),
     panel.grid  = element_blank(),
@@ -1021,28 +1039,28 @@ p_final <- ggplot(complete_data_country, aes(y = value, x = reorder(Pathway, -as
     legend.background=element_blank(),
     legend.key = element_rect(fill = NA),
     legend.text = element_text(size = 10),
-    strip.text = element_text(size = 12, face = "bold"),
+    strip.text = element_text(size = 10, face = "bold"),
     panel.spacing.x = unit(0.75, "lines"),
-    plot.caption = element_text(size = 12), # Adjust the font size of the caption
+    plot.caption = element_text(size = 12), 
     strip.text.y.left = element_text(angle = 0),
-    axis.text = element_text(size = 6),
+    axis.text = element_text(size = 8),
     axis.title.x = element_text(size = 14),
     axis.line.x = element_line()
   ) +
-  labs(caption = "(i) 'Agricultural Expansion' is expressed in code, taking the value 1 for 'Free expansion scenario', -1 for 'No deforestation' and -2 for 'No Agricultural expansion'.
-  \n(ii) 'Afforestation (Mha)', results are expressed in net increase rather than relative change.
-  \nFor Turkey, 'Protected Areas' values have been manually set to 2.5 to better visualization (real value: 192)
-")
+  labs(caption = "\n(i) 'Agricultural Expansion' is expressed in code, taking the value 1 for 'Free expansion scenario', -0.5 for 'No deforestation' and -1 for 'No Agricultural expansion'.
+  \n(ii) 'Afforestation (Mha)': results are expressed in net increase rather than relative change.
+  \n(iii) 'Food Waste': results are expressed in % of consumption which is waste in 2050.
+  \n(iv) 'Protected Areas': results are expressed in % of total land in 2050.")
 
   # \n For R_NEU, 'Protected Areas' values have been manually set to 2.5 to better visualization (real value: 3.95)
   # \n For Turkey, 'Protected Areas' values have been manually set to 2.5 to better visualization (real value: 192)
 
 width = 14
-height = 24
+height = 30
 print(p_final)
 
-tiff(here("output", "figures", paste0(gsub("-", "",Sys.Date()), "_", "ScenarioAssumptionSCENATHON.tiff")),
-     units = "in", height = 9, width = 18, res = 1800)
+tiff(here("output", "figures", paste0(gsub("-", "",Sys.Date()), "_", "ScenarioAssumptionSOFA.tiff")),
+     units = "in", height = 6, width = 14, res = 1800)
 plot(p_final)
 dev.off()
 

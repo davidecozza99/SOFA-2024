@@ -1,0 +1,285 @@
+# Libraries ---------------------------------------------------------------
+library(here)
+library(dplyr)
+library(readr)
+library(readxl)
+library(conflicted)
+library(readxl)
+library(ggplot2)
+library(hrbrthemes)
+library(stringr)
+library(writexl)
+library(RColorBrewer)
+library(tidyr)
+
+conflict_prefer("filter", "dplyr")
+conflicts_prefer(dplyr::lag)
+
+here()
+
+#Data -------------------------------------------------------------------
+
+aus_data <- read_xlsx(here("data", "report_AUS_20240306_9H01.xlsx"), sheet = "Indicators") %>% 
+  rename(Pathway = `Current Trend`) %>% 
+  select(Pathway, Year, kcal_feas, 
+         ForestChange, CalcCropland, CalcPasture, CalcOtherLand, 
+         CalcFarmLabourFTE,
+         CalcCropN2O, CalcCropCH4, CalcCropCO2, CalcLiveN2O, CalcLiveCH4, CalcDeforCO2, CalcOtherLUCCO2, CalcSequestCO2,
+         kcal_feas, kcal_mder,
+         LNPPMatureForest, LNPPMatureOtherLand,
+         CalcN_org, CalcN_synth,
+         CalcWFblue) %>% 
+  mutate(Cropland_change = CalcCropland - lag(CalcCropland)) %>% 
+  mutate(Pasture_change = CalcPasture - lag(CalcPasture)) %>% 
+  mutate(OtherLand_change = CalcOtherLand - lag(CalcOtherLand)) %>% 
+  filter(Year %in% c("2030", "2050")) %>% 
+  mutate(CO2 = CalcCropCO2 + CalcDeforCO2 + CalcOtherLUCCO2 + CalcSequestCO2) %>% 
+  mutate(CH4 = CalcCropCH4 + CalcLiveCH4) %>% 
+  mutate(N2O = CalcCropN2O + CalcLiveN2O) %>% 
+  mutate(TotalN = CalcN_org + CalcN_synth)
+
+
+aus_data$Pathway[aus_data$Pathway == "NationalCommitments"] <- "NC_complete"
+aus_data$Pathway[aus_data$Pathway == "GlobalSustainability"] <- "GS_complete"
+
+aus_data$Pathway[aus_data$Pathway == "Current Trend_Yes_NC_trade"] <- "NC_tradeeffect"
+aus_data$Pathway[aus_data$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradeeffect"
+
+
+
+# Commodities -----------------------------
+aus_comm <- read_xlsx(here("data", "report_AUS_20240306_9H01.xlsx"), sheet = "Commodities") %>%
+  rename(Pathway = `Current Trend`) %>%
+  filter(Year %in% c("2030", "2050"))%>%
+  select(Location, Pathway, Year, Product, kcalfeasprod) %>%
+  unique()
+
+# write.xlsx(aus_comm, file = here("data", "Decomposition", "aus_tool.xlsx"))
+
+
+aus_comm$Pathway[aus_comm$Pathway == "NationalCommitments"] <- "NC_complete"
+aus_comm$Pathway[aus_comm$Pathway == "GlobalSustainability"] <- "GS_complete"
+
+aus_comm$Pathway[aus_comm$Pathway == "Current Trend_Yes_NC_trade"] <- "NC_tradeeffect"
+aus_comm$Pathway[aus_comm$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradeeffect"
+
+mapping<- read_excel(here("data", "mapping_product_group.xlsx")) %>% 
+  rename(Product = PRODUCT)
+
+aus_kcal <- aus_comm %>% 
+  inner_join (mapping, by ="Product") %>% 
+  unique %>% 
+  mutate("Anim_Plant" = ifelse(PROD_GROUP %in% c("ANIMFAT", "EGGS", "FISH", "MILK", "REDMEAT", "PORK", "POULTRY"), "ANIM", "PLANT")) %>% 
+  group_by(Pathway, Location, Year, Anim_Plant) %>% 
+  mutate(kcal_anim_plant = sum(kcalfeasprod)) %>% 
+  select(-kcalfeasprod, -PROD_GROUP, -Product)
+
+
+aus_kcal_final <- aus_kcal %>%
+  pivot_wider(names_from = Anim_Plant, values_from = kcal_anim_plant, values_fn = list(kcal_anim_plant = function(x) x[which.min(!is.na(x))])) %>%
+  rename(kcal_anim = ANIM, kcal_plant = PLANT) %>%
+  replace(is.na(.), 0)
+
+#Final Database ---------------------------------------
+aus_data <- left_join(aus_data, aus_kcal_final %>% select(Pathway, Year, kcal_plant, kcal_anim), by = c("Pathway", "Year")) %>%
+  unique() 
+
+
+
+aus <- aus_data %>%
+  group_by(Year) %>%
+  mutate(
+    Pathway_code = ifelse(str_starts(Pathway, "NC"), "NC", ifelse(str_starts(Pathway, "GS"), "GS", NA)),
+    diff_kcal_feas = ifelse(Pathway != "Current Trend_Yes", kcal_feas - first(kcal_feas[Pathway == "Current Trend_Yes"]), NA),
+    diff_kcal_plant = ifelse(Pathway != "Current Trend_Yes", kcal_plant - first(kcal_plant[Pathway == "Current Trend_Yes"]), NA),
+    diff_kcal_anim = ifelse(Pathway != "Current Trend_Yes", kcal_anim - first(kcal_anim[Pathway == "Current Trend_Yes"]), NA),
+    diff_ForestChange = ifelse(Pathway != "Current Trend_Yes", ForestChange - first(ForestChange[Pathway == "Current Trend_Yes"]), NA),
+    diff_Cropland_change = ifelse(Pathway != "Current Trend_Yes", Cropland_change - first(Cropland_change[Pathway == "Current Trend_Yes"]), NA),
+    diff_Pasture_change = ifelse(Pathway != "Current Trend_Yes", Pasture_change - first(Pasture_change[Pathway == "Current Trend_Yes"]), NA),
+    diff_OtherLand_change = ifelse(Pathway != "Current Trend_Yes", OtherLand_change - first(OtherLand_change[Pathway == "Current Trend_Yes"]), NA),
+    diff_CalcFarmLabourFTE = ifelse(Pathway != "Current Trend_Yes", CalcFarmLabourFTE - first(CalcFarmLabourFTE[Pathway == "Current Trend_Yes"]), NA),
+    diff_CO2 = ifelse(Pathway != "Current Trend_Yes", CO2 - first(CO2[Pathway == "Current Trend_Yes"]), NA),
+    diff_CH4 = ifelse(Pathway != "Current Trend_Yes", CH4 - first(CH4[Pathway == "Current Trend_Yes"]), NA),
+    diff_N2O = ifelse(Pathway != "Current Trend_Yes", N2O - first(N2O[Pathway == "Current Trend_Yes"]), NA),
+    diff_kcal_mder = ifelse(Pathway != "Current Trend_Yes", kcal_mder - first(kcal_mder[Pathway == "Current Trend_Yes"]), NA),
+    diff_LNPPMatureForest = ifelse(Pathway != "Current Trend_Yes", LNPPMatureForest - first(LNPPMatureForest[Pathway == "Current Trend_Yes"]), NA),
+    diff_LNPPMatureOtherLand = ifelse(Pathway != "Current Trend_Yes", LNPPMatureOtherLand - first(LNPPMatureOtherLand[Pathway == "Current Trend_Yes"]), NA),
+    diff_TotalN = ifelse(Pathway != "Current Trend_Yes", TotalN - first(TotalN[Pathway == "Current Trend_Yes"]), NA),
+    diff_CalcWFblue = ifelse(Pathway != "Current Trend_Yes", CalcWFblue - first(CalcWFblue[Pathway == "Current Trend_Yes"]), NA)
+  ) 
+
+
+aus$scenarios <- substring(aus_data$Pathway, 4)
+
+
+#Labelling --------------------------
+pathway_labels <- c(
+  "GDP" = "GDP",
+  "pop" = "Population",
+  "diet" = "Diet",
+  "import" = "Import",
+  "export" = "Export",
+  "postharvloss" = "Post Harvest Loss",
+  "foodwaste" = "Food Waste",
+  "live" = "Livestock Productivity",
+  "crop" = "Crop Productivity",
+  "popactivity" = "Population Activity",
+  "agrexp" = "Agricultural Expansion",
+  "affor" = "Afforestation",
+  "urban" = "Urbanization",
+  "rumdensity" = "Ruminant Density",
+  "pa" = "Protected Areas",
+  "biofuel" = "Biofuel",
+  "agropra" = "Agroecological Practices",
+  "irri" = "Irrigation",
+  "final" = "Final",
+  "agroforestry" = "Agroforestry",
+  "grassland" = "Intensive/ Extensive grassland share",
+  "peatland" = "Peatland",
+  "live_rumdensity" = "Livestock productivity and Ruminant Density",
+  "tradeeffect" = "NC/GS Trade Adjustment effect")
+
+pathway_colors <- c(  
+  "GDP" = "yellow",  
+  "pop" = "grey",  
+  "diet" = "#00BFFF",  
+  "import" = "#98FB98",
+  "export" = "darkorange",  
+  "postharvloss" = "red",
+  "foodwaste" = "#4250A5",    
+  "live" = "#2F4F4F",  
+  "crop" = "#985AE0",  
+  "popactivity" = "#897E0B",
+  "agrexp" = "#D2691E",   
+  "affor" = "#228B22",  
+  "urban" = "#FF00FF",    
+  "rumdensity" = "green",         
+  "pa" = "#000080",        
+  "biofuel" = "#A52A2A",  
+  "agropra" = "#FFA07A",
+  "irri" = "#FFD700",  
+  "agroforestry" = "black",  
+  "grassland" = "grey",  
+  "peatland" = "#FF4500",
+  "live_rumdensity" = "#8B008B",
+  "tradeeffect" = "pink"
+)
+
+
+
+element_labels <- c(
+  "CO2" = "CO2 Emissions", 
+  "CH4" = "Methane (CH4) Emissions", 
+  "N2O" = "Nitrous Oxide (N2O) Emissions", 
+  "kcal_feas" = "Feasible Kcal", 
+  "kcal_plant" = "Feasible Kcal from Plant-based products",
+  "kcal_anim" = "Feasible Kcal from Animal-based products",
+  "kcal_mder" = "MDER Kcal", 
+  "ForestChange" = "Forest Change", 
+  "Cropland_change" = "Cropland Change", 
+  "Pasture_change" = "Pasture Change", 
+  "OtherLand_change" = "Other Land Change", 
+  "CalcFarmLabourFTE" = "Farm Labour FTE",
+  "LNPPMatureForest" = "LNPP Mature Forest", 
+  "LNPPMatureOtherLand" = "LNPP Mature Other Land", 
+  "TotalN" = "Total Nitrogen", 
+  "CalcWFblue" = "Water Irrigation Requirements"
+)
+
+units_labels <- c(
+  "CO2" = "(Mt CO2e per year)", 
+  "CH4" = "(Mt CO2e per year)", 
+  "N2O" = "(Mt CO2e per year)", 
+  "kcal_feas" = "(kcal per capita per day)", 
+  "kcal_plant" = "(kcal per capita per day)", 
+  "kcal_anim" = "(kcal per capita per day)",
+  "kcal_mder" = "(kcal per capita per day)", 
+  "ForestChange" = "(1000 ha per 5 year)", 
+  "Cropland_change" = "(1000 ha per 5 year)", 
+  "Pasture_change" = "(1000 ha per 5 year)", 
+  "OtherLand_change" = "(1000 ha per 5 year)", 
+  "CalcFarmLabourFTE" = "(1000 FTE workers)",
+  "LNPPMatureForest" = "(1000 ha)", 
+  "LNPPMatureOtherLand" = "(1000 ha)", 
+  "TotalN" = "(1000 tonnes)", 
+  "CalcWFblue" = "(1000 tonnes)"
+)
+
+# List of elements for decomposition analysis
+elements <- c("CH4","CO2", "N2O",
+              "kcal_feas","kcal_anim", "kcal_plant",
+              "ForestChange",  "Cropland_change", "Pasture_change", "OtherLand_change",
+              "CalcFarmLabourFTE", "LNPPMatureForest", "LNPPMatureOtherLand",
+              "TotalN", "CalcWFblue"
+)
+
+# write.xlsx(aus, file = here("data", "Decomposition", "aus.xlsx"))
+
+#Reordering pathwyas + erasing CT
+aus$Pathway_code <- factor(aus$Pathway_code, levels = c("NC", "GS"))
+aus <- aus[complete.cases(aus$Pathway_code), ]
+
+# write.xlsx(aus, file = here("data", "Decomposition", "aus.xlsx"))
+
+#Plot -------------------------------------------------------------------
+
+# folder to store the plots
+figure_directory <- here("output", "decomposition", "AUS", paste0(gsub("-", "", Sys.Date())))
+dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
+
+#Loop
+plots_list <- list()
+
+for (element in elements) {
+  # Create the plot
+  current_plot <- aus %>%
+    group_by(Pathway_code) %>%
+    ggplot(aes(x = Year, y = !!sym(paste0("diff_", element)))) +
+    geom_hline(yintercept = 0, linetype = "solid") +
+    geom_bar(stat = "identity", data = filter(aus, !str_detect(Pathway, "complete")),
+             aes(fill = scenarios)) +
+    guides(fill = guide_legend(override.aes = list(shape = NA))) +
+    geom_point(data = filter(aus, Pathway %in% c("NC_complete", "GS_complete")),
+               aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
+               size = 3, shape = 16) + 
+    # geom_point(data = filter(aus, Pathway %in% c("NC_tradeeffect", "GS_tradeeffect")),
+    #            aes(y = !!sym(paste0("diff_", element)), x = Year, color = "NC/GS Trade adjustment effect on CT"),
+    #            size = 3, shape = 16, alpha =0.7) + 
+    scale_color_manual(values = c("black"), name = "",
+                       labels = c("All scenarios combined")) +
+    labs(
+      title = paste("Decomposition analysis:\n",element_labels[element]),
+      x = "Year",
+      y = paste("Compared to Current Trend \n", units_labels[element])
+    ) +
+    facet_grid(. ~ Pathway_code, scales = "free_y",
+               labeller = labeller(Pathway_code = c(
+                 "NC" = "National Commitments",
+                 "GS" = "Global Sustainability"
+               ))) +
+    scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "Scenarios", labels = pathway_labels[pathway_labels != "complete"]) +
+    scale_x_continuous(breaks = unique(aus$Year[!is.na(aus[, paste0("diff_", element)])])) +
+    theme_minimal() +
+    theme(
+      text = element_text(family = "Arial", color = "black", size = 18, face = "bold"),
+      legend.title = element_text(family = "Arial", color = "steelblue", size = 16, face = "bold"),
+      legend.text = element_text(family = "Arial", size = 18),
+      plot.title = element_text(color = "steelblue", size = 20, face = "bold"),
+      axis.title.x = element_text(color = "steelblue", size = 18),
+      axis.title.y = element_text(color = "steelblue", size = 18)
+    )
+  
+
+  # Save the current plot as TIFF
+  tiff(
+    filename = here(figure_directory, paste0(element, ".tiff")),
+    units = "in", height = 5, width = 14, res = 600
+  )
+  print(current_plot)
+  dev.off()
+
+  # Append the current plot to the list
+  plots_list[[element]] <- current_plot
+}
+
+plots_list
