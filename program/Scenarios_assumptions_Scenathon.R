@@ -723,7 +723,11 @@ total_land <- df %>%
 
 
 #Extracting data from the Calculators - only run when needed
+<<<<<<< Updated upstream
 
+=======
+# 
+>>>>>>> Stashed changes
 # db_pa <- data.frame()
 # 
 # for (cur_file in file){
@@ -776,7 +780,7 @@ total_land <- df %>%
 # write.xlsx(db_pa %>% data.frame(), file = here("data", "extracted_scenathon", paste0(gsub("-", "",Sys.Date()), "_ExtractedPA.xlsx")), row.names = F)
 
 ### Manually added values for MEX and SWE
-db_pa <- readxl::read_excel(here("data", "extracted_scenathon", "20240419_ExtractedPA.xlsx"))
+db_pa <- readxl::read_excel(here("data", "extracted_scenathon", "20240427_ExtractedPA.xlsx"))
 
 db_change_pa <- db_pa %>%
   mutate(paareatarget = as.numeric(paareatarget)) %>%
@@ -1041,9 +1045,13 @@ var.labs <- c(
   Import_quantity_change = "Imports \n(kcal)",
   Foodwaste_change = "Share of \n Food Waste \n(iii)",
   Affor = "Afforestation \n(Mha) \n(ii)",
+<<<<<<< Updated upstream
   pa= "Protected \n Areas \n(iv)",
   share_irr_final= "Irrigated \n Area \n(v)"
   
+=======
+  pa= "Protected \n Areas \n(iv)"
+>>>>>>> Stashed changes
 )
 
 
@@ -1054,6 +1062,7 @@ complete_data <- complete_data %>%
                          "UK",
                          ALPHA3))
 
+<<<<<<< Updated upstream
 
 
 complete_data$ALPHA3 <- gsub("^R_", "", complete_data$ALPHA3)
@@ -1067,6 +1076,22 @@ complete_data$ALPHA3 <- factor(as.character(complete_data$ALPHA3), levels = c("A
                                                                               "RWA", "SWE", "TUR", "UK", "USA",
                                                                               "ASP", "CSA", "NEU", "NMC",
                                                                               "OEU", "SSA"))
+=======
+# complete_data$ALPHA3 <- factor(as.character(complete_data$ALPHA3), levels = c("ARG", "AUS", "BRA", "CAN",
+#                                                                               "CHN", "COL", "DEU", "DNK","ETH",
+#                                                                               "FIN", "GRC","IDN", 'IND',
+#                                                                               "MEX", "NPL", "NOR", "RUS",
+#                                                                               "RWA", "SWE", "TUR", "UK", "USA",
+#                                                                               "R_ASP", "R_CSA", "R_NEU", "R_NMC",
+#                                                                               "R_OEU", "R_SSA"))
+
+complete_data <- complete_data %>%
+  dplyr::filter(ALPHA3 %in% c("AUS", "BRA", "COL", "ETH", "UK"))
+
+complete_data$ALPHA3 <- factor(as.character(complete_data$ALPHA3), levels = c( "AUS", "BRA", "COL", "ETH",
+                                                                             "UK"))
+
+>>>>>>> Stashed changes
 
 ### Merge cluster data with complete_data
 # complete_data <- complete_data %>% 
@@ -1088,6 +1113,23 @@ pathway_order <- c("CurrentTrend", "NationalCommitments", "GlobalSustainability"
 #   dplyr::filter(ALPHA3 %in% c("R_ASP", "R_CSA", "R_NEU", "R_NMC",
 #                         "R_OEU", "R_SSA"))
 
+<<<<<<< Updated upstream
+=======
+
+complete_data <- complete_data %>%
+  mutate(ALPHA3 = gsub("^R_", "", ALPHA3))  
+
+
+
+# # Reorder ALPHA3 with new levels
+# complete_data$ALPHA3 <- factor(complete_data$ALPHA3, levels = c("ARG", "AUS", "BRA", "CAN", "CHN", "COL", "DEU", "DNK", "ETH", "FIN", "GRC", "IDN", "IND", 
+#                                                                 "MEX", "NPL", "NOR", "RUS", "RWA", "SWE", "TUR", "UK", "USA", "ASP", "CSA", "NEU", "NMC", 
+#                                                                 "OEU", "SSA"))
+# 
+
+
+
+>>>>>>> Stashed changes
 p_final <- ggplot(complete_data, aes(y = value, x = reorder(Pathway, -as.numeric(factor(Pathway, levels = pathway_order))), group = ALPHA3, fill = sign)) +
   geom_col(position = "dodge", show.legend = FALSE)+
   ylab("Relative change between 2020 and 2050 (2020=0)")+
@@ -1103,8 +1145,6 @@ p_final <- ggplot(complete_data, aes(y = value, x = reorder(Pathway, -as.numeric
              drop = T,
              space = "fixed",
              scale = "free")+
-  # geom_text(aes(label = region_labels[ALPHA3], y = Inf, x = Inf), 
-  #           hjust = 1, vjust = 1, size = 4, fontface = "bold") +
   theme(
     panel.background = element_rect(fill = '#F2F2F2'),
     panel.grid  = element_blank(),
@@ -1113,6 +1153,7 @@ p_final <- ggplot(complete_data, aes(y = value, x = reorder(Pathway, -as.numeric
     axis.ticks.y = element_blank(),
     legend.background=element_blank(),
     legend.key = element_rect(fill = NA),
+<<<<<<< Updated upstream
     legend.text = element_text(size = 12),
     strip.text = element_text(size = 10, face = "bold"),
     panel.spacing.x = unit(0.75, "lines"),
@@ -1129,14 +1170,34 @@ p_final <- ggplot(complete_data, aes(y = value, x = reorder(Pathway, -as.numeric
 #   \n(v) 'Irrigation area': results are expressed in % of harvest area in 2050.
 # 
 # ")
+=======
+    legend.text = element_text(size = 10),
+    strip.text = element_text(size = 10, face = "bold"),
+    panel.spacing.x = unit(0.75, "lines"),
+    plot.caption = element_text(size = 12), 
+    strip.text.y.left = element_text(angle = 0),
+    axis.text = element_text(size = 8),
+    axis.title.x = element_text(size = 14),
+    axis.line.x = element_line()
+  ) +
+  labs(caption = "\n(i) 'Agricultural Expansion' is expressed in code, taking the value 1 for 'Free expansion scenario', -0.5 for 'No deforestation' and -1 for 'No Agricultural expansion'.
+  \n(ii) 'Afforestation (Mha)': results are expressed in net increase rather than relative change.
+  \n(iii) 'Food Waste': results are expressed in % of consumption which is waste in 2050.
+  \n(iv) 'Protected Areas': results are expressed in % of total land in 2050.")
+>>>>>>> Stashed changes
 
 
 width = 14
-height = 24
+height = 30
 print(p_final)
 
+<<<<<<< Updated upstream
 tiff(here("output", "figures", paste0(gsub("-", "",Sys.Date()), "_", "ScenarioAssumptionSCENATHON.tiff")),
      units = "in", height = 14, width = 14, res = 1000)
+=======
+tiff(here("output", "figures", paste0(gsub("-", "",Sys.Date()), "_", "ScenarioAssumptionSOFA.tiff")),
+     units = "in", height = 6, width = 14, res = 1800)
+>>>>>>> Stashed changes
 plot(p_final)
 dev.off()
 
