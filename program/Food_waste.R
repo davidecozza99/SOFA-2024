@@ -347,7 +347,7 @@ for (cur_file in file){
                                                                "GS_pop_urban",
                                                                ifelse(grepl("pop", cur_file),
                                                                       "GS_pop",
-                                                                      ifelse(grepl("GBR_foodwaste", cur_file),
+                                                                      ifelse(grepl("foodwaste", cur_file),
                                                                              "GS_foodwaste",
                                                                       ifelse(grepl("Current", cur_file),
                                                                                               "CurrentTrend",
@@ -372,7 +372,7 @@ for (cur_file in file){
 
 write.xlsx(db_full_waste, file = here("data", "extracted", paste0(gsub("-", "",Sys.Date()), "_SOFAPathways_foodwaste.xlsx")), row.names = F)
 
-db_full_waste <- readxl::read_excel(here("data", "extracted", "20240512_SOFAPathways_foodwaste.xlsx")) %>% 
+db_full_waste <- readxl::read_excel(here("data", "extracted", "20240513_SOFAPathways_foodwaste.xlsx")) %>% 
   # mutate(ALPHA3 = ifelse(nchar(ALPHA3) == 4, stringr::str_sub(ALPHA3, 2, 4), ALPHA3)) %>% 
   rename(FPRODUCT = fproduct) %>% 
   mutate(FPRODUCT = ifelse(FPRODUCT == "MILK", "milk", FPRODUCT))
