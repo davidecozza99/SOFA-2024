@@ -490,7 +490,7 @@ db_change_Expansion <- db_scenarios %>%
 
 
 # Afforestation -----------------------------------------------------------
-
+# 
 # db_full_affor <- data.frame()
 # 
 # for (cur_file in file){
@@ -723,11 +723,8 @@ total_land <- df %>%
 
 
 #Extracting data from the Calculators - only run when needed
-<<<<<<< Updated upstream
 
-=======
 # 
->>>>>>> Stashed changes
 # db_pa <- data.frame()
 # 
 # for (cur_file in file){
@@ -875,18 +872,72 @@ db_change_irr <- db_irr %>%
   select(-YEAR)
 
 
+
+
+
+# db_agrprac <- data.frame()
 # 
-# db_change_irr <- db_shareirr_agg %>% 
-#   mutate(var_pivot = paste0("share_irr_final_", YEAR)) %>% 
-#   select(var_pivot, Pathway, ALPHA3, share_irr_final) %>% 
-#   pivot_wider(names_from = var_pivot,
-#               values_from = c(share_irr_final)) %>% 
-#   mutate(irr_change = round(share_irr_final_2050/share_irr_final_2020, 2)) %>% 
-#   select(ALPHA3, Pathway, irr_change)
+# for (cur_file in file){
+#   #???print(cur_file)
+#   #???Extract the right sheet from calculators
+#   data <- read_excel(here("data", "Calcs_new", cur_file),
+#                      sheet = "3_calc_crops",
+#                      range = "G28:AE798")
+#   # if(grepl("SWE", cur_file)){
+#   # data <- read_excel(here("data", "Calcs", cur_file),
+#   #                      sheet = "2_calc_livestock",
+#   #                      range = "BH31:BU75")
+#   # }
+# 
+#   data <- data %>%
+#     slice(which(YEAR %in% c(2020, 2050))) %>%
+#     select(YEAR, CROP, SPAMgroup, Harvarea, AreaAgroeco) %>%
+#     mutate(ALPHA3 = ifelse(grepl("Current", cur_file),
+#                            str_sub(cur_file, 40, 42),
+#                            ifelse(grepl("National", cur_file), str_sub(cur_file, 46, 48),
+#                                   str_sub(cur_file, 47, 49)))) %>%
+#     mutate(ALPHA3 = ifelse(ALPHA3 == "R_A", "R_ASP",
+#                            ifelse(ALPHA3 == "R_C", "R_CSA",
+#                                   ifelse(ALPHA3 == "R_N", "R_NEU",
+#                                          ifelse(ALPHA3 == "R_O", "R_OEU",
+#                                                 ifelse(ALPHA3 == "R_S", "R_SSA",
+#                                                        ifelse(ALPHA3 == "RME", "R_NMC", ALPHA3))))))) %>%
+#     mutate(Pathway = ifelse(grepl("Current", cur_file),
+#                             "CurrentTrend",
+#                             ifelse(grepl("National", cur_file),
+#                                    "NationalCommitments",
+#                                    "GlobalSustainability"))) %>%
+#     unique()
+# 
+#   db_agrprac <- db_agrprac %>%
+#     rbind.data.frame(data) %>%
+#     data.frame()
+# }
+# 
+# write.xlsx(db_agrprac %>% data.frame(), file = here("data", "extracted_scenathon", paste0(gsub("-", "",Sys.Date()), "_ExtractedAgrprac.xlsx")), row.names = F)
 
-  
-  
 
+
+
+db_agrprac <- readxl::read_excel(here("data", "extracted_scenathon", "20240514_ExtractedAgrprac.xlsx")) %>% 
+  dplyr::filter(YEAR == 2050)
+
+options(scipen = 999)
+
+db_change_agrprac <- db_agrprac %>%
+  group_by(ALPHA3, Pathway) %>%
+  mutate(total_harvarea = sum(Harvarea, na.rm = TRUE)) %>%
+  ungroup() %>%
+  group_by(ALPHA3, Pathway, CROP) %>%
+  mutate(Harvarea_per_crop = Harvarea / total_harvarea) %>% 
+  ungroup() %>% 
+  group_by(ALPHA3, Pathway) %>%
+  mutate(share_agrprac = (AreaAgroeco / Harvarea) *Harvarea_per_crop) %>% 
+  mutate(share_agrprac_final = round(sum(share_agrprac, na.rm = TRUE), 2)) %>% 
+  ungroup() %>% 
+  select(ALPHA3, YEAR, Pathway, share_agrprac_final) %>% 
+  unique() %>%  
+  select(-YEAR)
 
 
 
@@ -902,6 +953,7 @@ data_final <- df_change %>%
   left_join(db_change_foodwaste) %>% 
   left_join(db_change_pa) %>% 
   left_join(db_change_irr) %>% 
+  left_join(db_change_agrprac) %>% 
   dplyr::filter(ALPHA3 != "WORLD")
 # %>% 
   # mutate(ALPHA3 = ifelse(ALPHA3 == "RMECAS", "NMC", ALPHA3)) 
@@ -1013,13 +1065,14 @@ data_final_FABLE <- data_final %>%
 melted <- melt(data_final_FABLE, id.vars = c("ALPHA3", "Pathway", "afforestation", "agricultural_land_expansion")) 
 melted$value <- ifelse(melted$variable == "pa", melted$value,
                        ifelse(melted$variable == "share_irr_final", melted$value,
+                              ifelse(melted$variable == "share_agrprac_final", melted$value,
                        ifelse(melted$variable == "Foodwaste_change", melted$value,
                        ifelse(
                          melted$value!= "NaN" & melted$variable != "Affor",
                          melted$value-1,
                          ifelse(melted$variable == "Affor",
                                 melted$value,
-                                NA)))))
+                                NA))))))
 melted$sign <- ifelse(melted$value < 0,
                       0,
                       1)
@@ -1036,7 +1089,7 @@ complete_data <- melted %>%
 
 var.labs <- c(
   Population_change = "Population",
-  kcal_targ_change = "Calories \n per Capita",
+  kcal_targ_change = "Calories \nper Capita",
   pdty_crop_change = "Crops \nProductivity",
   pdty_live_change = "Livestock \nProductivity",
   density_change = "Ruminant \nDensity ",
@@ -1045,13 +1098,9 @@ var.labs <- c(
   Import_quantity_change = "Imports \n(kcal)",
   Foodwaste_change = "Share of \n Food Waste \n(iii)",
   Affor = "Afforestation \n(Mha) \n(ii)",
-<<<<<<< Updated upstream
   pa= "Protected \n Areas \n(iv)",
-  share_irr_final= "Irrigated \n Area \n(v)"
-  
-=======
-  pa= "Protected \n Areas \n(iv)"
->>>>>>> Stashed changes
+  share_irr_final= "Irrigated \nArea\n(v)",
+  share_agrprac_final= "Area under \nAgricological \nPractises\n(v)"
 )
 
 
@@ -1062,7 +1111,6 @@ complete_data <- complete_data %>%
                          "UK",
                          ALPHA3))
 
-<<<<<<< Updated upstream
 
 
 complete_data$ALPHA3 <- gsub("^R_", "", complete_data$ALPHA3)
@@ -1076,22 +1124,9 @@ complete_data$ALPHA3 <- factor(as.character(complete_data$ALPHA3), levels = c("A
                                                                               "RWA", "SWE", "TUR", "UK", "USA",
                                                                               "ASP", "CSA", "NEU", "NMC",
                                                                               "OEU", "SSA"))
-=======
-# complete_data$ALPHA3 <- factor(as.character(complete_data$ALPHA3), levels = c("ARG", "AUS", "BRA", "CAN",
-#                                                                               "CHN", "COL", "DEU", "DNK","ETH",
-#                                                                               "FIN", "GRC","IDN", 'IND',
-#                                                                               "MEX", "NPL", "NOR", "RUS",
-#                                                                               "RWA", "SWE", "TUR", "UK", "USA",
-#                                                                               "R_ASP", "R_CSA", "R_NEU", "R_NMC",
-#                                                                               "R_OEU", "R_SSA"))
 
-complete_data <- complete_data %>%
-  dplyr::filter(ALPHA3 %in% c("AUS", "BRA", "COL", "ETH", "UK"))
 
-complete_data$ALPHA3 <- factor(as.character(complete_data$ALPHA3), levels = c( "AUS", "BRA", "COL", "ETH",
-                                                                             "UK"))
 
->>>>>>> Stashed changes
 
 ### Merge cluster data with complete_data
 # complete_data <- complete_data %>% 
@@ -1101,7 +1136,7 @@ complete_data$ALPHA3 <- factor(as.character(complete_data$ALPHA3), levels = c( "
 
 
 # Define the order of Pathway levels
-pathway_order <- c("CurrentTrend", "NationalCommitments", "GlobalSustainability", "FSDP")
+pathway_order <- c("CurrentTrend", "NationalCommitments", "GlobalSustainability")
 
 # cluster_labels <- c(`1` = "NOR, DNK, DEU", `2` = "ARG, AUS, GRC, \n MEX, R_NEU, R_OEU,\nRUS, TUR, USA", `3` = "AFRICA", 
 #                     `4` = "COL, IDN,\n NPL, R_ASP", `5` = "BRA, CAN, CHN,\n FIN, GBR, IND,\n R_CSA, RMECAS, SWE")
@@ -1113,12 +1148,10 @@ pathway_order <- c("CurrentTrend", "NationalCommitments", "GlobalSustainability"
 #   dplyr::filter(ALPHA3 %in% c("R_ASP", "R_CSA", "R_NEU", "R_NMC",
 #                         "R_OEU", "R_SSA"))
 
-<<<<<<< Updated upstream
-=======
 
-complete_data <- complete_data %>%
-  mutate(ALPHA3 = gsub("^R_", "", ALPHA3))  
-
+# complete_data <- complete_data %>%
+#   mutate(ALPHA3 = gsub("^R_", "", ALPHA3))  
+# 
 
 
 # # Reorder ALPHA3 with new levels
@@ -1129,7 +1162,6 @@ complete_data <- complete_data %>%
 
 
 
->>>>>>> Stashed changes
 p_final <- ggplot(complete_data, aes(y = value, x = reorder(Pathway, -as.numeric(factor(Pathway, levels = pathway_order))), group = ALPHA3, fill = sign)) +
   geom_col(position = "dodge", show.legend = FALSE)+
   ylab("Relative change between 2020 and 2050 (2020=0)")+
@@ -1153,59 +1185,36 @@ p_final <- ggplot(complete_data, aes(y = value, x = reorder(Pathway, -as.numeric
     axis.ticks.y = element_blank(),
     legend.background=element_blank(),
     legend.key = element_rect(fill = NA),
-<<<<<<< Updated upstream
     legend.text = element_text(size = 12),
-    strip.text = element_text(size = 10, face = "bold"),
-    panel.spacing.x = unit(0.75, "lines"),
-    plot.caption = element_text(size = 14), # Adjust the font size of the caption
-    strip.text.y.left = element_text(angle = 0),
-    axis.text = element_text(size = 10),
-    axis.title.x = element_text(size = 12),
-    axis.line.x = element_line()
-  ) 
-#   labs(caption = "(i) 'Agricultural Expansion' is expressed in code, taking the value 1 for 'Free expansion scenario', -1 for 'No deforestation' and -2 for 'No Agricultural expansion'.
-#   \n(ii) 'Afforestation (Mha)': results are expressed in net increase rather than relative change.
-#   \n(iii) 'Food Waste': results are expressed % of consumption which is wasted.
-#   \n(iv) 'Protected Areas': results are expressed in % of total land in 2050.
-#   \n(v) 'Irrigation area': results are expressed in % of harvest area in 2050.
-# 
+      strip.text = element_text(size = 12, face = "bold"),
+      panel.spacing.x = unit(0.75, "lines"),
+      plot.caption = element_text(size = 14),
+      strip.text.y.left = element_text(angle = 0),
+      axis.text = element_text(size = 10),
+      axis.title.x = element_text(size = 20),
+      axis.line.x = element_line()
+    )
+# +
+#   labs(caption = "(i) Results are expressed in code, taking the value 1 for 'Free expansion scenario', -1 for 'No deforestation' and -2 for 'No Agricultural expansion'.
+#   \n(ii) Results are expressed in net increase rather than relative change.
+#   \n(iii) Results are expressed % of consumption which is wasted.
+#   \n(iv) Results are expressed in % of total land in 2050.
+#   \n(v) Results are expressed in % of harvest area in 2050.
 # ")
-=======
-    legend.text = element_text(size = 10),
-    strip.text = element_text(size = 10, face = "bold"),
-    panel.spacing.x = unit(0.75, "lines"),
-    plot.caption = element_text(size = 12), 
-    strip.text.y.left = element_text(angle = 0),
-    axis.text = element_text(size = 8),
-    axis.title.x = element_text(size = 14),
-    axis.line.x = element_line()
-  ) +
-  labs(caption = "\n(i) 'Agricultural Expansion' is expressed in code, taking the value 1 for 'Free expansion scenario', -0.5 for 'No deforestation' and -1 for 'No Agricultural expansion'.
-  \n(ii) 'Afforestation (Mha)': results are expressed in net increase rather than relative change.
-  \n(iii) 'Food Waste': results are expressed in % of consumption which is waste in 2050.
-  \n(iv) 'Protected Areas': results are expressed in % of total land in 2050.")
->>>>>>> Stashed changes
+  #  
+
+
 
 
 width = 14
 height = 30
 print(p_final)
 
-<<<<<<< Updated upstream
-tiff(here("output", "figures", paste0(gsub("-", "",Sys.Date()), "_", "ScenarioAssumptionSCENATHON.tiff")),
-     units = "in", height = 14, width = 14, res = 1000)
-=======
-tiff(here("output", "figures", paste0(gsub("-", "",Sys.Date()), "_", "ScenarioAssumptionSOFA.tiff")),
-     units = "in", height = 6, width = 14, res = 1800)
->>>>>>> Stashed changes
+
+tiff(here("output", "figures", paste0(gsub("-", "",Sys.Date()), "_", "ScenarioAssumptionScenathon.tiff")),
+     units = "in", height = 14, width = 18, res = 300)
 plot(p_final)
 dev.off()
-
-# 
-# tiff(here("output", "figures", paste0(gsub("-", "",Sys.Date()), "_", "ScenarioAssumptionSOFACalculators.tiff")),
-#      units = "in", height = 9, width = 18, res = 300)
-# plot(p_final_SOFA)
-# dev.off()
 
 
 
