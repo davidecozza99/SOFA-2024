@@ -329,20 +329,20 @@ for (cur_file in file){
 
 
 
-  
-  
+
+
   data <- data %>%
     select(year, food_waste, LOSS_SCEN, fproduct, prodgroup) %>%
     mutate(Pathway = ifelse(grepl("affor", cur_file),
                             "GS_affor",
                             ifelse(grepl("diet", cur_file),
-                                   "GS_diet", 
+                                   "GS_diet",
                                    ifelse(grepl("liverum", cur_file),
-                                          "GS_live_rum", 
+                                          "GS_live_rum",
                                           ifelse(grepl("agrexp", cur_file),
                                                  "GS_agrexp",
                                                  ifelse(grepl("crop", cur_file),
-                                                        "GS_crop", 
+                                                        "GS_crop",
                                                         ifelse(grepl("popurban", cur_file),
                                                                "GS_pop_urban",
                                                                ifelse(grepl("pop", cur_file),
@@ -353,15 +353,15 @@ for (cur_file in file){
                                                                                               "CurrentTrend",
                                                                                               ifelse(grepl("National", cur_file),
                                                                                                      "NationalCommitments",
-                                                                                                     "GlobalSustainability"))))))))))) %>% 
+                                                                                                     "GlobalSustainability"))))))))))) %>%
     mutate(ALPHA3 = ifelse(grepl("AUS", cur_file), "AUS",
                            ifelse(grepl("BRA", cur_file), "BRA",
                                   ifelse(grepl("COL", cur_file), "COL",
                                          ifelse(grepl("ETH", cur_file), "ETH",
-                                                ifelse(grepl("GBR", cur_file), "GBR", 
+                                                ifelse(grepl("GBR", cur_file), "GBR",
                                                        ifelse(grepl("Current", cur_file),
                                                                   str_sub(cur_file, 40, 42),
-                                                                             ifelse(grepl("National", cur_file), 
+                                                                             ifelse(grepl("National", cur_file),
                                                                                     str_sub(cur_file, 46, 48),
                                                                                     str_sub(cur_file, 47, 49))))))))) %>%
     unique()
@@ -372,9 +372,9 @@ for (cur_file in file){
 
 write.xlsx(db_full_waste, file = here("data", "extracted", paste0(gsub("-", "",Sys.Date()), "_SOFAPathways_foodwaste.xlsx")), row.names = F)
 
-db_full_waste <- readxl::read_excel(here("data", "extracted", "20240513_SOFAPathways_foodwaste.xlsx")) %>% 
+db_full_waste <- readxl::read_excel(here("data", "extracted", "20240514_SOFAPathways_foodwaste.xlsx")) %>% 
   # mutate(ALPHA3 = ifelse(nchar(ALPHA3) == 4, stringr::str_sub(ALPHA3, 2, 4), ALPHA3)) %>% 
-  rename(FPRODUCT = fproduct) %>% 
+  rename(FPRODUCT = fproduct) %>%
   mutate(FPRODUCT = ifelse(FPRODUCT == "MILK", "milk", FPRODUCT))
 
 
@@ -396,7 +396,7 @@ db_full_waste_final <- db_full_waste %>%
 
 
 
-write.xlsx(db_full_waste_final, file = here("data", "extracted", paste0(gsub("-", "",Sys.Date()), "_SOFAPathways_foodwaste.xlsx")), row.names = F)
+write.xlsx(db_full_waste_final, file = here("data", "extracted", paste0(gsub("-", "",Sys.Date()), "_SOFAPathways_foodwaste_final.xlsx")), row.names = F)
 
 
 
