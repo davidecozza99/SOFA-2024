@@ -17,11 +17,33 @@ conflicts_prefer(dplyr::lag)
 
 here()
 
+
+
+
+N <- read_excel(here("data", "240513_ExpostNComputations_SOFA.xlsx")) %>%
+  mutate(Year = as.double(Year)) %>% 
+  mutate(
+    Country = case_when(
+      Country == "AUS" ~ "Australia",
+      Country == "BRA" ~ "Brazil",
+      Country == "COL" ~ "Colombia",
+      Country == "ETH" ~ "Ethiopia",
+      Country == "GBR" ~ "UK",
+      TRUE ~ Country  # Keeps the original value if it doesn't match any of the specified cases
+    )
+  ) %>% 
+  rename(Location = Country) %>% 
+  mutate(Pathway = if_else(Pathway == "CurrentTrend", "Current Trend_Yes", Pathway))
+
+  
+
+
+
 #Data -------------------------------------------------------------------
 
 aus_data <- read_xlsx(here("data", "report_AUS_20240306_9H01.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
-  select(Pathway, Year, kcal_feas, 
+  select(Location, Pathway, Year, kcal_feas, 
          ForestChange, CalcCropland, CalcPasture, CalcOtherLand, 
          CalcFarmLabourFTE,
          CalcCropN2O, CalcCropCH4, CalcCropCO2, CalcLiveN2O, CalcLiveCH4, CalcDeforCO2, CalcOtherLUCCO2, CalcSequestCO2,
@@ -36,7 +58,8 @@ aus_data <- read_xlsx(here("data", "report_AUS_20240306_9H01.xlsx"), sheet = "In
   mutate(CO2 = CalcCropCO2 + CalcDeforCO2 + CalcOtherLUCCO2 + CalcSequestCO2) %>% 
   mutate(CH4 = CalcCropCH4 + CalcLiveCH4) %>% 
   mutate(N2O = CalcCropN2O + CalcLiveN2O) %>% 
-  mutate(TotalN = CalcN_org + CalcN_synth)
+  left_join(N) %>% 
+  mutate(TotalN = CalcN_org + CalcN_synth + CalcNLeftPasture, na.rm =TRUE)
 
 
 aus_data$Pathway[aus_data$Pathway == "NationalCommitments"] <- "NC_complete"
@@ -88,7 +111,9 @@ aus_kcal_final <- aus_kcal %>%
 
 #Final Database ---------------------------------------
 aus_data <- left_join(aus_data, aus_kcal_final %>% select(Pathway, Year, kcal_plant, kcal_anim), by = c("Pathway", "Year")) %>%
-  unique() 
+  unique() %>% 
+  filter(Pathway != "GS_live_rumdensity") 
+
 
 
 
@@ -112,7 +137,9 @@ aus <- aus_data %>%
     diff_LNPPMatureOtherLand = ifelse(Pathway != "Current Trend_Yes", LNPPMatureOtherLand - first(LNPPMatureOtherLand[Pathway == "Current Trend_Yes"]), NA),
     diff_TotalN = ifelse(Pathway != "Current Trend_Yes", TotalN - first(TotalN[Pathway == "Current Trend_Yes"]), NA),
     diff_CalcWFblue = ifelse(Pathway != "Current Trend_Yes", CalcWFblue - first(CalcWFblue[Pathway == "Current Trend_Yes"]), NA)
-  ) 
+  ) %>% 
+  filter(Pathway != "GS_live_rumdensity") 
+  
 
 
 aus$scenarios <- substring(aus_data$Pathway, 4)
@@ -142,7 +169,7 @@ pathway_labels <- c(
   "agroforestry" = "Agroforestry",
   "grassland" = "Intensive/ Extensive grassland share",
   "peatland" = "Peatland",
-  "live_rumdensity" = "Livestock productivity and Ruminant Density",
+  # "live_rumdensity" = "Livestock productivity and Ruminant Density",
   "tradeeffect" = "NC/GS Trade Adjustment effect")
 
 pathway_colors <- c(  
@@ -277,12 +304,12 @@ for (element in elements) {
   
 
   # Save the current plot as TIFF
-  tiff(
-    filename = here(figure_directory, paste0(element, ".tiff")),
-    units = "in", height = 5, width = 14, res = 600
-  )
-  print(current_plot)
-  dev.off()
+  # tiff(
+  #   filename = here(figure_directory, paste0(element, ".tiff")),
+  #   units = "in", height = 5, width = 14, res = 600
+  # )
+  # print(current_plot)
+  # dev.off()
 
   # Append the current plot to the list
   plots_list[[element]] <- current_plot
