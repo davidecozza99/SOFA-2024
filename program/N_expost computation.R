@@ -34,7 +34,7 @@ bra_data <- read_xlsx(here("data", "report_BRA_20240306_10H44.xlsx"), sheet = "I
   rename(Pathway = `Current Trend`) %>% 
   filter(Pathway %in% c("Current Trend_Yes", "NationalCommitments", "GlobalSustainability", "GS_agrexp", "GS_diet", "GS_crop"))
 
-col_data <- read_xlsx(here("data", "report_COL_20240325_15H07.xlsx"), sheet = "Indicators") %>% 
+col_data <- read_xlsx(here("data", "report_COL_20240516_9H40.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
   filter(Pathway %in% c("Current Trend_Yes", "NationalCommitments", "GlobalSustainability", "GS_diet", "GS_crop", "GS_pop_urban"))
 
@@ -72,8 +72,8 @@ all_data <- aus_data %>%
 file <- list.files(path = here("data", "SOFA extraction"))
 
 
-#Extracting data from the Calculators - only run when needed 
-#<<<<<<< HEAD
+# Extracting data from the Calculators - only run when needed
+# <<<<<<< HEAD
 # 
 # db_full <- data.frame()
 # 
@@ -142,11 +142,11 @@ file <- list.files(path = here("data", "SOFA extraction"))
 #                           ifelse(ALPHA3 == "RME", "NMC", ALPHA3))) %>%
 #   data.frame()
 # 
-# xlsx::write.xlsx(db_herd, file = here("data",  "Manure", paste0(format(Sys.Date(),format = "%y%m%d"), "_Extracted_herdsize.xlsx")), row.names = F)
+# write.xlsx(db_herd, file = here("data",  "Manure", paste0(format(Sys.Date(),format = "%y%m%d"), "_Extracted_herdsize.xlsx")), row.names = F)
 
 
 
-db_herd <- read_excel(here("data",  "Manure", "240513_Extracted_herdsize.xlsx")) %>% 
+db_herd <- read_excel(here("data",  "Manure", "240516_Extracted_herdsize.xlsx")) %>% 
   # mutate(ALPHA3 = ifelse(ALPHA3 == "RME", "NMC",
   #                        ifelse(nchar(ALPHA3)>3, stringr::str_sub(ALPHA3, 2, 4), ALPHA3))) %>% 
   select(-ALPHA3) %>% 

@@ -27,9 +27,9 @@ bra_data <- read_xlsx(here("data", "report_BRA_20240306_10H44.xlsx"), sheet = "I
   rename(Pathway = `Current Trend`) %>% 
   filter(Pathway %in% c("Current Trend_Yes", "NationalCommitments", "GlobalSustainability", "GS_agrexp", "GS_diet", "GS_crop"))
 
-col_data <- read_xlsx(here("data", "report_COL_20240325_15H07.xlsx"), sheet = "Indicators") %>% 
+col_data <- read_xlsx(here("data", "report_COL_20240516_9H40.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
-  filter(Pathway %in% c("Current Trend_Yes", "NationalCommitments", "GlobalSustainability", "GS_diet", "GS_crop", "GS_pop_urban"))
+  filter(Pathway %in% c("Current Trend_Yes", "NationalCommitments", "GlobalSustainability", "GS_diet", "GS_crop", "GS_urban"))
   
 eth_data <- read_xlsx(here("data", "report_ETH_20240426_12H01.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
@@ -48,8 +48,8 @@ all_data <- aus_data %>%
   bind_rows(gbr_data)
 
 all_data <- all_data %>% 
-  select(Pathway, Location, Population, Year, kcal_feas, kcal_PoU,
-         ForestChange, CalcCropland, CalcPasture, CalcOtherLand, 
+  select(Pathway, Location, GDP, Population, Year, kcal_feas, kcal_PoU,kcal_mder,
+         ForestChange, CalcCropland, CalcPasture, CalcOtherLand, NewOtherLand, 
          CalcFarmLabourFTE,
          CalcCropN2O, CalcCropCH4, CalcCropCO2, CalcLiveN2O, CalcLiveCH4, CalcDeforCO2, CalcOtherLUCCO2, CalcSequestCO2,
          kcal_feas, kcal_mder,
@@ -59,7 +59,8 @@ all_data <- all_data %>%
          NewForestChange, LNPPNewForest, LNPPNewOtherLand, AgroecoSh) %>% 
   mutate(Cropland_change = CalcCropland - lag(CalcCropland)) %>% 
   mutate(Pasture_change = CalcPasture - lag(CalcPasture)) %>% 
-  mutate(OtherLand_change = CalcOtherLand - lag(CalcOtherLand)) %>%
+  mutate(CalcOtherLand= CalcOtherLand + NewOtherLand) %>% 
+  mutate(OtherLand_change = CalcOtherLand - lag(CalcOtherLand)) %>% 
   mutate(LNPPNewOtherLand_change = LNPPNewOtherLand - lag(LNPPNewOtherLand)) %>% 
   mutate(LNPPNewForest_change = LNPPNewForest - lag(LNPPNewForest)) %>% 
   # filter(Year %in% c("2030", "2050")) %>% 
@@ -71,11 +72,32 @@ all_data <- all_data %>%
 
 
 # Commodities -----------------------------
-aus_comm <- read_xlsx(here("data", "report_AUS_20240306_9H01.xlsx"), sheet = "Commodities")
-bra_comm <- read_xlsx(here("data", "report_BRA_20240306_10H44.xlsx"), sheet = "Commodities") 
-col_comm <- read_xlsx(here("data", "report_COL_20240325_15H07.xlsx"), sheet = "Commodities")  
-eth_comm <- read_xlsx(here("data", "report_ETH_20240426_12H01.xlsx"), sheet = "Commodities")  
-gbr_comm <- read_xlsx(here("data", "report_GBR_20240306_10H43.xlsx"), sheet = "Commodities")  
+
+
+aus_comm <- read_xlsx(here("data", "report_AUS_20240306_9H01.xlsx"), sheet = "Commodities")%>% 
+  rename(Pathway = `Current Trend`) %>% 
+  filter(Pathway %in% c("Current Trend_Yes", "NationalCommitments", "GlobalSustainability", "GS_diet", "GS_affor", "GS_live_rumdensity"))
+  
+
+bra_comm <- read_xlsx(here("data", "report_BRA_20240306_10H44.xlsx"), sheet = "Commodities") %>% 
+  rename(Pathway = `Current Trend`) %>% 
+  filter(Pathway %in% c("Current Trend_Yes", "NationalCommitments", "GlobalSustainability", "GS_agrexp", "GS_diet", "GS_crop"))
+
+
+col_comm <- read_xlsx(here("data", "report_COL_20240516_9H40.xlsx"), sheet = "Commodities") %>% 
+  rename(Pathway = `Current Trend`) %>% 
+  filter(Pathway %in% c("Current Trend_Yes", "NationalCommitments", "GlobalSustainability", "GS_diet", "GS_crop", "GS_urban"))
+
+
+eth_comm <- read_xlsx(here("data", "report_ETH_20240426_12H01.xlsx"), sheet = "Commodities")  %>% 
+  rename(Pathway = `Current Trend`) %>% 
+  filter(Pathway %in% c("Current Trend_Yes", "NationalCommitments", "GlobalSustainability", "GS_pop", "GS_agrexp", "GS_crop"))
+
+
+gbr_comm <- read_xlsx(here("data", "report_GBR_20240306_10H43.xlsx"), sheet = "Commodities")  %>% 
+  rename(Pathway = `Current Trend`) %>% 
+  filter(Pathway %in% c("Current Trend_Yes", "NationalCommitments", "GlobalSustainability", "GS_diet", "GS_foodwaste", "GS_crop"))
+
 
 
 
@@ -84,7 +106,7 @@ all_comm <- aus_comm %>%
   bind_rows(col_comm) %>%
   bind_rows(eth_comm) %>%
   bind_rows(gbr_comm) %>% 
-  rename(Pathway = `Current Trend`) %>% 
+  # rename(Pathway = `Current Trend`) %>% 
   # filter(Year %in% c("2030", "2050"))%>% 
   select(Location, Pathway, Year, Product, kcalfeasprod)
 
@@ -110,24 +132,31 @@ all_kcal_final <- all_kcal %>%
 all_data <- left_join(all_data, all_kcal_final %>% select(Pathway, Year, kcal_plant, Location, kcal_anim), by = c("Pathway", "Location", "Year")) %>%
   unique() 
 
-# 
+
+
+
 # #Creation of EAT_LANCET Kcal variables
 
 mapping_eat<- read_excel(here("data", "mapping_product_group_EAT.xlsx")) %>%
   rename(Product = PRODUCT)
 
+teff_ethiopia <- read_excel("data/240517_teff_kcal.xlsx")
+
+
+
 all_kcal_eat <- all_comm %>%
   inner_join(mapping_eat, by ="Product") %>%
+  rbind(teff_ethiopia) %>% 
   unique %>%
   group_by(Pathway, Location, Year, EAT_foodgroup) %>%
   mutate(kcal_eat = sum(kcalfeasprod)) %>%
-  select(-kcalfeasprod, -PROD_GROUP, -Product)
+  select(-kcalfeasprod, -PROD_GROUP, -Product) %>% 
+  unique() 
 
-
-all_kcal_eat_final <- all_kcal_eat %>%
-  pivot_wider(names_from = EAT_foodgroup, values_from = kcal_eat, values_fn = list(kcal_eat = function(x) x[which.min(!is.na(x))])) %>%
-  rename(kcal_NotIdentifiedinEATLancet = "NA") %>%
-  replace(is.na(.), 0)
+# all_kcal_eat_final <- all_kcal_eat %>%
+#   pivot_wider(names_from = EAT_foodgroup, values_from = kcal_eat, values_fn = list(kcal_eat = function(x) x[which.min(!is.na(x))])) %>%
+#   rename(kcal_NotIdentifiedinEATLancet = "NA") %>%
+#   replace(is.na(.), 0)
 
 
 all_kcal_eat_final <- all_kcal_eat %>%
@@ -137,6 +166,7 @@ all_kcal_eat_final <- all_kcal_eat %>%
     ~ if_else(. %in% c("Location", "Pathway", "Year", "kcal_NotIdentified_EATLancet"), ., paste0("kcal_", .,"_EATLancet")),
     -c(Location, Pathway, Year, kcal_NotIdentifiedinEATLancet)
   )
+write.xlsx(all_kcal_eat_final, file = here("data", "Decomposition", paste0(gsub("-", "",Sys.Date()), "_",  "database_decomposition_eat.xlsx")))
 
 #Final Database ---------------------------------------
 
@@ -146,10 +176,7 @@ all_data <- left_join(all_data, all_kcal_eat_final, by = c("Pathway", "Location"
 
 
 #Save
-write.xlsx(all_data, file = here("data", "Decomposition", "database_decomposition_withETHnew.xlsx"))
-
-
-
+# write.xlsx(all_data, file = here("data", "Decomposition", paste0(gsub("-", "",Sys.Date()), "_",  "database_decomposition.xlsx")))
 
 
 
@@ -173,22 +200,23 @@ all_kcal_fao_fbs_final <- all_kcal_fao_fbs %>%
 rename_with(
     ~ if_else(. %in% c("Location", "Pathway", "Year"), ., paste0("kcal_", .,"_fao_fbs")),
     -c(Location, Pathway, Year)
-  )
+  ) %>% 
+  mutate(Pathway = recode(Pathway, "Current Trend_Yes" = "Current Trend"))
 
+  
 
 
 #Final Database ---------------------------------------
 
 all_data_fao_fbs <- left_join(all_data, all_kcal_fao_fbs_final, by = c("Pathway", "Location", "Year")) %>%
-  unique() %>%
-  mutate(Pathway = recode(Pathway, "Current Trend_Yes" = "Current Trend"))
+  unique() 
 
 
 #Save
-write.xlsx(all_data_fao_fbs, file = here("data", "Decomposition", "database_decomposition_newvariables_asked_withETH.xlsx"))
+write.xlsx(all_data_fao_fbs, file = here("data", "Decomposition", paste0(gsub("-", "",Sys.Date()), "_", "database_decomposition.xlsx")))
 
 
-
+#### Ex post : to add in the other_EAT column the difference between Kcal_feas (REPORTING AGGREGATED) - sum of Kcal_feas from the (REPORTING BY_PRODUCT)
 
 
 

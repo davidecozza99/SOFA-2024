@@ -18,11 +18,34 @@ conflicts_prefer(dplyr::lag)
 here()
 
 #Data -------------------------------------------------------------------
+db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>% 
+  rename(Year = YEAR) %>%
+  mutate(Year = as.double(Year)) %>%
+  mutate(
+    ALPHA3 = case_when(
+      ALPHA3 == "AUS" ~ "Australia",
+      ALPHA3 == "BRA" ~ "Brazil",
+      ALPHA3 == "COL" ~ "Colombia",
+      ALPHA3 == "ETH" ~ "Ethiopia",
+      ALPHA3 == "GBR" ~ "UK",
+      TRUE ~ ALPHA3  # Keeps the original value if it doesn't match any of the specified cases
+    )
+  ) %>%
+  rename(Location = ALPHA3) %>%
+  mutate(Pathway = if_else(Pathway == "CurrentTrend", "Current Trend_Yes", Pathway))
+
+# Split the database into separate data frames based on the value of ALPHA3
+db_manure <- db_manure %>% filter(Location == "Ethiopia")
+
 
 eth_data <- read_xlsx(here("data", "report_ETH_20240426_12H01.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
+  filter(Pathway!= "Current Trend") %>% 
+  left_join(db_manure, by = c("Location", "Year", "Pathway")) %>% 
+  mutate(Pathway = ifelse(Pathway == "GS_rumdensity", "GS_popactivity", 
+                          ifelse(Pathway == "GS_rum", "GS_rumdensity", Pathway))) %>%
   select(Pathway, Year, kcal_feas, 
-         ForestChange, CalcCropland, CalcPasture, CalcOtherLand, 
+         ForestChange, CalcCropland, CalcPasture, CalcOtherLand, NewOtherLand, 
          CalcFarmLabourFTE,
          CalcCropN2O, CalcCropCH4, CalcCropCO2, CalcLiveN2O, CalcLiveCH4, CalcDeforCO2, CalcOtherLUCCO2, CalcSequestCO2,
          kcal_feas, kcal_mder,
@@ -31,6 +54,7 @@ eth_data <- read_xlsx(here("data", "report_ETH_20240426_12H01.xlsx"), sheet = "I
          CalcWFblue) %>% 
   mutate(Cropland_change = CalcCropland - lag(CalcCropland)) %>% 
   mutate(Pasture_change = CalcPasture - lag(CalcPasture)) %>% 
+  mutate(CalcOtherLand= CalcOtherLand + NewOtherLand) %>% 
   mutate(OtherLand_change = CalcOtherLand - lag(CalcOtherLand)) %>% 
   filter(Year %in% c("2030", "2050")) %>% 
   mutate(CO2 = CalcCropCO2 + CalcDeforCO2 + CalcOtherLUCCO2 + CalcSequestCO2) %>% 

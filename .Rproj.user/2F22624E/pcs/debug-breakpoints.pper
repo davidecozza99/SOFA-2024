@@ -137,21 +137,6 @@
                 "package_name": ""
             },
             {
-                "id": 23,
-                "path": "C:/Users/Davide/Desktop/GitHub/SOFA 2024/program/Scenarios_assumptions_SOFA.R",
-                "line_number": 118,
-                "function_steps": "",
-                "function_name": "toplevel",
-                "state": 1,
-                "editor_state": 1,
-                "editor_line_number": 118,
-                "is_pending_debug_completion": false,
-                "needs_updated_steps": false,
-                "type": 1,
-                "is_package_breakpoint": false,
-                "package_name": ""
-            },
-            {
                 "id": 24,
                 "path": "C:/Users/Davide/Desktop/GitHub/SOFA 2024/program/GHG Emissions.R",
                 "line_number": 114,
@@ -169,14 +154,29 @@
             {
                 "id": 25,
                 "path": "C:/Users/Davide/Desktop/GitHub/SOFA 2024/program/decomposition_finaldatabase.R",
-                "line_number": 156,
+                "line_number": 183,
                 "function_steps": "",
                 "function_name": "toplevel",
                 "state": 1,
                 "editor_state": 1,
-                "editor_line_number": 156,
+                "editor_line_number": 183,
                 "is_pending_debug_completion": false,
                 "needs_updated_steps": true,
+                "type": 1,
+                "is_package_breakpoint": false,
+                "package_name": ""
+            },
+            {
+                "id": 27,
+                "path": "C:/Users/Davide/Desktop/GitHub/SOFA 2024/program/Decomposition_AUS_onebyone.R",
+                "line_number": 48,
+                "function_steps": "",
+                "function_name": "toplevel",
+                "state": 1,
+                "editor_state": 1,
+                "editor_line_number": 48,
+                "is_pending_debug_completion": false,
+                "needs_updated_steps": false,
                 "type": 1,
                 "is_package_breakpoint": false,
                 "package_name": ""

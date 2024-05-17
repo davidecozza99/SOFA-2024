@@ -18,11 +18,35 @@ conflicts_prefer(dplyr::lag)
 here()
 
 #Data -------------------------------------------------------------------
- 
-col_data <- read_xlsx(here("data", "report_COL_20240325_15H07.xlsx"), sheet = "Indicators") %>% 
+
+db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>% 
+  rename(Year = YEAR) %>%
+  mutate(Year = as.double(Year)) %>%
+  mutate(
+    ALPHA3 = case_when(
+      ALPHA3 == "AUS" ~ "Australia",
+      ALPHA3 == "BRA" ~ "Brazil",
+      ALPHA3 == "COL" ~ "Colombia",
+      ALPHA3 == "ETH" ~ "Ethiopia",
+      ALPHA3 == "GBR" ~ "UK",
+      TRUE ~ ALPHA3  # Keeps the original value if it doesn't match any of the specified cases
+    )
+  ) %>%
+  rename(Location = ALPHA3) %>%
+  mutate(Pathway = if_else(Pathway == "CurrentTrend", "Current Trend_Yes", Pathway))
+
+# Split the database into separate data frames based on the value of ALPHA3
+db_manure <- db_manure %>% filter(Location == "Colombia")
+
+
+col_data <- read_xlsx(here("data", "report_COL_20240516_9H40.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
+  filter(Pathway!= "Current Trend") %>% 
+  left_join(db_manure, by = c("Location", "Year", "Pathway")) %>% 
+  mutate(Pathway = ifelse(Pathway == "GS_rumdensity", "GS_popactivity", 
+                          ifelse(Pathway == "GS_rum", "GS_rumdensity", Pathway))) %>%
   select(Pathway, Year, kcal_feas, 
-         ForestChange, CalcCropland, CalcPasture, CalcOtherLand, 
+         ForestChange, CalcCropland, CalcPasture, CalcOtherLand, NewOtherLand, 
          CalcFarmLabourFTE,
          CalcCropN2O, CalcCropCH4, CalcCropCO2, CalcLiveN2O, CalcLiveCH4, CalcDeforCO2, CalcOtherLUCCO2, CalcSequestCO2,
          kcal_feas, kcal_mder,
@@ -31,6 +55,7 @@ col_data <- read_xlsx(here("data", "report_COL_20240325_15H07.xlsx"), sheet = "I
          CalcWFblue) %>% 
   mutate(Cropland_change = CalcCropland - lag(CalcCropland)) %>% 
   mutate(Pasture_change = CalcPasture - lag(CalcPasture)) %>% 
+  mutate(CalcOtherLand= CalcOtherLand + NewOtherLand) %>% 
   mutate(OtherLand_change = CalcOtherLand - lag(CalcOtherLand)) %>% 
   filter(Year %in% c("2030", "2050")) %>% 
   mutate(CO2 = CalcCropCO2 + CalcDeforCO2 + CalcOtherLUCCO2 + CalcSequestCO2) %>% 
@@ -48,7 +73,7 @@ col_data$Pathway[col_data$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradee
 
 
 # Commodities -----------------------------
-col_comm <- read_xlsx(here("data", "report_COL_20240325_15H07.xlsx"), sheet = "Commodities") %>% 
+col_comm <- read_xlsx(here("data", "report_COL_20240516_9H40.xlsx"), sheet = "Commodities") %>% 
   rename(Pathway = `Current Trend`) %>% 
   filter(Year %in% c("2030", "2050"))%>% 
   select(Location, Pathway, Year, Product, kcalfeasprod)
@@ -272,15 +297,16 @@ for (element in elements) {
   
   
   # # Save the current plot as TIFF
-  tiff(
-    filename = here(figure_directory, paste0(element, ".tiff")),
-    units = "in", height = 6, width = 14, res = 600
-  )
-  print(current_plot)
-  dev.off()
+  # tiff(
+  #   filename = here(figure_directory, paste0(element, ".tiff")),
+  #   units = "in", height = 6, width = 14, res = 600
+  # )
+  # print(current_plot)
+  # dev.off()
   # # 
   # Append the current plot to the list
   plots_list[[element]] <- current_plot
 }
 
 plots_list
+

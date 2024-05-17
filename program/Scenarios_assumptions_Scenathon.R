@@ -952,8 +952,8 @@ data_final <- df_change %>%
   left_join(db_change_afforestation) %>%
   left_join(db_change_foodwaste) %>% 
   left_join(db_change_pa) %>% 
-  left_join(db_change_irr) %>% 
-  left_join(db_change_agrprac) %>% 
+  # left_join(db_change_irr) %>% 
+  # left_join(db_change_agrprac) %>% 
   dplyr::filter(ALPHA3 != "WORLD")
 # %>% 
   # mutate(ALPHA3 = ifelse(ALPHA3 == "RMECAS", "NMC", ALPHA3)) 
@@ -1097,7 +1097,7 @@ var.labs <- c(
   Export_quantity_change = "Exports \n(kcal)",
   Import_quantity_change = "Imports \n(kcal)",
   Foodwaste_change = "Share of \n Food Waste \n(iii)",
-  Affor = "Afforestation \n(Mha) \n(ii)",
+  Affor = "Afforestation \n(1000ha) \n(ii)",
   pa= "Protected \n Areas \n(iv)",
   share_irr_final= "Irrigated \nArea\n(v)",
   share_agrprac_final= "Area under \nAgricological \nPractises\n(v)"

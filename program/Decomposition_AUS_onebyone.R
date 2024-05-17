@@ -20,46 +20,53 @@ here()
 
 
 
-N <- read_excel(here("data", "240513_ExpostNComputations_SOFA.xlsx")) %>%
-  mutate(Year = as.double(Year)) %>% 
-  mutate(
-    Country = case_when(
-      Country == "AUS" ~ "Australia",
-      Country == "BRA" ~ "Brazil",
-      Country == "COL" ~ "Colombia",
-      Country == "ETH" ~ "Ethiopia",
-      Country == "GBR" ~ "UK",
-      TRUE ~ Country  # Keeps the original value if it doesn't match any of the specified cases
-    )
-  ) %>% 
-  rename(Location = Country) %>% 
-  mutate(Pathway = if_else(Pathway == "CurrentTrend", "Current Trend_Yes", Pathway))
-
-  
-
-
 
 #Data -------------------------------------------------------------------
 
+db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>% 
+  rename(Year = YEAR) %>%
+  mutate(Year = as.double(Year)) %>%
+  mutate(
+    ALPHA3 = case_when(
+      ALPHA3 == "AUS" ~ "Australia",
+      ALPHA3 == "BRA" ~ "Brazil",
+      ALPHA3 == "COL" ~ "Colombia",
+      ALPHA3 == "ETH" ~ "Ethiopia",
+      ALPHA3 == "GBR" ~ "UK",
+      TRUE ~ ALPHA3  # Keeps the original value if it doesn't match any of the specified cases
+    )
+  ) %>%
+  rename(Location = ALPHA3) %>%
+  mutate(Pathway = if_else(Pathway == "CurrentTrend", "Current Trend_Yes", Pathway))
+
+# Split the database into separate data frames based on the value of ALPHA3
+db_manure <- db_manure %>% filter(Location == "Australia")
+
+
+
 aus_data <- read_xlsx(here("data", "report_AUS_20240306_9H01.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
-  select(Location, Pathway, Year, kcal_feas, 
-         ForestChange, CalcCropland, CalcPasture, CalcOtherLand, 
+  filter(Pathway!= "Current Trend") %>% 
+  left_join(db_manure, by = c("Location", "Year", "Pathway")) %>% 
+  select(Pathway, Year, kcal_feas, 
+         ForestChange, CalcCropland, CalcPasture, CalcOtherLand, NewOtherLand, 
          CalcFarmLabourFTE,
          CalcCropN2O, CalcCropCH4, CalcCropCO2, CalcLiveN2O, CalcLiveCH4, CalcDeforCO2, CalcOtherLUCCO2, CalcSequestCO2,
          kcal_feas, kcal_mder,
          LNPPMatureForest, LNPPMatureOtherLand,
-         CalcN_org, CalcN_synth,
+         CalcN_org, CalcN_synth, Nmanure,
          CalcWFblue) %>% 
   mutate(Cropland_change = CalcCropland - lag(CalcCropland)) %>% 
   mutate(Pasture_change = CalcPasture - lag(CalcPasture)) %>% 
+  mutate(CalcOtherLand= CalcOtherLand + NewOtherLand) %>% 
   mutate(OtherLand_change = CalcOtherLand - lag(CalcOtherLand)) %>% 
   filter(Year %in% c("2030", "2050")) %>% 
   mutate(CO2 = CalcCropCO2 + CalcDeforCO2 + CalcOtherLUCCO2 + CalcSequestCO2) %>% 
   mutate(CH4 = CalcCropCH4 + CalcLiveCH4) %>% 
   mutate(N2O = CalcCropN2O + CalcLiveN2O) %>% 
-  left_join(N) %>% 
-  mutate(TotalN = CalcN_org + CalcN_synth + CalcNLeftPasture, na.rm =TRUE)
+  mutate(TotalN = CalcN_synth + Nmanure)
+  # left_join(N) %>% 
+  # mutate(TotalN = CalcN_org + CalcN_synth + CalcNLeftPasture, na.rm =TRUE)
 
 
 aus_data$Pathway[aus_data$Pathway == "NationalCommitments"] <- "NC_complete"
@@ -143,6 +150,10 @@ aus <- aus_data %>%
 
 
 aus$scenarios <- substring(aus_data$Pathway, 4)
+
+
+
+
 
 
 #Labelling --------------------------
@@ -304,12 +315,12 @@ for (element in elements) {
   
 
   # Save the current plot as TIFF
-  # tiff(
-  #   filename = here(figure_directory, paste0(element, ".tiff")),
-  #   units = "in", height = 5, width = 14, res = 600
-  # )
-  # print(current_plot)
-  # dev.off()
+  tiff(
+    filename = here(figure_directory, paste0(element, ".tiff")),
+    units = "in", height = 5, width = 14, res = 600
+  )
+  print(current_plot)
+  dev.off()
 
   # Append the current plot to the list
   plots_list[[element]] <- current_plot
