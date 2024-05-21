@@ -54,10 +54,10 @@ aus_data <- read_xlsx(here("data", "report_AUS_20240306_9H01.xlsx"), sheet = "In
          LNPPMatureForest, LNPPMatureOtherLand,
          CalcN_org, CalcN_synth, Nmanure,
          CalcWFblue) %>% 
-  mutate(Cropland_change = CalcCropland - lag(CalcCropland)) %>% 
-  mutate(Pasture_change = CalcPasture - lag(CalcPasture)) %>% 
+  mutate(Cropland_change = (CalcCropland - lag(CalcCropland))/5) %>% 
+  mutate(Pasture_change = (CalcPasture - lag(CalcPasture))/5) %>% 
   mutate(CalcOtherLand= CalcOtherLand + NewOtherLand) %>% 
-  mutate(OtherLand_change = CalcOtherLand - lag(CalcOtherLand)) %>% 
+  mutate(OtherLand_change = (CalcOtherLand - lag(CalcOtherLand))/5) %>% 
   filter(Year %in% c("2030", "2050")) %>% 
   mutate(CO2 = CalcCropCO2 + CalcDeforCO2 + CalcOtherLUCCO2 + CalcSequestCO2) %>% 
   mutate(CH4 = CalcCropCH4 + CalcLiveCH4) %>% 
@@ -181,8 +181,6 @@ bra_data <- read_xlsx(here("data", "report_BRA_20240306_10H44.xlsx"), sheet = "I
   rename(Pathway = `Current Trend`) %>% 
   filter(Pathway!= "Current Trend") %>% 
   left_join(db_manure, by = c("Location", "Year", "Pathway")) %>% 
-  mutate(Pathway = ifelse(Pathway == "GS_rumdensity", "GS_popactivity", 
-                          ifelse(Pathway == "GS_rum", "GS_rumdensity", Pathway))) %>%
   select(Pathway, Year, kcal_feas, 
          ForestChange, CalcCropland, CalcPasture, CalcOtherLand, NewOtherLand, 
          CalcFarmLabourFTE,
@@ -191,10 +189,10 @@ bra_data <- read_xlsx(here("data", "report_BRA_20240306_10H44.xlsx"), sheet = "I
          LNPPMatureForest, LNPPMatureOtherLand,
          CalcN_org, CalcN_synth,
          CalcWFblue) %>% 
-  mutate(Cropland_change = CalcCropland - lag(CalcCropland)) %>% 
-  mutate(Pasture_change = CalcPasture - lag(CalcPasture)) %>% 
+  mutate(Cropland_change = (CalcCropland - lag(CalcCropland))/5) %>% 
+  mutate(Pasture_change = (CalcPasture - lag(CalcPasture))/5) %>% 
   mutate(CalcOtherLand= CalcOtherLand + NewOtherLand) %>% 
-  mutate(OtherLand_change = CalcOtherLand - lag(CalcOtherLand)) %>% 
+  mutate(OtherLand_change = (CalcOtherLand - lag(CalcOtherLand))/5) %>% 
   filter(Year %in% c("2030", "2050")) %>% 
   mutate(CO2 = CalcCropCO2 + CalcDeforCO2 + CalcOtherLUCCO2 + CalcSequestCO2) %>% 
   mutate(CH4 = CalcCropCH4 + CalcLiveCH4) %>% 
@@ -323,10 +321,10 @@ col_data <- read_xlsx(here("data", "report_COL_20240516_9H40.xlsx"), sheet = "In
          LNPPMatureForest, LNPPMatureOtherLand,
          CalcN_org, CalcN_synth,
          CalcWFblue) %>% 
-  mutate(Cropland_change = CalcCropland - lag(CalcCropland)) %>% 
-  mutate(Pasture_change = CalcPasture - lag(CalcPasture)) %>% 
+  mutate(Cropland_change = (CalcCropland - lag(CalcCropland))/5) %>% 
+  mutate(Pasture_change = (CalcPasture - lag(CalcPasture))/5) %>% 
   mutate(CalcOtherLand= CalcOtherLand + NewOtherLand) %>% 
-  mutate(OtherLand_change = CalcOtherLand - lag(CalcOtherLand)) %>% 
+  mutate(OtherLand_change = (CalcOtherLand - lag(CalcOtherLand))/5) %>% 
   filter(Year %in% c("2030", "2050")) %>% 
   mutate(CO2 = CalcCropCO2 + CalcDeforCO2 + CalcOtherLUCCO2 + CalcSequestCO2) %>% 
   mutate(CH4 = CalcCropCH4 + CalcLiveCH4) %>% 
@@ -439,8 +437,6 @@ eth_data <- read_xlsx(here("data", "report_ETH_20240426_12H01.xlsx"), sheet = "I
   rename(Pathway = `Current Trend`) %>% 
   filter(Pathway!= "Current Trend") %>% 
   left_join(db_manure, by = c("Location", "Year", "Pathway")) %>% 
-  mutate(Pathway = ifelse(Pathway == "GS_rumdensity", "GS_popactivity", 
-                          ifelse(Pathway == "GS_rum", "GS_rumdensity", Pathway))) %>%
   select(Pathway, Year, kcal_feas, 
          ForestChange, CalcCropland, CalcPasture, CalcOtherLand, NewOtherLand, 
          CalcFarmLabourFTE,
@@ -449,10 +445,10 @@ eth_data <- read_xlsx(here("data", "report_ETH_20240426_12H01.xlsx"), sheet = "I
          LNPPMatureForest, LNPPMatureOtherLand,
          CalcN_org, CalcN_synth,
          CalcWFblue) %>% 
-  mutate(Cropland_change = CalcCropland - lag(CalcCropland)) %>% 
-  mutate(Pasture_change = CalcPasture - lag(CalcPasture)) %>% 
+  mutate(Cropland_change = (CalcCropland - lag(CalcCropland))/5) %>% 
+  mutate(Pasture_change = (CalcPasture - lag(CalcPasture))/5) %>% 
   mutate(CalcOtherLand= CalcOtherLand + NewOtherLand) %>% 
-  mutate(OtherLand_change = CalcOtherLand - lag(CalcOtherLand)) %>% 
+  mutate(OtherLand_change = (CalcOtherLand - lag(CalcOtherLand))/5) %>% 
   filter(Year %in% c("2030", "2050")) %>% 
   mutate(CO2 = CalcCropCO2 + CalcDeforCO2 + CalcOtherLUCCO2 + CalcSequestCO2) %>% 
   mutate(CH4 = CalcCropCH4 + CalcLiveCH4) %>% 
@@ -566,8 +562,6 @@ gbr_data <- read_xlsx(here("data", "report_GBR_20240306_10H43.xlsx"), sheet = "I
   rename(Pathway = `Current Trend`) %>% 
   filter(Pathway!= "Current Trend") %>% 
   left_join(db_manure, by = c("Location", "Year", "Pathway")) %>% 
-  mutate(Pathway = ifelse(Pathway == "GS_rumdensity", "GS_popactivity", 
-                          ifelse(Pathway == "GS_rum", "GS_rumdensity", Pathway))) %>%
   select(Pathway, Year, kcal_feas, 
          ForestChange, CalcCropland, CalcPasture, CalcOtherLand, NewOtherLand, 
          CalcFarmLabourFTE,
@@ -576,10 +570,10 @@ gbr_data <- read_xlsx(here("data", "report_GBR_20240306_10H43.xlsx"), sheet = "I
          LNPPMatureForest, LNPPMatureOtherLand,
          CalcN_org, CalcN_synth,
          CalcWFblue) %>% 
-  mutate(Cropland_change = CalcCropland - lag(CalcCropland)) %>% 
-  mutate(Pasture_change = CalcPasture - lag(CalcPasture)) %>% 
+  mutate(Cropland_change = (CalcCropland - lag(CalcCropland))/5) %>% 
+  mutate(Pasture_change = (CalcPasture - lag(CalcPasture))/5) %>% 
   mutate(CalcOtherLand= CalcOtherLand + NewOtherLand) %>% 
-  mutate(OtherLand_change = CalcOtherLand - lag(CalcOtherLand)) %>% 
+  mutate(OtherLand_change = (CalcOtherLand - lag(CalcOtherLand))/5) %>% 
   filter(Year %in% c("2030", "2050")) %>% 
   mutate(CO2 = CalcCropCO2 + CalcDeforCO2 + CalcOtherLUCCO2 + CalcSequestCO2) %>% 
   mutate(CH4 = CalcCropCH4 + CalcLiveCH4) %>% 
@@ -673,7 +667,9 @@ gbr$ALPHA3 <- "UK"
 
 all <- bind_rows(aus, bra, col, eth, gbr) %>% 
   filter(Year == "2050") %>% 
-  filter(str_starts(Pathway, "GS_"))
+  filter(str_starts(Pathway, "GS_")) %>% 
+  filter(!Pathway %in% c("GS_agroforestry", "GS_peatland", "GS_popactivity", "GS_grassland" )) 
+  
 
 
 
@@ -691,7 +687,7 @@ pathway_labels <- c(
   "live" = "Livestock Productivity",
   "crop" = "Crop Productivity",
   "popactivity" = "Population Activity",
-  "agrexp" = "Agricultural Expansion",
+  "agrexp" = "Deforestation Control",
   "affor" = "Afforestation",
   "urban" = "Urbanization",
   "rumdensity" = "Ruminant Density",
@@ -704,7 +700,7 @@ pathway_labels <- c(
   "grassland" = "Intensive/ Extensive\n grassland share",
   "peatland" = "Peatland",
   # "live_rumdensity" = "Livestock productivity and Ruminant Density",
-  "tradeeffect" = "NC/GS Trade \nAdjustment effect")
+  "tradeeffect" = "International Demand")
 
 pathway_colors <- c(  
   "GDP" = "yellow",  
@@ -726,12 +722,11 @@ pathway_colors <- c(
   "agropra" = "#FFA07A",
   "irri" = "#FFD700",  
   "agroforestry" = "black",  
-  "grassland" = "grey",  
-  "peatland" = "#FF4500",
+  "grassland" = "#FF4500",  
+  # "peatland" = "#FF4500",
   "live_rumdensity" = "#8B008B",
   "tradeeffect" = "pink"
 )
-
 
 
 element_labels <- c(
@@ -755,24 +750,25 @@ element_labels <- c(
 )
 
 units_labels <- c(
-  "GAS" = "(Mt CO2e per year)",
-  "CO2" = "(Mt CO2e per year)", 
-  "CH4" = "(Mt CO2e per year)", 
-  "N2O" = "(Mt CO2e per year)", 
-  "kcal_feas" = "(kcal per capita per day)", 
-  "kcal_plant" = "(kcal per capita per day)", 
-  "kcal_anim" = "(kcal per capita per day)",
-  "kcal_mder" = "(kcal per capita per day)", 
-  "ForestChange" = "(1000 ha per 5 year)", 
-  "Cropland_change" = "(1000 ha per 5 year)", 
-  "Pasture_change" = "(1000 ha per 5 year)", 
-  "OtherLand_change" = "(1000 ha per 5 year)", 
-  "CalcFarmLabourFTE" = "(1000 FTE workers)",
-  "LNPPMatureForest" = "(1000 ha)", 
-  "LNPPMatureOtherLand" = "(1000 ha)", 
-  "TotalN" = "(1000 tonnes)", 
-  "CalcWFblue" = "(1000 tonnes)"
+  "GAS" = "Mt CO2e per year",
+  "CO2" = "Mt CO2e per year", 
+  "CH4" = "Mt CO2e per year", 
+  "N2O" = "Mt CO2e per year", 
+  "kcal_feas" = "kcal per capita per day", 
+  "kcal_plant" = "kcal per capita per day", 
+  "kcal_anim" = "kcal per capita per day",
+  "kcal_mder" = "kcal per capita per day", 
+  "ForestChange" = "1000 ha per year", 
+  "Cropland_change" = "1000 ha per year", 
+  "Pasture_change" = "1000 ha per year", 
+  "OtherLand_change" = "1000 ha per year", 
+  "CalcFarmLabourFTE" = "1000 FTE workers",
+  "LNPPMatureForest" = "1000 ha", 
+  "LNPPMatureOtherLand" = "1000 ha", 
+  "TotalN" = "1000 tonnes", 
+  "CalcWFblue" = "1000 tonnes"
 )
+
 
 # List of elements for decomposition analysis
 elements <- c("GAS",
@@ -784,72 +780,66 @@ elements <- c("GAS",
 
 
 
-# folder to store the plots
-figure_directory <- here("output", "decomposition", "all_country", paste0(gsub("-", "", Sys.Date())))
+# Create the directory for saving plotss
+figure_directory <- here("output", "decomposition", "all_country", gsub("-", "", Sys.Date()))
 dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 
-#Loop
+# Loop to create and save plots
 plots_list <- list()
 
 for (element in elements) {
-  # Create the plot
-  current_plot <- all %>%
+
+    current_plot <- all %>%
     group_by(Pathway_code) %>%
     ggplot(aes(x = ALPHA3, y = !!sym(paste0("diff_", element)))) +
-    geom_hline(yintercept = 0, linetype = "solid") +
     geom_bar(stat = "identity", data = filter(all, !str_detect(Pathway, "complete")),
-             aes(fill = scenarios)) +
-    guides(fill = guide_legend(override.aes = list(shape = NA))) +
+             aes(fill = scenarios), colour = "white", size = 0.5) +
+    geom_hline(yintercept = 0, linetype = "solid") +
+    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 4, byrow = T))+
     geom_point(data = filter(all, Pathway == "GS_complete"),
                aes(y = !!sym(paste0("diff_", element)), x = ALPHA3, color = "All scenarios combined"),
                size = 3, shape = 16) + 
-    # geom_point(data = filter(all, Pathway %in% c("NC_tradeeffect", "GS_tradeeffect")),
-    #            aes(y = !!sym(paste0("diff_", element)), x = ALPHA3, color = "NC/GS Trade adjustment effect on CT"),
-    #            size = 3, shape = 16, alpha =0.7) + 
     scale_color_manual(values = c("black"), name = "",
                        labels = c("All scenarios combined")) +
     labs(
-      title = paste("Decomposition analysis:\n",element_labels[element]),
-      x = "Country",
-      y = paste("Compared to Current Trend \n", units_labels[element])
+      x = "",
+      y = paste("Difference in", units_labels[element], "\ncompared to CT")
     ) +
     facet_grid(. ~ Pathway_code, scales = "free_y",
                labeller = labeller(Pathway_code = c(
-                 "NC" = "National Commitments",
-                 "GS" = "Global Sustainability"
+                 "NC" = "",
+                 "GS" = ""
                ))) +
-    scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "Scenarios", labels = pathway_labels[pathway_labels != "complete"]) +
-    # scale_x_d(breaks = unique(all$ALPHA3[!is.na(all[, paste0("diff_", element)])])) +
+    scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "", labels = pathway_labels[pathway_labels != "complete"]) +
     theme_minimal() +
     theme(
-      text = element_text(family = "Arial", color = "black", size = 18, face = "bold"),
-      legend.title = element_text(family = "Arial", color = "steelblue", size = 16, face = "bold"),
+      text = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
+      legend.title = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
       legend.text = element_text(family = "Arial", size = 18),
-      plot.title = element_text(color = "steelblue", size = 20, face = "bold"),
-      axis.title.x = element_text(color = "steelblue", size = 18),
-      axis.title.y = element_text(color = "steelblue", size = 18)
-    ) + 
-    guides(
-      color = guide_legend(
-        ncol = 1,
-        direction = "vertical",
-        title.position = "top",
-        title.hjust = 0.5,
-        label.hjust = 0.5,
-        label.vjust = 0.5
-      )
+      plot.title = element_text(color = "black", size = 20, face = "bold"), 
+      axis.title.x = element_text(color = "black", size = 18),
+      legend.position = "bottom",
+      legend.direction = "horizontal",
+      legend.box= "vertical",
+      legend.box.spacing = unit(0.5, 'mm'),
+      legend.spacing.x = unit(1, 'mm'),
+      legend.spacing.y = unit(0.5, 'mm'),
+      legend.box.margin = unit(0.5, "lines"),
+      legend.key.size = unit(5, "mm"),  
+      panel.spacing = unit(1, "lines"),
+      legend.key.width = unit(6, "mm"),
+      legend.key.height = unit(6, "mm")
     )
   
+  filename <- paste0(gsub("-", "", Sys.Date()), "_" ,element, ".tiff")
   
-  # Save the current plot as TIFF
   tiff(
-    filename = here(figure_directory, paste0(element, ".tiff")),
-    units = "in", height = 5, width = 14, res = 600
+    filename = here(figure_directory, filename),
+    units = "in", height = 8, width = 16, res = 600
   )
   print(current_plot)
   dev.off()
-
-  # Append the current plot to the list
+  
   plots_list[[element]] <- current_plot
 }
 
@@ -864,6 +854,66 @@ plots_list
 
 
 
+# Create the directory for saving plots
+figure_directory <- here("output", "decomposition", "all_country", gsub("-", "", Sys.Date()))
+dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 
+plots_list <- list()
+legends <- list()
+
+
+for (element in elements) {
+  # Create the plot
+  current_plot <- all %>%
+    group_by(Pathway_code) %>%
+    ggplot(aes(x = ALPHA3, y = !!sym(paste0("diff_", element)))) +
+    geom_bar(stat = "identity", data = filter(all, !str_detect(Pathway, "complete")),
+             aes(fill = scenarios), colour = "white", size = 0.2) +
+    geom_hline(yintercept = 0, linetype = "solid") +
+    guides(fill = guide_legend(override.aes = list(shape = NA))) +
+    geom_point(data = filter(all, Pathway == "GS_complete"),
+               aes(y = !!sym(paste0("diff_", element)), x = ALPHA3, color = "All scenarios combined"),
+               size = 3, shape = 16) + 
+    scale_color_manual(values = c("black"), name = "",
+                       labels = c("All scenarios combined")) +
+    labs(
+      x = "",
+      y = ""  
+    ) +
+    facet_grid(. ~ Pathway_code, scales = "free_y",
+               labeller = labeller(Pathway_code = c(
+                 "NC" = "",
+                 "GS" = ""
+               ))) +
+    scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "Scenarios", labels = pathway_labels[pathway_labels != "complete"]) +
+    theme_minimal() +
+    theme(
+      text = element_text(family = "Arial", color = "black", size = 18, face = "bold"),
+      legend.title = element_text(family = "Arial", color = "steelblue", size = 16, face = "bold"),
+      legend.text = element_text(family = "Arial", size = 18),
+      plot.title = element_text(color = "steelblue", size = 20, face = "bold"),
+      axis.title.x = element_text(color = "steelblue", size = 18),
+      legend.direction = "horizontal",
+      legend.position = "none",  
+      strip.text = element_text(size = 14)  
+    ) +
+    labs(title = element_labels[element]) 
+  
+  plots_list[[element]] <- current_plot
+}
+
+selected_elements <- c("Cropland_change", "Pasture_change", "OtherLand_change", "ForestChange") 
+selected_plots <- lapply(selected_elements, function(element) plots_list[[element]])
+
+combined_plot <- plot_grid(plotlist = selected_plots, ncol = 2, align = "v")
+
+legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.position = "right"))
+
+final_plot <- plot_grid(
+  combined_plot + labs(y = "Difference in 1000ha per year \n compared to Current Trend"),  
+  legend, ncol = 1, rel_heights = c(1, 0.3)
+)
+
+# ggsave(filename = here(figure_directory, "combined_plot_with_legend.tiff"), plot = final_plot, width = 14, height = 8, dpi = 600)
 
 

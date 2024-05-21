@@ -43,8 +43,6 @@ gbr_data <- read_xlsx(here("data", "report_GBR_20240306_10H43.xlsx"), sheet = "I
   rename(Pathway = `Current Trend`) %>% 
   filter(Pathway!= "Current Trend") %>% 
   left_join(db_manure, by = c("Location", "Year", "Pathway")) %>% 
-  mutate(Pathway = ifelse(Pathway == "GS_rumdensity", "GS_popactivity", 
-                          ifelse(Pathway == "GS_rum", "GS_rumdensity", Pathway))) %>%
   select(Pathway, Year, kcal_feas, 
          ForestChange, CalcCropland, CalcPasture, CalcOtherLand, NewOtherLand, 
          CalcFarmLabourFTE,
@@ -135,9 +133,7 @@ gbr$scenarios <- substring(gbr_data$Pathway, 4)
 
 
 
-#Labelling -------------------------------------------------------------------
-
-
+#Labelling --------------------------
 pathway_labels <- c(
   "GDP" = "GDP",
   "pop" = "Population",
@@ -149,7 +145,7 @@ pathway_labels <- c(
   "live" = "Livestock Productivity",
   "crop" = "Crop Productivity",
   "popactivity" = "Population Activity",
-  "agrexp" = "Agricultural Expansion",
+  "agrexp" = "Deforestation Control",
   "affor" = "Afforestation",
   "urban" = "Urbanization",
   "rumdensity" = "Ruminant Density",
@@ -159,11 +155,10 @@ pathway_labels <- c(
   "irri" = "Irrigation",
   "final" = "Final",
   "agroforestry" = "Agroforestry",
-  "grassland" = "Intensive/ Extensive grassland share",
+  "grassland" = "Intensive/ Extensive\n grassland share",
   "peatland" = "Peatland",
-  "live_rumdensity" = "Livestock productivity and Ruminant Density",
-  "tradeeffect" = "NC/GS Trade Adjustment effect")
-
+  # "live_rumdensity" = "Livestock productivity and Ruminant Density",
+  "tradeeffect" = "International Demand")
 
 pathway_colors <- c(  
   "GDP" = "yellow",  
@@ -185,16 +180,15 @@ pathway_colors <- c(
   "agropra" = "#FFA07A",
   "irri" = "#FFD700",  
   "agroforestry" = "black",  
-  "grassland" = "grey",  
-  "peatland" = "#FF4500",
+  "grassland" = "#FF4500",  
+  # "peatland" = "#FF4500",
   "live_rumdensity" = "#8B008B",
   "tradeeffect" = "pink"
 )
 
 
-
-
 element_labels <- c(
+  "GAS" = "GHG",
   "CO2" = "CO2 Emissions", 
   "CH4" = "Methane (CH4) Emissions", 
   "N2O" = "Nitrous Oxide (N2O) Emissions", 
@@ -214,23 +208,25 @@ element_labels <- c(
 )
 
 units_labels <- c(
-  "CO2" = "(Mt CO2e per year)", 
-  "CH4" = "(Mt CO2e per year)", 
-  "N2O" = "(Mt CO2e per year)", 
-  "kcal_feas" = "(kcal per capita per day)", 
-  "kcal_plant" = "(kcal per capita per day)", 
-  "kcal_anim" = "(kcal per capita per day)",
-  "kcal_mder" = "(kcal per capita per day)", 
-  "ForestChange" = "(1000 ha per 5 year)", 
-  "Cropland_change" = "(1000 ha per 5 year)", 
-  "Pasture_change" = "(1000 ha per 5 year)", 
-  "OtherLand_change" = "(1000 ha per 5 year)", 
-  "CalcFarmLabourFTE" = "(1000 FTE workers)",
-  "LNPPMatureForest" = "(1000 ha)", 
-  "LNPPMatureOtherLand" = "(1000 ha)", 
-  "TotalN" = "(1000 tonnes)", 
-  "CalcWFblue" = "(1000 tonnes)"
+  "GAS" = "Mt CO2e per year",
+  "CO2" = "Mt CO2e per year", 
+  "CH4" = "Mt CO2e per year", 
+  "N2O" = "Mt CO2e per year", 
+  "kcal_feas" = "kcal per capita per day", 
+  "kcal_plant" = "kcal per capita per day", 
+  "kcal_anim" = "kcal per capita per day",
+  "kcal_mder" = "kcal per capita per day", 
+  "ForestChange" = "1000 ha per year", 
+  "Cropland_change" = "1000 ha per year", 
+  "Pasture_change" = "1000 ha per year", 
+  "OtherLand_change" = "1000 ha per year", 
+  "CalcFarmLabourFTE" = "1000 FTE workers",
+  "LNPPMatureForest" = "1000 ha", 
+  "LNPPMatureOtherLand" = "1000 ha", 
+  "TotalN" = "1000 tonnes", 
+  "CalcWFblue" = "1000 tonnes"
 )
+
 
 # List of elements for decomposition analysis
 elements <- c("CH4","CO2", "N2O",
@@ -244,6 +240,10 @@ elements <- c("CH4","CO2", "N2O",
 #Reordering pathwyas + erasing CT
 gbr$Pathway_code <- factor(gbr$Pathway_code, levels = c("NC", "GS"))
 gbr <- gbr[complete.cases(gbr$Pathway_code), ]
+
+gbr<- gbr %>% 
+  filter(!Pathway %in% c("GS_agroforestry", "GS_peatland", "GS_popactivity", "GS_grassland",
+                         "NC_agroforestry", "NC_peatland", "NC_popactivity", "NC_grassland"))
 
 #Plot -------------------------------------------------------------------
 
@@ -259,10 +259,10 @@ for (element in elements) {
   current_plot <- gbr %>%
     group_by(Pathway_code) %>%
     ggplot(aes(x = Year, y = !!sym(paste0("diff_", element)))) +
-    geom_hline(yintercept = 0, linetype = "solid") +
     geom_bar(stat = "identity", data = filter(gbr, !str_detect(Pathway, "complete")),
-             aes(fill = scenarios)) +
-    guides(fill = guide_legend(override.aes = list(shape = NA))) +
+             aes(fill = scenarios), colour = "white", size = 0.5) +
+    geom_hline(yintercept = 0, linetype = "solid") +
+    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 4, byrow = T))+
     geom_point(data = filter(gbr, Pathway %in% c("NC_complete", "GS_complete")),
                aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
                size = 3, shape = 16) + 
@@ -281,23 +281,33 @@ for (element in elements) {
                  "NC" = "National Commitments",
                  "GS" = "Global Sustainability"
                ))) +
-    scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "Scenarios", labels = pathway_labels[pathway_labels != "complete"]) +
+    scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "", labels = pathway_labels[pathway_labels != "complete"]) +
     scale_x_continuous(breaks = unique(gbr$Year[!is.na(gbr[, paste0("diff_", element)])])) +
     theme_minimal() +
     theme(
-      text = element_text(family = "Arial", color = "black", size = 18, face = "bold"),
-      legend.title = element_text(family = "Arial", color = "steelblue", size = 16, face = "bold"),
+      text = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
+      legend.title = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
       legend.text = element_text(family = "Arial", size = 18),
-      plot.title = element_text(color = "steelblue", size = 20, face = "bold"),
-      axis.title.x = element_text(color = "steelblue", size = 18),
-      axis.title.y = element_text(color = "steelblue", size = 18)
+      plot.title = element_text(color = "black", size = 20, face = "bold"), 
+      axis.title.x = element_text(color = "black", size = 18),
+      legend.position = "bottom",
+      legend.direction = "horizontal",
+      legend.box= "vertical",
+      legend.box.spacing = unit(0.5, 'mm'),
+      legend.spacing.x = unit(1, 'mm'),
+      legend.spacing.y = unit(0.5, 'mm'),
+      legend.box.margin = unit(0.5, "lines"),
+      legend.key.size = unit(5, "mm"),  
+      panel.spacing = unit(1, "lines"),
+      legend.key.width = unit(6, "mm"),
+      legend.key.height = unit(6, "mm")
     )
   
+  filename <- paste0(gsub("-", "", Sys.Date()), "_" ,element, ".tiff")
   
-  # # Save the current plot as TIFF
   tiff(
-    filename = here(figure_directory, paste0(element, ".tiff")),
-    units = "in", height = 8, width = 14, res = 600
+    filename = here(figure_directory, filename),
+    units = "in", height = 8, width = 16, res = 600
   )
   print(current_plot)
   dev.off()
