@@ -18,7 +18,6 @@ conflicts_prefer(dplyr::lag)
 here()
 
 #Data -------------------------------------------------------------------
-
 db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>% 
   rename(Year = YEAR) %>%
   mutate(Year = as.double(Year)) %>%
@@ -36,10 +35,9 @@ db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>%
   mutate(Pathway = if_else(Pathway == "CurrentTrend", "Current Trend_Yes", Pathway))
 
 # Split the database into separate data frames based on the value of ALPHA3
-db_manure <- db_manure %>% filter(Location == "UK")
+db_manure <- db_manure %>% filter(Location == "Brazil")
 
-
-gbr_data <- read_xlsx(here("data", "report_GBR_20240306_10H43.xlsx"), sheet = "Indicators") %>% 
+bra_data <- read_xlsx(here("data", "report_BRA_20240306_10H44.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
   filter(Pathway!= "Current Trend") %>% 
   left_join(db_manure, by = c("Location", "Year", "Pathway")) %>% 
@@ -55,38 +53,40 @@ gbr_data <- read_xlsx(here("data", "report_GBR_20240306_10H43.xlsx"), sheet = "I
   mutate(Pasture_change = CalcPasture - lag(CalcPasture)) %>% 
   mutate(CalcOtherLand= CalcOtherLand + NewOtherLand) %>% 
   mutate(OtherLand_change = CalcOtherLand - lag(CalcOtherLand)) %>% 
-  filter(Year %in% c("2030", "2050")) %>% 
+  filter(Year %in% c("2030", "2050")) %>%
   mutate(CO2 = CalcCropCO2 + CalcDeforCO2 + CalcOtherLUCCO2 + CalcSequestCO2) %>% 
   mutate(CH4 = CalcCropCH4 + CalcLiveCH4) %>% 
   mutate(N2O = CalcCropN2O + CalcLiveN2O) %>% 
   mutate(TotalN = CalcN_org + CalcN_synth)
 
+bra_data$Pathway[bra_data$Pathway == "NationalCommitments"] <- "NC_complete"
+bra_data$Pathway[bra_data$Pathway == "GlobalSustainability"] <- "GS_complete"
+
+bra_data$Pathway[bra_data$Pathway == "Current Trend_Yes_NC_trade"] <- "NC_tradeeffect"
+bra_data$Pathway[bra_data$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradeeffect"
 
 
-gbr_data$Pathway[gbr_data$Pathway == "NationalCommitments"] <- "NC_complete"
-gbr_data$Pathway[gbr_data$Pathway == "GlobalSustainability"] <- "GS_complete"
-
-gbr_data$Pathway[gbr_data$Pathway == "Current Trend_Yes_NC_trade"] <- "NC_tradeeffect"
-gbr_data$Pathway[gbr_data$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradeeffect"
 
 
+# Commodities -----------------------------
+bra_comm <- read_xlsx(here("data", "report_BRA_20240306_10H44.xlsx"), sheet = "Commodities") %>%
+  rename(Pathway = `Current Trend`) %>%
+  filter(Year %in% c("2030", "2050"))%>%
+  select(Location, Pathway, Year, Product, kcalfeasprod) %>%
+  unique()
 
-gbr_comm <- read_xlsx(here("data", "report_GBR_20240306_10H43.xlsx"), sheet = "Commodities") %>% 
-  rename(Pathway = `Current Trend`) %>% 
-  filter(Year %in% c("2030", "2050"))%>% 
-  select(Location, Pathway, Year, Product, kcalfeasprod)
 
-gbr_comm$Pathway[gbr_comm$Pathway == "NationalCommitments"] <- "NC_complete"
-gbr_comm$Pathway[gbr_comm$Pathway == "GlobalSustainability"] <- "GS_complete"
 
-gbr_comm$Pathway[gbr_comm$Pathway == "Current Trend_Yes_NC_trade"] <- "NC_tradeeffect"
-gbr_comm$Pathway[gbr_comm$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradeeffect"
+bra_comm$Pathway[bra_comm$Pathway == "NationalCommitments"] <- "NC_complete"
+bra_comm$Pathway[bra_comm$Pathway == "GlobalSustainability"] <- "GS_complete"
 
+bra_comm$Pathway[bra_comm$Pathway == "Current Trend_Yes_NC_trade"] <- "NC_tradeeffect"
+bra_comm$Pathway[bra_comm$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradeeffect"
 
 mapping<- read_excel(here("data", "mapping_product_group.xlsx")) %>% 
   rename(Product = PRODUCT)
 
-gbr_kcal <- gbr_comm %>% 
+bra_kcal <- bra_comm %>% 
   left_join (mapping, by ="Product") %>% 
   mutate("Anim_Plant" = ifelse(PROD_GROUP %in% c("ANIMFAT", "EGGS", "FISH", "MILK", "REDMEAT", "PORK", "POULTRY"), "ANIM", "PLANT")) %>%
   distinct(Location, Year, Pathway, Product, .keep_all = TRUE) %>% 
@@ -96,16 +96,19 @@ gbr_kcal <- gbr_comm %>%
   unique()
 
 
-gbr_kcal_final <- gbr_kcal %>%
+bra_kcal_final <- bra_kcal %>%
   pivot_wider(names_from = Anim_Plant, values_from = kcal_anim_plant, values_fn = list(kcal_anim_plant = function(x) x[which.min(!is.na(x))])) %>%
   rename(kcal_anim = ANIM, kcal_plant = PLANT) %>%
   replace(is.na(.), 0)
 
-gbr_data <- left_join(gbr_data, gbr_kcal_final %>% select(Pathway, Year, kcal_plant, kcal_anim), by = c("Pathway", "Year")) %>%
+
+#Final Database ---------------------------------------
+bra_data <- left_join(bra_data, bra_kcal_final %>% select(Pathway, Year, kcal_plant, kcal_anim), by = c("Pathway", "Year")) %>%
   unique() 
 
 
-gbr <- gbr_data %>%
+
+bra <- bra_data %>%
   group_by(Year) %>%
   mutate(
     Pathway_code = ifelse(str_starts(Pathway, "NC"), "NC", ifelse(str_starts(Pathway, "GS"), "GS", NA)),
@@ -128,7 +131,10 @@ gbr <- gbr_data %>%
   ) 
 
 
-gbr$scenarios <- substring(gbr_data$Pathway, 4)
+# write.xlsx(bra, file = here("data", "Decomposition", paste0(gsub("-", "",Sys.Date()), "_", "bra.xlsx")))
+
+
+bra$scenarios <- substring(bra_data$Pathway, 4)
 
 
 
@@ -228,27 +234,28 @@ units_labels <- c(
 )
 
 
+
 # List of elements for decomposition analysis
 elements <- c("CH4","CO2", "N2O",
-              "kcal_feas","kcal_anim", "kcal_plant"
-
-              ,"ForestChange",  "Cropland_change", "Pasture_change", "OtherLand_change",
+              "kcal_feas","kcal_anim", "kcal_plant",
+              "ForestChange",  "Cropland_change", "Pasture_change", "OtherLand_change",
               "CalcFarmLabourFTE", "LNPPMatureForest", "LNPPMatureOtherLand",
               "TotalN", "CalcWFblue"
 )
 
-#Reordering pathwyas + erasing CT
-gbr$Pathway_code <- factor(gbr$Pathway_code, levels = c("NC", "GS"))
-gbr <- gbr[complete.cases(gbr$Pathway_code), ]
 
-gbr<- gbr %>% 
+#Reordering pathwyas + erasing CT
+bra$Pathway_code <- factor(bra$Pathway_code, levels = c("NC", "GS"))
+bra <- bra[complete.cases(bra$Pathway_code), ]
+
+bra<- bra %>% 
   filter(!Pathway %in% c("GS_agroforestry", "GS_peatland", "GS_popactivity", "GS_grassland",
                          "NC_agroforestry", "NC_peatland", "NC_popactivity", "NC_grassland"))
 
 #Plot -------------------------------------------------------------------
 
 # folder to store the plots
-figure_directory <- here("output", "decomposition", "GBR", paste0(gsub("-", "", Sys.Date())))
+figure_directory <- here("output", "decomposition", "BRA", paste0(gsub("-", "", Sys.Date())))
 dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 
 #Loop
@@ -256,25 +263,24 @@ plots_list <- list()
 
 for (element in elements) {
   # Create the plot
-  current_plot <- gbr %>%
+  current_plot <- bra %>%
     group_by(Pathway_code) %>%
     ggplot(aes(x = Year, y = !!sym(paste0("diff_", element)))) +
-    geom_bar(stat = "identity", data = filter(gbr, !str_detect(Pathway, "complete")),
-             aes(fill = scenarios), colour = "white", size = 0.5) +
+    geom_bar(stat = "identity", data = filter(bra, !str_detect(Pathway, "complete")),
+             aes(fill = scenarios), colour = "white", size = 0.5, width = 7) +
     geom_hline(yintercept = 0, linetype = "solid") +
-    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 4, byrow = T))+
-    geom_point(data = filter(gbr, Pathway %in% c("NC_complete", "GS_complete")),
+    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 2, byrow = T))+
+    geom_point(data = filter(bra, Pathway %in% c("NC_complete", "GS_complete")),
                aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
                size = 3, shape = 16) + 
-    # geom_point(data = filter(gbr, Pathway %in% c("NC_tradeeffect", "GS_tradeeffect")),
+    # geom_point(data = filter(bra, Pathway %in% c("NC_tradeeffect", "GS_tradeeffect")),
     #            aes(y = !!sym(paste0("diff_", element)), x = Year, color = "NC/GS Trade adjustment effect on CT"),
     #            size = 3, shape = 16, alpha =0.7) + 
     scale_color_manual(values = c("black"), name = "",
                        labels = c("All scenarios combined")) +
     labs(
-      title = paste("Decomposition analysis:\n",element_labels[element]),
-      x = "Year",
-      y = paste("Compared to Current Trend \n", units_labels[element])
+      x = "",
+      y = paste("Difference in", units_labels[element], "\ncompared to CT")
     ) +
     facet_grid(. ~ Pathway_code, scales = "free_y",
                labeller = labeller(Pathway_code = c(
@@ -282,14 +288,16 @@ for (element in elements) {
                  "GS" = "Global Sustainability"
                ))) +
     scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "", labels = pathway_labels[pathway_labels != "complete"]) +
-    scale_x_continuous(breaks = unique(gbr$Year[!is.na(gbr[, paste0("diff_", element)])])) +
+    scale_x_continuous(breaks = unique(bra$Year[!is.na(bra[, paste0("diff_", element)])])) +
     theme_minimal() +
     theme(
-      text = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
+      text = element_text(family = "Arial", color = "black", size = 14, face = "bold"),
       legend.title = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
-      legend.text = element_text(family = "Arial", size = 18),
-      plot.title = element_text(color = "black", size = 20, face = "bold"), 
-      axis.title.x = element_text(color = "black", size = 18),
+      legend.text = element_text(family = "Arial", size = 13),
+      plot.title = element_text(color = "black", size = 14, face = "bold"), 
+      axis.title.x = element_text(color = "black", size = 13),
+      axis.text.x = element_text(color = "black", size = 13),
+      axis.text.y = element_text(color = "black", size = 13),
       legend.position = "bottom",
       legend.direction = "horizontal",
       legend.box= "vertical",
@@ -299,18 +307,20 @@ for (element in elements) {
       legend.box.margin = unit(0.5, "lines"),
       legend.key.size = unit(5, "mm"),  
       panel.spacing = unit(1, "lines"),
-      legend.key.width = unit(6, "mm"),
-      legend.key.height = unit(6, "mm")
+      legend.key.width = unit(8, "mm"),
+      legend.key.height = unit(8, "mm")
     )
   
   filename <- paste0(gsub("-", "", Sys.Date()), "_" ,element, ".tiff")
   
-  tiff(
-    filename = here(figure_directory, filename),
-    units = "in", height = 8, width = 16, res = 600
-  )
-  print(current_plot)
-  dev.off()
+  
+  
+  # tiff(
+  #   filename = here(figure_directory, filename),
+  #   units = "in", height = 10, width = 18, res = 600
+  # )
+  # print(current_plot)
+  # dev.off()
 
   # Append the current plot to the list
   plots_list[[element]] <- current_plot

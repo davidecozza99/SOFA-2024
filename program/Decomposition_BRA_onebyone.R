@@ -267,9 +267,9 @@ for (element in elements) {
     group_by(Pathway_code) %>%
     ggplot(aes(x = Year, y = !!sym(paste0("diff_", element)))) +
     geom_bar(stat = "identity", data = filter(bra, !str_detect(Pathway, "complete")),
-             aes(fill = scenarios), colour = "white", size = 0.5) +
+             aes(fill = scenarios), colour = "white", size = 0.5, width = 7) +
     geom_hline(yintercept = 0, linetype = "solid") +
-    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 4, byrow = T))+
+    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 2, byrow = T))+
     geom_point(data = filter(bra, Pathway %in% c("NC_complete", "GS_complete")),
                aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
                size = 3, shape = 16) + 
@@ -291,11 +291,13 @@ for (element in elements) {
     scale_x_continuous(breaks = unique(bra$Year[!is.na(bra[, paste0("diff_", element)])])) +
     theme_minimal() +
     theme(
-      text = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
+      text = element_text(family = "Arial", color = "black", size = 14, face = "bold"),
       legend.title = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
-      legend.text = element_text(family = "Arial", size = 18),
-      plot.title = element_text(color = "black", size = 20, face = "bold"), 
-      axis.title.x = element_text(color = "black", size = 18),
+      legend.text = element_text(family = "Arial", size = 13),
+      plot.title = element_text(color = "black", size = 14, face = "bold"), 
+      axis.title.x = element_text(color = "black", size = 13),
+      axis.text.x = element_text(color = "black", size = 13),
+      axis.text.y = element_text(color = "black", size = 13),
       legend.position = "bottom",
       legend.direction = "horizontal",
       legend.box= "vertical",
@@ -305,21 +307,20 @@ for (element in elements) {
       legend.box.margin = unit(0.5, "lines"),
       legend.key.size = unit(5, "mm"),  
       panel.spacing = unit(1, "lines"),
-      legend.key.width = unit(6, "mm"),
-      legend.key.height = unit(6, "mm")
+      legend.key.width = unit(8, "mm"),
+      legend.key.height = unit(8, "mm")
     )
   
   filename <- paste0(gsub("-", "", Sys.Date()), "_" ,element, ".tiff")
   
   
   
-  # Save the current plot as TIFF
-  tiff(
-    filename = here(figure_directory, filename),
-    units = "in", height = 5, width = 14, res = 600
-  )
-  print(current_plot)
-  dev.off()
+  # tiff(
+  #   filename = here(figure_directory, filename),
+  #   units = "in", height = 10, width = 18, res = 600
+  # )
+  # print(current_plot)
+  # dev.off()
 
   # Append the current plot to the list
   plots_list[[element]] <- current_plot

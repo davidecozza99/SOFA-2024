@@ -169,14 +169,14 @@
             {
                 "id": 27,
                 "path": "C:/Users/Davide/Desktop/GitHub/SOFA 2024/program/Decomposition_AUS_onebyone.R",
-                "line_number": 48,
+                "line_number": 49,
                 "function_steps": "",
                 "function_name": "toplevel",
                 "state": 1,
                 "editor_state": 1,
-                "editor_line_number": 48,
+                "editor_line_number": 49,
                 "is_pending_debug_completion": false,
-                "needs_updated_steps": false,
+                "needs_updated_steps": true,
                 "type": 1,
                 "is_package_breakpoint": false,
                 "package_name": ""

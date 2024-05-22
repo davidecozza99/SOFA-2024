@@ -773,8 +773,7 @@ units_labels <- c(
 # List of elements for decomposition analysis
 elements <- c("GAS",
               "kcal_feas",
-              "ForestChange", 
-              "Cropland_change", "Pasture_change", "OtherLand_change",
+              "ForestChange", "Cropland_change", "Pasture_change", "OtherLand_change",
               "TotalN"
 )
 
@@ -831,7 +830,7 @@ for (element in elements) {
       legend.key.height = unit(6, "mm")
     )
   
-  filename <- paste0(gsub("-", "", Sys.Date()), "_" ,element, ".tiff")
+  filename <- paste0(gsub("-", "", Sys.Date()), "_" ,element, "_all_country2050.tiff")
   
   tiff(
     filename = here(figure_directory, filename),
@@ -870,7 +869,7 @@ for (element in elements) {
     geom_bar(stat = "identity", data = filter(all, !str_detect(Pathway, "complete")),
              aes(fill = scenarios), colour = "white", size = 0.2) +
     geom_hline(yintercept = 0, linetype = "solid") +
-    guides(fill = guide_legend(override.aes = list(shape = NA))) +
+    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 3, byrow = T))+
     geom_point(data = filter(all, Pathway == "GS_complete"),
                aes(y = !!sym(paste0("diff_", element)), x = ALPHA3, color = "All scenarios combined"),
                size = 3, shape = 16) + 
@@ -885,17 +884,25 @@ for (element in elements) {
                  "NC" = "",
                  "GS" = ""
                ))) +
-    scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "Scenarios", labels = pathway_labels[pathway_labels != "complete"]) +
+    scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "", labels = pathway_labels[pathway_labels != "complete"]) +
     theme_minimal() +
     theme(
-      text = element_text(family = "Arial", color = "black", size = 18, face = "bold"),
-      legend.title = element_text(family = "Arial", color = "steelblue", size = 16, face = "bold"),
-      legend.text = element_text(family = "Arial", size = 18),
-      plot.title = element_text(color = "steelblue", size = 20, face = "bold"),
-      axis.title.x = element_text(color = "steelblue", size = 18),
+      text = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
+      legend.title = element_text(family = "Arial", color = "black", size = 14, face = "bold"),
+      legend.text = element_text(family = "Arial", size = 13),
+      plot.title = element_text(color = "black", size = 14, face = "bold"),
+      axis.title.x = element_text(color = "black", size = 12),
+      legend.position = "none",
       legend.direction = "horizontal",
-      legend.position = "none",  
-      strip.text = element_text(size = 14)  
+      legend.box= "vertical",
+      legend.box.spacing = unit(0.5, 'mm'),
+      legend.spacing.x = unit(3, 'mm'),
+      legend.spacing.y = unit(3, 'mm'),
+      legend.box.margin = unit(0.5, "lines"),
+      legend.key.size = unit(5, "mm"),  
+      panel.spacing = unit(1, "lines"),
+      legend.key.width = unit(8, "mm"),
+      legend.key.height = unit(8, "mm")
     ) +
     labs(title = element_labels[element]) 
   
@@ -909,11 +916,26 @@ combined_plot <- plot_grid(plotlist = selected_plots, ncol = 2, align = "v")
 
 legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.position = "right"))
 
+# Create a dummy plot for the y-axis label
+y_axis_label <- ggplot() +
+  annotate("text", x = 0.5, y = 0.5, label = "Difference in 1000ha per year compared to Current Trend",
+           angle = 90, family = "Arial", size = 5, fontface = "bold") +
+  theme_void()  # Remove all other plot elements
+
+# Combine the y-axis label, combined plots, and legend
 final_plot <- plot_grid(
-  combined_plot + labs(y = "Difference in 1000ha per year \n compared to Current Trend"),  
+  plot_grid(y_axis_label, combined_plot, ncol = 2, rel_widths = c(0.05, 1)),
   legend, ncol = 1, rel_heights = c(1, 0.3)
 )
 
-# ggsave(filename = here(figure_directory, "combined_plot_with_legend.tiff"), plot = final_plot, width = 14, height = 8, dpi = 600)
+filename <- paste0(gsub("-", "", Sys.Date()), "_Landchange_all_country2050.tiff")
+
+# tiff(
+#   filename = here(figure_directory, filename),
+#   units = "in", height = 8, width = 16, res = 600
+# )
+print(final_plot)
+dev.off()
+
 
 

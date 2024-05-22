@@ -585,7 +585,7 @@ db_change_afforestation <- db_full_afforestation_agg %>%
   pivot_wider(names_from = var_pivot,
               values_from = NewForest) %>% 
   select(-affor_NA) %>% 
-  mutate(Affor = (affor_2050-affor_2020)) %>%
+  mutate(Affor = (affor_2050-affor_2020)/1000) %>%
   mutate(across(starts_with("affor_"), as.numeric)) %>%
   select(ALPHA3, Pathway, Affor) %>% 
   data.frame() %>% 
@@ -604,10 +604,6 @@ db_change_afforestation <- db_full_afforestation_agg %>%
 
 
 
-
-# %>% 
-#   mutate(Affor = ifelse(Affor > 10 , 10, Affor))
-# 
 
 
 
@@ -1097,7 +1093,7 @@ var.labs <- c(
   Export_quantity_change = "Exports \n(kcal)",
   Import_quantity_change = "Imports \n(kcal)",
   Foodwaste_change = "Share of \n Food Waste \n(iii)",
-  Affor = "Afforestation \n(1000 ha) \n(ii)",
+  Affor = "Afforestation \n(Mha) \n(ii)",
   pa= "Protected \n Areas \n(iv)",
   share_irr_final= "Irrigated \nArea\n(v)",
   share_agrprac_final= "Area under \nAgricological \nPractises\n(vi)"
@@ -1133,15 +1129,15 @@ data_SOFA <- data_SOFA %>%
   mutate(value = if_else(ALPHA3 == "IND" & Pathway == "CurrentTrend" & variable == "Export_quantity_change", 0.0, value)) %>% 
   mutate(sign = if_else(ALPHA3 == "IND" & Pathway == "CurrentTrend" & variable == "Import_quantity_change", 1, sign)) %>% 
   mutate(value = if_else(ALPHA3 == "IND" & Pathway == "CurrentTrend" & variable == "food_waste", 0.404, value)) %>% 
-  mutate(value = if_else(ALPHA3 == "IND" & Pathway == "CurrentTrend" & variable == "pa", 0, value)) %>% 
+  mutate(value = if_else(ALPHA3 == "IND" & Pathway == "CurrentTrend" & variable == "pa", 0.01, value)) %>% 
   mutate(value = if_else(ALPHA3 == "IND" & Pathway == "CurrentTrend" & variable == "Expansion_change", -0.5, value)) %>% 
   mutate(sign = if_else(ALPHA3 == "IND" & Pathway == "CurrentTrend" & variable == "Expansion_change", 0, sign)) %>% 
-  mutate(value = if_else(ALPHA3 == "IND" & Pathway == "CurrentTrend" & variable == "share_irr_final", 0.0, value)) %>% 
+  mutate(value = if_else(ALPHA3 == "IND" & Pathway == "CurrentTrend" & variable == "share_irr_final", 0.16, value)) %>% 
   mutate(value = if_else(ALPHA3 == "IND" & Pathway == "CurrentTrend" & variable == "share_agrprac_final", 0.0, value)) %>% 
   
   
   mutate(value = if_else(ALPHA3 == "IND" & Pathway == "CurrentTrend" & variable == "Import_quantity_change", 02.065, value)) %>% 
-  mutate(value = if_else(ALPHA3 == "IND" & Pathway == "CurrentTrend" & variable == "Affor", 28537.5, value)) %>% 
+  mutate(value = if_else(ALPHA3 == "IND" & Pathway == "CurrentTrend" & variable == "Affor", 28.5375, value)) %>% 
   
   
   mutate(value = if_else(ALPHA3 == "IND" & Pathway == "FSDP" & variable == "Population_change", 0.15, value)) %>% 
@@ -1157,11 +1153,11 @@ data_SOFA <- data_SOFA %>%
   mutate(value = if_else(ALPHA3 == "IND" & Pathway == "FSDP" & variable == "Export_quantity_change", 0.0, value)) %>% 
   mutate(sign = if_else(ALPHA3 == "IND" & Pathway == "FSDP" & variable == "Import_quantity_change", 1, sign)) %>% 
   mutate(value = if_else(ALPHA3 == "IND" & Pathway == "FSDP" & variable == "Import_quantity_change", 1.778, value)) %>% 
-  mutate(value = if_else(ALPHA3 == "IND" & Pathway == "FSDP" & variable == "pa", 0 , value)) %>% 
+  mutate(value = if_else(ALPHA3 == "IND" & Pathway == "FSDP" & variable == "pa", 0.1 , value)) %>% 
   mutate(value = if_else(ALPHA3 == "IND" & Pathway == "FSDP" & variable == "Expansion_change", -0.5, value)) %>% 
   mutate(sign = if_else(ALPHA3 == "IND" & Pathway == "FSDP" & variable == "Expansion_change", 0, sign)) %>%
-  mutate(value = if_else(ALPHA3 == "IND" & Pathway == "FSDP" & variable == "Affor", 28537.3, value)) %>% 
-  mutate(value = if_else(ALPHA3 == "IND" & Pathway == "FSDP" & variable == "share_irr_final", 0.0, value)) %>% 
+  mutate(value = if_else(ALPHA3 == "IND" & Pathway == "FSDP" & variable == "Affor", 28.5373, value)) %>% 
+  mutate(value = if_else(ALPHA3 == "IND" & Pathway == "FSDP" & variable == "share_irr_final", 0.2, value)) %>% 
   mutate(value = if_else(ALPHA3 == "IND" & Pathway == "FSDP" & variable == "share_agrprac_final", 0.0, value)) 
 
 
