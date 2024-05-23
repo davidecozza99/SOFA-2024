@@ -243,7 +243,9 @@ eth <- eth[complete.cases(eth$Pathway_code), ]
 
 eth<- eth %>% 
   filter(!Pathway %in% c("GS_agroforestry", "GS_peatland", "GS_popactivity", "GS_grassland",
-                         "NC_agroforestry", "NC_peatland", "NC_popactivity", "NC_grassland"))
+                         "NC_agroforestry", "NC_peatland", "NC_popactivity", "NC_grassland")) %>% 
+  mutate(Year = as.factor(Year))
+
 
 #Plot -------------------------------------------------------------------
 
@@ -260,7 +262,7 @@ for (element in elements) {
     group_by(Pathway_code) %>%
     ggplot(aes(x = Year, y = !!sym(paste0("diff_", element)))) +
     geom_bar(stat = "identity", data = filter(eth, !str_detect(Pathway, "complete")),
-             aes(fill = scenarios), colour = "white", size = 0.5) +
+             aes(fill = scenarios), colour = "white", size = 0.5, width = 7) +
     geom_hline(yintercept = 0, linetype = "solid") +
     guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 2, byrow = T))+
     geom_point(data = filter(eth, Pathway %in% c("NC_complete", "GS_complete")),
@@ -273,7 +275,7 @@ for (element in elements) {
                        labels = c("All scenarios combined")) +
     labs(
       x = "",
-      y = paste("Difference in", units_labels[element], "\ncompared to CT")
+      y = paste("Difference in", units_labels[element], "compared to CT")
     ) +
     facet_grid(. ~ Pathway_code, scales = "free_y",
                labeller = labeller(Pathway_code = c(
@@ -281,14 +283,15 @@ for (element in elements) {
                  "GS" = "Global Sustainability"
                ))) +
     scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "", labels = pathway_labels[pathway_labels != "complete"]) +
-    scale_x_continuous(breaks = unique(eth$Year[!is.na(eth[, paste0("diff_", element)])])) +
+    scale_x_discrete(breaks = unique(eth$Year[!is.na(eth[, paste0("diff_", element)])])) +
     theme_minimal() +
     theme(
-      text = element_text(family = "Arial", color = "black", size = 14, face = "bold"),
+      text = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
+      strip.text = element_text(size = 18, face = "bold"),
       legend.title = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
       legend.text = element_text(family = "Arial", size = 13),
       plot.title = element_text(color = "black", size = 14, face = "bold"), 
-      axis.title.x = element_text(color = "black", size = 13),
+      axis.title.x = element_text(color = "black", size = 14),
       axis.text.x = element_text(color = "black", size = 13),
       axis.text.y = element_text(color = "black", size = 13),
       legend.position = "bottom",
@@ -299,10 +302,11 @@ for (element in elements) {
       legend.spacing.y = unit(0.5, 'mm'),
       legend.box.margin = unit(0.5, "lines"),
       legend.key.size = unit(5, "mm"),  
-      panel.spacing = unit(1, "lines"),
+      panel.spacing = unit(5, "lines"),
       legend.key.width = unit(8, "mm"),
       legend.key.height = unit(8, "mm")
     )
+  
   
   filename <- paste0(gsub("-", "", Sys.Date()), "_" ,element, ".tiff")
   

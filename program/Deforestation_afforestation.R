@@ -12,7 +12,7 @@ here()
 
 #Data ---------------------------------------------------------------
 deforestation<- read_csv(here("data", "20240319_extracted_indicator.csv")) %>%
-  rename(alpha3 = country, , Year = year,  ForestChange=forestchange, NewForestChange = newforestchange) %>% 
+  rename(alpha3 = country, Year = year,  ForestChange=forestchange, NewForestChange = newforestchange) %>% 
   mutate(pathway = recode(pathway, "NationalCommitment" = "NationalCommitments")) %>% 
   filter(iteration == "5") %>% 
   filter(Year %in% c("2020", "2030", "2050"))%>% 
@@ -62,9 +62,9 @@ for (country in countries) {
           axis.title.x = element_text(color = "steelblue", size = 12),
           axis.title.y = element_text(color = "steelblue", size = 12))
 
-  tiff(here("output", "figures", country, paste0(gsub("-", "",Sys.Date()), "_", "Deforestation.tiff")),
-  units = "in", height = 5, width = 14, res = 300)
-  plot(p_pathway3)
-  dev.off()
+  # tiff(here("output", "figures", country, paste0(gsub("-", "",Sys.Date()), "_", "Deforestation.tiff")),
+  # units = "in", height = 5, width = 14, res = 300)
+  # plot(p_pathway3)
+  # dev.off()
 }
 

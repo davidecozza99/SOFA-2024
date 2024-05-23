@@ -27,17 +27,17 @@ here()
 file <- list.files(path = here("data", "Calcs_new"))
 
 # data --------------------------------------------------------------------
-df <- read.csv(here("data", "240424_FullDataBase.csv"), sep = "") %>% 
-  dplyr::filter(tradeadjustment == "No")
-product <- read.csv(here("data",  "240424_FullProductDataBase.csv"),sep = "")  %>% 
-  dplyr::filter(tradeadjustment == "No")
+df <- read.csv(here("data", "240523_FullDataBase.csv")) %>% 
+  dplyr::filter(tradeajustment == "Yes")
+product <- read.csv(here("data",  "240523_FullProductDataBase.csv"))  %>% 
+  dplyr::filter(tradeadjustment == "Yes")
 mapping_F6 <- read_excel(here("data",  "DataForFoodFigures.xlsx"), 
                          sheet = "prod groups map")
 
-db_scenarios <- read.csv(here("data", "240424_scenarios.csv")) %>%
-  select(pathway, country, afforestation,agricultural_land_expansion)%>% 
+db_scenarios <- read.csv(here("data", "240523_scenarios.csv")) %>%
+  select(pathways, country, afforestation,agricultural_land_expansion)%>% 
   rename(ALPHA3 = country,
-         Pathway = pathway) %>% 
+         Pathway = pathways) %>% 
   mutate(Pathway = recode(Pathway, "CurrentTrends" = "CurrentTrend")) %>% 
   unique()
 
@@ -56,10 +56,10 @@ fao_prod$Item <- ifelse(fao_prod$Item == "Rice and products", "Rice (Milled Equi
 
 
 
-# mapping_animalprod <- read.csv(here("data", "FAOSTAT_mapping_animalprod.csv"))
+mapping_animalprod <- read.csv(here("data", "FAOSTAT_mapping_animalprod.csv"))
 
-# fao_prod <- fao_prod %>% 
-#   inner_join(mapping_animalprod, by = "Item")
+ fao_prod <- fao_prod %>%
+   inner_join(mapping_animalprod, by = "Item")
 
 mapping <- read_excel(here("data",  "mapping_GAMS_FAO_products.xlsx"))
 mapping[which(mapping$FAO == "Groundnuts (Shelled Eq)"), "FAO"] <- "Groundnuts"
@@ -230,7 +230,7 @@ product_tot <- product_df %>%
 # 
 # }
 # write.xlsx(db_full %>% data.frame(), file = here("data", "extracted_scenathon", paste0(gsub("-", "",Sys.Date()), "_ExtractedPdtyLivestock.xlsx")), row.names = F)
-db_full <- readxl::read_excel(here("data", "extracted_scenathon", "20240425_ExtractedPdtyLivestock.xlsx"))
+db_full <- readxl::read_excel(here("data", "extracted_scenathon", "20240523_ExtractedPdtyLivestock.xlsx"))
 
 #Computing Livestock productivity in t/TLU
 db_full_agg <- db_full %>%
@@ -302,7 +302,7 @@ db_change_Live_Prod <- db_full_agg %>%
 # }
 # 
 # write.xlsx(db_full2 %>% data.frame(), file = here("data", "extracted_scenathon", paste0(gsub("-", "",Sys.Date()), "_ExtractedRumDensity.xlsx")), row.names = F)
-db_full2 <- readxl::read_excel(here("data", "extracted_scenathon", "20240425_ExtractedRumDensity.xlsx")) 
+db_full2 <- readxl::read_excel(here("data", "extracted_scenathon", "20240523_ExtractedRumDensity.xlsx")) 
 
 
 db_full2_agg <- db_full2 %>%
@@ -373,7 +373,7 @@ db_change_RumDensity <- db_full2_agg %>%
 # }
 # 
 # write.xlsx(db_full_crop %>% data.frame(), file = here("data", "extracted_scenathon", paste0(gsub("-", "",Sys.Date()), "_ExtractedPdtyCrop.xlsx")), row.names = F)
-db_full_crop <- readxl::read_excel(here("data", "extracted_scenathon", "20240425_ExtractedPdtyCrop.xlsx"))
+db_full_crop <- readxl::read_excel(here("data", "extracted_scenathon", "20240523_ExtractedPdtyCrop.xlsx"))
 
 db_full_crop_agg <- db_full_crop %>%
   #Use harvested area as weight
@@ -472,7 +472,7 @@ db_change_crop <- db_full_crop_agg %>%
 # }
 # 
 # write.xlsx(db_full_expansion %>% data.frame(), file = here("data", "extracted_scenathon", paste0(gsub("-", "",Sys.Date()), "_ExtractedExpansion.xlsx")), row.names = F)
-db_full_expansion <- readxl::read_excel(here("data", "extracted_scenathon", "20240425_ExtractedExpansion.xlsx")) %>% 
+db_full_expansion <- readxl::read_excel(here("data", "extracted_scenathon", "20240523_ExtractedExpansion.xlsx")) %>% 
   mutate(ALPHA3 = ifelse(ALPHA3 == "RMECAS", "NMC", ALPHA3)) 
 # %>% 
 #   mutate(ALPHA3 = ifelse(nchar(ALPHA3) == 4, stringr::str_sub(ALPHA3, 2, 4), ALPHA3))
@@ -544,10 +544,10 @@ db_change_Expansion <- db_scenarios %>%
 # db_full_affor_temp <- db_full_affor %>%
 # mutate(ALPHA3 = ifelse(grepl("\\.", ALPHA3), stringr::str_sub(ALPHA3, 1, 3), ALPHA3))
 # 
-# write.xlsx(db_full_affor %>% data.frame(), file = here("data", "extracted_scenathon", paste0(gsub("-", "",Sys.Date()), "_1ExtractedAfforestation.xlsx")), row.names = F)
+# write.xlsx(db_full_affor %>% data.frame(), file = here("data", "extracted_scenathon", paste0(gsub("-", "",Sys.Date()), "_ExtractedAfforestation.xlsx")), row.names = F)
 
 
-db_full_affor <- read_excel(here("data", "extracted_scenathon", "20240426_1ExtractedAfforestation.xlsx")) %>% 
+db_full_affor <- read_excel(here("data", "extracted_scenathon", "20240523_ExtractedAfforestation.xlsx")) %>% 
   mutate(ALPHA3 = ifelse(ALPHA3 == "RASP", "R_ASP",
                          ifelse(ALPHA3 == "RCSA", "R_CSA",
                                 ifelse(ALPHA3 == "RNEU", "R_NEU",
@@ -652,7 +652,7 @@ db_change_afforestation <- db_full_afforestation_agg %>%
 # write.xlsx(db_full_waste %>% data.frame(), file = here("data", "extracted_scenathon", paste0(gsub("-", "",Sys.Date()), "_ExtractedFoodWaste.xlsx")), row.names = F)
 # 
 
-db_full_waste <- readxl::read_excel(here("data", "extracted_scenathon", "20240425_ExtractedFoodWaste.xlsx")) %>% 
+db_full_waste <- readxl::read_excel(here("data", "extracted_scenathon", "20240523_ExtractedFoodWaste.xlsx")) %>% 
   # mutate(ALPHA3 = ifelse(nchar(ALPHA3) == 4, stringr::str_sub(ALPHA3, 2, 4), ALPHA3)) %>% 
   rename(FPRODUCT = fproduct) %>% 
   mutate(FPRODUCT = ifelse(FPRODUCT == "MILK", "milk", FPRODUCT))
@@ -847,7 +847,7 @@ db_change_pa <- db_pa %>%
 
 
 
-db_irr <- readxl::read_excel(here("data", "extracted_scenathon", "20240507_ExtractedIrr.xlsx")) %>% 
+db_irr <- readxl::read_excel(here("data", "extracted_scenathon", "20240523_ExtractedIrr.xlsx")) %>% 
   dplyr::filter(YEAR == 2050)
 
 options(scipen = 999)
@@ -915,7 +915,7 @@ db_change_irr <- db_irr %>%
 
 
 
-db_agrprac <- readxl::read_excel(here("data", "extracted_scenathon", "20240514_ExtractedAgrprac.xlsx")) %>% 
+db_agrprac <- readxl::read_excel(here("data", "extracted_scenathon", "20240523_ExtractedAgrprac.xlsx")) %>% 
   dplyr::filter(YEAR == 2050)
 
 options(scipen = 999)
