@@ -49,7 +49,7 @@ gbr_data <- read_xlsx(here("data", "report_GBR_20240306_10H43.xlsx"), sheet = "I
          CalcCropN2O, CalcCropCH4, CalcCropCO2, CalcLiveN2O, CalcLiveCH4, CalcDeforCO2, CalcOtherLUCCO2, CalcSequestCO2,
          kcal_feas, kcal_mder,
          LNPPMatureForest, LNPPMatureOtherLand,
-         CalcN_org, CalcN_synth,
+         CalcN_org, CalcN_synth,Nmanure,
          CalcWFblue) %>% 
   mutate(Cropland_change = CalcCropland - lag(CalcCropland)) %>% 
   mutate(Pasture_change = CalcPasture - lag(CalcPasture)) %>% 
@@ -59,7 +59,7 @@ gbr_data <- read_xlsx(here("data", "report_GBR_20240306_10H43.xlsx"), sheet = "I
   mutate(CO2 = CalcCropCO2 + CalcDeforCO2 + CalcOtherLUCCO2 + CalcSequestCO2) %>% 
   mutate(CH4 = CalcCropCH4 + CalcLiveCH4) %>% 
   mutate(N2O = CalcCropN2O + CalcLiveN2O) %>% 
-  mutate(TotalN = CalcN_org + CalcN_synth)
+  mutate(TotalN = CalcN_synth + Nmanure)
 
 
 
@@ -262,7 +262,7 @@ for (element in elements) {
     group_by(Pathway_code) %>%
     ggplot(aes(x = Year, y = !!sym(paste0("diff_", element)))) +
     geom_bar(stat = "identity", data = filter(gbr, !str_detect(Pathway, "complete")),
-             aes(fill = scenarios), colour = "white", size = 0.5, width = 7) +
+             aes(fill = scenarios), colour = "white", size = 0.5, width = 0.5) +
     geom_hline(yintercept = 0, linetype = "solid") +
     guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 2, byrow = T))+
     geom_point(data = filter(gbr, Pathway %in% c("NC_complete", "GS_complete")),
@@ -289,8 +289,8 @@ for (element in elements) {
       text = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
       strip.text = element_text(size = 18, face = "bold"),
       legend.title = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
-      legend.text = element_text(family = "Arial", size = 13),
-      plot.title = element_text(color = "black", size = 14, face = "bold"), 
+      legend.text = element_text(family = "Arial", size = 15),
+      plot.title = element_text(color = "black", size = 16, face = "bold"), 
       axis.title.x = element_text(color = "black", size = 14),
       axis.text.x = element_text(color = "black", size = 13),
       axis.text.y = element_text(color = "black", size = 13),

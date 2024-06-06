@@ -316,8 +316,8 @@ for (element in elements) {
       text = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
       strip.text = element_text(size = 18, face = "bold"),
       legend.title = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
-      legend.text = element_text(family = "Arial", size = 13),
-      plot.title = element_text(color = "black", size = 14, face = "bold"), 
+      legend.text = element_text(family = "Arial", size = 15),
+      plot.title = element_text(color = "black", size = 16, face = "bold"), 
       axis.title.x = element_text(color = "black", size = 14),
       axis.text.x = element_text(color = "black", size = 13),
       axis.text.y = element_text(color = "black", size = 13),
@@ -337,12 +337,12 @@ for (element in elements) {
   filename <- paste0(gsub("-", "", Sys.Date()), "_" ,element, ".tiff")
   
   # # # # Save the current plot as TIFF
-  # tiff(
-  #   filename = here(figure_directory, filename),
-  #   units = "in", height = 10, width = 18, res = 600
-  # )
-  # print(current_plot)
-  # dev.off()
+  tiff(
+    filename = here(figure_directory, filename),
+    units = "in", height = 10, width = 18, res = 600
+  )
+  print(current_plot)
+  dev.off()
 
   # Append the current plot to the list
   plots_list[[element]] <- current_plot

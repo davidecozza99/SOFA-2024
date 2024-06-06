@@ -130,10 +130,10 @@ conflict_prefer("filter", "dplyr")
 here()
 
 #Data extraction ---------------------------------------------------------------
-scenathon<- read.csv(here("data", "240424_FullDataBase.csv"), sep = "") %>% 
+scenathon<- read_csv(here("data", "240523_FullDataBase.csv")) %>% 
   rename(alpha3 = country, Year = year) %>% 
   mutate(pathway = recode(pathway, "NationalCommitment" = "NationalCommitments")) %>% 
-  filter(tradeadjustment == "Yes") %>%
+  filter(tradeadjusment == "Yes") %>%
   filter(Year != "2000") %>% 
   select(alpha3, pathway, Year, calccropn2o, calccropch4, calccropco2, calcliven2o, calclivech4, 
          ghgbiofuels,

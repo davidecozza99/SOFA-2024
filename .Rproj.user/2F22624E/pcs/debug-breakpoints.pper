@@ -191,7 +191,7 @@
                 "editor_state": 1,
                 "editor_line_number": 244,
                 "is_pending_debug_completion": false,
-                "needs_updated_steps": false,
+                "needs_updated_steps": true,
                 "type": 1,
                 "is_package_breakpoint": false,
                 "package_name": ""
