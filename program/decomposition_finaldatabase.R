@@ -166,7 +166,7 @@ all_kcal_eat_final <- all_kcal_eat %>%
     ~ if_else(. %in% c("Location", "Pathway", "Year", "kcal_NotIdentified_EATLancet"), ., paste0("kcal_", .,"_EATLancet")),
     -c(Location, Pathway, Year, kcal_NotIdentifiedinEATLancet)
   )
-write.xlsx(all_kcal_eat_final, file = here("data", "Decomposition", paste0(gsub("-", "",Sys.Date()), "_",  "database_decomposition_eat.xlsx")))
+# write.xlsx(all_kcal_eat_final, file = here("data", "Decomposition", paste0(gsub("-", "",Sys.Date()), "_",  "database_decomposition_eat.xlsx")))
 
 #Final Database ---------------------------------------
 
@@ -213,12 +213,16 @@ all_data_fao_fbs <- left_join(all_data, all_kcal_fao_fbs_final, by = c("Pathway"
 
 
 #Save
-write.xlsx(all_data_fao_fbs, file = here("data", "Decomposition", paste0(gsub("-", "",Sys.Date()), "_", "database_decomposition.xlsx")))
+# write.xlsx(all_data_fao_fbs, file = here("data", "Decomposition", paste0(gsub("-", "",Sys.Date()), "_", "database_decomposition.xlsx")))
 
 
 #### Ex post : to add in the other_EAT column the difference between Kcal_feas (REPORTING AGGREGATED) - sum of Kcal_feas from the (REPORTING BY_PRODUCT)
 
 
+### Mapping EAT - FAO
+mapping_eat_fao <- mapping_eat %>% 
+  left_join(mapping_fao_fbs) %>% 
+  unique()
 
 
 
@@ -350,4 +354,21 @@ all_kcal_ind_eat_final <- all_kcal_ind_eat %>%
 
 #Save
 write.xlsx(all_kcal_ind_eat_final, file = here("data", "Decomposition", "India_EAT.xlsx"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

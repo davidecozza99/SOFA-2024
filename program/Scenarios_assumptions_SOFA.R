@@ -1204,15 +1204,13 @@ data_final_FABLE <- data_final %>%
 
 melted <- melt(data_final_FABLE, id.vars = c("ALPHA3", "Pathway", "afforestation", "agricultural_land_expansion")) 
 melted$value <- ifelse(melted$variable == "pa", melted$value,
-                       ifelse(melted$variable == "irr_change", melted$value,
-                              ifelse(melted$variable == "agrprac_change", melted$value,
                                      ifelse(melted$variable == "Foodwaste_change", melted$value,
                                             ifelse(
                                               melted$value!= "NaN" & melted$variable != "Affor",
                                               melted$value-1,
                                               ifelse(melted$variable == "Affor",
                                                      melted$value,
-                                                     NA))))))
+                                                     NA))))
 melted$sign <- ifelse(melted$value < 0,
                       0,
                       1)
@@ -1276,7 +1274,7 @@ data_SOFA <- data_SOFA %>%
   mutate(value = if_else(ALPHA3 == "IND" & Pathway == "CurrentTrend" & variable == "pa", 0.01, value)) %>% 
   mutate(value = if_else(ALPHA3 == "IND" & Pathway == "CurrentTrend" & variable == "Expansion_change", -0.5, value)) %>% 
   mutate(sign = if_else(ALPHA3 == "IND" & Pathway == "CurrentTrend" & variable == "Expansion_change", 0, sign)) %>% 
-  mutate(value = if_else(ALPHA3 == "IND" & Pathway == "CurrentTrend" & variable == "share_irr_final", 0.16, value)) %>% 
+  mutate(value = if_else(ALPHA3 == "IND" & Pathway == "CurrentTrend" & variable == "irr_change", 0.16, value)) %>% 
   mutate(value = if_else(ALPHA3 == "IND" & Pathway == "CurrentTrend" & variable == "share_agrprac_final", 0.0, value)) %>% 
   
   
@@ -1301,7 +1299,7 @@ data_SOFA <- data_SOFA %>%
   mutate(value = if_else(ALPHA3 == "IND" & Pathway == "FSDP" & variable == "Expansion_change", -0.5, value)) %>% 
   mutate(sign = if_else(ALPHA3 == "IND" & Pathway == "FSDP" & variable == "Expansion_change", 0, sign)) %>%
   mutate(value = if_else(ALPHA3 == "IND" & Pathway == "FSDP" & variable == "Affor", 28.5373, value)) %>% 
-  mutate(value = if_else(ALPHA3 == "IND" & Pathway == "FSDP" & variable == "share_irr_final", 0.2, value)) %>% 
+  mutate(value = if_else(ALPHA3 == "IND" & Pathway == "FSDP" & variable == "irr_change", 0.2, value)) %>% 
   mutate(value = if_else(ALPHA3 == "IND" & Pathway == "FSDP" & variable == "share_agrprac_final", 0.0, value)) 
 
 
