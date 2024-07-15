@@ -57,6 +57,7 @@ bra_data <- read_xlsx(here("data", "report_BRA_20240306_10H44.xlsx"), sheet = "I
   mutate(CO2 = CalcCropCO2 + CalcDeforCO2 + CalcOtherLUCCO2 + CalcSequestCO2) %>% 
   mutate(CH4 = CalcCropCH4 + CalcLiveCH4) %>% 
   mutate(N2O = CalcCropN2O + CalcLiveN2O) %>% 
+  mutate(GHG = CO2 + CH4 + N2O) %>% 
   mutate(TotalN = CalcN_synth + Nmanure)
 
 bra_data$Pathway[bra_data$Pathway == "NationalCommitments"] <- "NC_complete"
@@ -123,6 +124,7 @@ bra <- bra_data %>%
     diff_CO2 = ifelse(Pathway != "Current Trend_Yes", CO2 - first(CO2[Pathway == "Current Trend_Yes"]), NA),
     diff_CH4 = ifelse(Pathway != "Current Trend_Yes", CH4 - first(CH4[Pathway == "Current Trend_Yes"]), NA),
     diff_N2O = ifelse(Pathway != "Current Trend_Yes", N2O - first(N2O[Pathway == "Current Trend_Yes"]), NA),
+    diff_GHG = ifelse(Pathway != "Current Trend_Yes", GHG - first(GHG[Pathway == "Current Trend_Yes"]), NA),
     diff_kcal_mder = ifelse(Pathway != "Current Trend_Yes", kcal_mder - first(kcal_mder[Pathway == "Current Trend_Yes"]), NA),
     diff_LNPPMatureForest = ifelse(Pathway != "Current Trend_Yes", LNPPMatureForest - first(LNPPMatureForest[Pathway == "Current Trend_Yes"]), NA),
     diff_LNPPMatureOtherLand = ifelse(Pathway != "Current Trend_Yes", LNPPMatureOtherLand - first(LNPPMatureOtherLand[Pathway == "Current Trend_Yes"]), NA),
@@ -195,6 +197,7 @@ pathway_colors <- c(
 
 element_labels <- c(
   "GAS" = "GHG",
+  "GHG" = "AFOLU GHG (CO2 + CH4 + N2O)",
   "CO2" = "CO2 Emissions", 
   "CH4" = "Methane (CH4) Emissions", 
   "N2O" = "Nitrous Oxide (N2O) Emissions", 
@@ -214,6 +217,7 @@ element_labels <- c(
 )
 
 units_labels <- c(
+  "GHG" = "Mt CO2e per year",
   "GAS" = "Mt CO2e per year",
   "CO2" = "Mt CO2e per year", 
   "CH4" = "Mt CO2e per year", 
@@ -236,7 +240,7 @@ units_labels <- c(
 
 
 # List of elements for decomposition analysis
-elements <- c("CH4","CO2", "N2O",
+elements <- c("CH4","CO2", "N2O", "GHG",
               "kcal_feas","kcal_anim", "kcal_plant",
               "ForestChange",  "Cropland_change", "Pasture_change", "OtherLand_change",
               "CalcFarmLabourFTE", "LNPPMatureForest", "LNPPMatureOtherLand",
@@ -319,15 +323,262 @@ for (element in elements) {
   
   
 
-  tiff(
-    filename = here(figure_directory, filename),
-    units = "in", height = 10, width = 18, res = 600
-  )
-  print(current_plot)
-  dev.off()
+  # tiff(
+  #   filename = here(figure_directory, filename),
+  #   units = "in", height = 10, width = 18, res = 600
+  # )
+  # print(current_plot)
+  # dev.off()
 
   # Append the current plot to the list
   plots_list[[element]] <- current_plot
 }
 
-plots_list
+# plots_list
+
+
+
+
+
+
+
+
+# LAND FIGURE (Cropland, Pasture, Other Land, Forest change)
+for (element in elements) {
+  # Create the plot
+  current_plot <- bra %>%
+    group_by(Pathway_code) %>%
+    ggplot(aes(x = Year, y = !!sym(paste0("diff_", element)))) +
+    geom_bar(stat = "identity", data = filter(bra, !str_detect(Pathway, "complete")),
+             aes(fill = scenarios), colour = "white", size = 0.2) +
+    geom_hline(yintercept = 0, linetype = "solid") +
+    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 3, byrow = T))+
+    geom_point(data = filter(bra, Pathway == "GS_complete"),
+               aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
+               size = 3, shape = 16) +
+    scale_color_manual(values = c("black"), name = "",
+                       labels = c("All scenarios combined")) +
+    labs(
+      x = "",
+      y = ""
+    ) +
+    facet_grid(. ~ Pathway_code, scales = "free_y",
+               labeller = labeller(Pathway_code = c(
+                 "NC" = "NC",
+                 "GS" = "GS"
+               ))) +
+    scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "", labels = pathway_labels[pathway_labels != "complete"]) +
+    theme_minimal() +
+    theme(
+      text = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
+      legend.title = element_text(family = "Arial", color = "black", size = 14, face = "bold"),
+      legend.text = element_text(family = "Arial", size = 13),
+      plot.title = element_text(color = "black", size = 20, face = "bold", hjust = 0.5),  
+      axis.title.x = element_text(color = "black", size = 12),
+      legend.position = "none",
+      legend.direction = "horizontal",
+      legend.box= "vertical",
+      legend.box.spacing = unit(0.5, 'mm'),
+      legend.spacing.x = unit(3, 'mm'),
+      legend.spacing.y = unit(3, 'mm'),
+      legend.box.margin = unit(0.5, "lines"),
+      legend.key.size = unit(5, "mm"),
+      panel.spacing = unit(1, "lines"),
+      legend.key.width = unit(8, "mm"),
+      legend.key.height = unit(8, "mm")
+    ) +
+    labs(title = element_labels[element])
+  
+  plots_list[[element]] <- current_plot
+}
+
+selected_elements <- c("Cropland_change", "Pasture_change", "OtherLand_change", "ForestChange")
+selected_plots <- lapply(selected_elements, function(element) plots_list[[element]])
+
+combined_plot <- plot_grid(plotlist = selected_plots, ncol = 2, align = "v")
+
+legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.position = "right"))
+
+# Create a dummy plot for the y-axis label
+y_axis_label <- ggplot() +
+  annotate("text", x = 0.5, y = 0.5, label = "Difference in 1000ha per year compared to Current Trend",
+           angle = 90, family = "Arial", size = 5, fontface = "bold") +
+  theme_void()
+
+# Combine the y-axis label, combined plots, and legend
+final_plot <- plot_grid(
+  plot_grid(y_axis_label, combined_plot, ncol = 2, rel_widths = c(0.05, 1)),
+  legend, ncol = 1, rel_heights = c(1, 0.3)
+)
+
+filename <- paste0(gsub("-", "", Sys.Date()), "_Landchange.tiff")
+
+tiff(
+  filename = here(figure_directory, filename),
+  units = "in", height = 8, width = 16, res = 600
+)
+print(final_plot)
+dev.off()
+
+
+
+
+# AFOLU GHG FIGURE (CO2, CH4, N2O)
+for (element in elements) {
+  # Create the plot
+  current_plot <- bra %>%
+    group_by(Pathway_code) %>%
+    ggplot(aes(x = Year, y = !!sym(paste0("diff_", element)))) +
+    geom_bar(stat = "identity", data = filter(bra, !str_detect(Pathway, "complete")),
+             aes(fill = scenarios), colour = "white", size = 0.2) +
+    geom_hline(yintercept = 0, linetype = "solid") +
+    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 3, byrow = T))+
+    geom_point(data = filter(bra, Pathway == "GS_complete"),
+               aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
+               size = 3, shape = 16) + 
+    scale_color_manual(values = c("black"), name = "",
+                       labels = c("All scenarios combined")) +
+    labs(
+      x = "",
+      y = ""  
+    ) +
+    facet_grid(. ~ Pathway_code, scales = "free_y",
+               labeller = labeller(Pathway_code = c(
+                 "NC" = "NC",
+                 "GS" = "GS"
+               ))) +
+    scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "", labels = pathway_labels[pathway_labels != "complete"]) +
+    theme_minimal() +
+    theme(
+      text = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
+      legend.title = element_text(family = "Arial", color = "black", size = 14, face = "bold"),
+      legend.text = element_text(family = "Arial", size = 13),
+      plot.title = element_text(color = "black", size = 20, face = "bold", hjust = 0.5), 
+      axis.title.x = element_text(color = "black", size = 12),
+      legend.position = "none",
+      legend.direction = "horizontal",
+      legend.box= "vertical",
+      legend.box.spacing = unit(0.5, 'mm'),
+      legend.spacing.x = unit(3, 'mm'),
+      legend.spacing.y = unit(3, 'mm'),
+      legend.box.margin = unit(0.5, "lines"),
+      legend.key.size = unit(5, "mm"),  
+      panel.spacing = unit(1, "lines"),
+      legend.key.width = unit(8, "mm"),
+      legend.key.height = unit(8, "mm")
+    ) +
+    labs(title = element_labels[element]) 
+  
+  plots_list[[element]] <- current_plot
+}
+
+selected_elements <- c("CO2", "CH4", "N2O", "GHG") 
+selected_plots <- lapply(selected_elements, function(element) plots_list[[element]])
+
+combined_plot <- plot_grid(plotlist = selected_plots, ncol = 2, align = "v")
+
+legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.position = "right"))
+
+# Create a dummy plot for the y-axis label
+y_axis_label <- ggplot() +
+  annotate("text", x = 0.5, y = 0.5, label = "Difference in Mt CO2e per year \ncompared to Current Trend",
+           angle = 90, family = "Arial", size = 5, fontface = "bold") +
+  theme_void() 
+
+# Combine the y-axis label, combined plots, and legend
+final_plot <- plot_grid(
+  plot_grid(y_axis_label, combined_plot, ncol = 2, rel_widths = c(0.05, 1)),
+  legend, ncol = 1, rel_heights = c(1, 0.3)
+)
+
+filename <- paste0(gsub("-", "", Sys.Date()), "_4GHG.tiff")
+
+tiff(
+  filename = here(figure_directory, filename),
+  units = "in", height = 8, width = 16, res = 600
+)
+print(final_plot)
+dev.off()
+
+
+
+
+
+
+# KCAL FIGURE (kcal_plant, kcal_anim)
+for (element in elements) {
+  # Create the plot
+  current_plot <- bra %>%
+    group_by(Pathway_code) %>%
+    ggplot(aes(x = Year, y = !!sym(paste0("diff_", element)))) +
+    geom_bar(stat = "identity", data = filter(bra, !str_detect(Pathway, "complete")),
+             aes(fill = scenarios), colour = "white", size = 0.2) +
+    geom_hline(yintercept = 0, linetype = "solid") +
+    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 3, byrow = T))+
+    geom_point(data = filter(bra, Pathway == "GS_complete"),
+               aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
+               size = 3, shape = 16) + 
+    scale_color_manual(values = c("black"), name = "",
+                       labels = c("All scenarios combined")) +
+    labs(
+      x = "",
+      y = ""  
+    ) +
+    facet_grid(. ~ Pathway_code, scales = "free_y",
+               labeller = labeller(Pathway_code = c(
+                 "NC" = "NC",
+                 "GS" = "GS"
+               ))) +
+    scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "", labels = pathway_labels[pathway_labels != "complete"]) +
+    theme_minimal() +
+    theme(
+      text = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
+      legend.title = element_text(family = "Arial", color = "black", size = 14, face = "bold"),
+      legend.text = element_text(family = "Arial", size = 13),
+      plot.title = element_text(color = "black", size = 20, face = "bold", hjust = 0.5),  
+      axis.title.x = element_text(color = "black", size = 12),
+      legend.position = "none",
+      legend.direction = "horizontal",
+      legend.box= "vertical",
+      legend.box.spacing = unit(0.5, 'mm'),
+      legend.spacing.x = unit(3, 'mm'),
+      legend.spacing.y = unit(3, 'mm'),
+      legend.box.margin = unit(0.5, "lines"),
+      legend.key.size = unit(5, "mm"),  
+      panel.spacing = unit(1, "lines"),
+      legend.key.width = unit(8, "mm"),
+      legend.key.height = unit(8, "mm")
+    ) +
+    labs(title = element_labels[element]) 
+  
+  plots_list[[element]] <- current_plot
+}
+
+selected_elements <- c("kcal_plant", "kcal_anim") 
+selected_plots <- lapply(selected_elements, function(element) plots_list[[element]])
+
+combined_plot <- plot_grid(plotlist = selected_plots, ncol = 2, align = "v")
+
+legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.position = "right"))
+
+# Create a dummy plot for the y-axis label
+y_axis_label <- ggplot() +
+  annotate("text", x = 0.5, y = 0.5, label = "Difference in kcal per capita per day \ncompared to Current Trend",
+           angle = 90, family = "Arial", size = 5, fontface = "bold") +
+  theme_void()
+
+# Combine the y-axis label, combined plots, and legend
+final_plot <- plot_grid(
+  plot_grid(y_axis_label, combined_plot, ncol = 2, rel_widths = c(0.05, 1)),
+  legend, ncol = 1, rel_heights = c(1, 0.3)
+)
+
+filename <- paste0(gsub("-", "", Sys.Date()), "_kcal_anim_plant.tiff")
+
+tiff(
+  filename = here(figure_directory, filename),
+  units = "in", height = 8, width = 16, res = 600
+)
+print(final_plot)
+dev.off()
+
