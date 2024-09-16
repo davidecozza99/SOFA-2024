@@ -1227,18 +1227,18 @@ complete_data <- melted %>%
 
 var.labs <- c(
   Population_change = "Population",
-  kcal_targ_change = "Calories \nper Capita",
-  pdty_crop_change = "Crops \nProductivity",
-  pdty_live_change = "Livestock \nProductivity",
-  density_change = "Ruminant \nDensity ",
+  kcal_targ_change = "Calories \nper capita",
+  pdty_crop_change = "Crops \nproductivity",
+  pdty_live_change = "Livestock \nproductivity",
+  density_change = "Ruminant \ndensity ",
   Expansion_change ="Agricultural \nexpansion \n(i)",
   Export_quantity_change = "Exports \n(kcal)",
   Import_quantity_change = "Imports \n(kcal)",
-  Foodwaste_change = "Share of \n Food Waste \n(iii)",
+  Foodwaste_change = "Share of \n food waste \n(iii)",
   Affor = "Afforestation \n(Mha) \n(ii)",
-  pa= "Protected \n Areas \n(iv)",
-  irr_change= "Irrigated \nArea",
-  agrprac_change= "Area under \nagroecological \npractises"
+  pa= "Protected \n areas \n(iv)",
+  irr_change= "Irrigated \nareas",
+  agrprac_change= "Area under \nagroecological \npractices"
 )
 
 
@@ -1367,7 +1367,7 @@ print(p_final_SOFA)
 
 
 
-tiff(here("output", "figures", paste0(gsub("-", "",Sys.Date()), "_", "ScenarioAssumptionSOFA.tiff")),
-     units = "in", height = 10, width = 24, res = 300)
+pdf(here("output", "figures", paste0(gsub("-", "", format(Sys.Date(), format = "%y%m%d")), "_", "ScenarioAssumptionSOFA.pdf")),
+    height = 10, width = 24)
 plot(p_final_SOFA)
 dev.off()

@@ -111,25 +111,26 @@ pathway_labels <- c(
   "diet" = "Diet",
   "import" = "Import",
   "export" = "Export",
-  "postharvloss" = "Post Harvest Loss",
-  "foodwaste" = "Food Waste",
-  "live" = "Livestock Productivity",
-  "crop" = "Crop Productivity",
-  "popactivity" = "Population Activity",
-  "agrexp" = "Deforestation Control",
+  "postharvloss" = "Post harvest loss",
+  "foodwaste" = "Food waste",
+  "live" = "Livestock productivity",
+  "crop" = "Crop productivity",
+  "popactivity" = "Population activity",
+  "agrexp" = "Deforestation control",
   "affor" = "Afforestation",
   "urban" = "Urbanization",
-  "rumdensity" = "Ruminant Density",
-  "pa" = "Protected Areas",
+  "rumdensity" = "Ruminant density",
+  "pa" = "Protected areas",
   "biofuel" = "Biofuel",
-  "agropra" = "Agroecological Practices",
+  "agropra" = "Agroecological practices",
   "irri" = "Irrigation",
   "final" = "Final",
   "agroforestry" = "Agroforestry",
   "grassland" = "Intensive/ Extensive\n grassland share",
   "peatland" = "Peatland",
   # "live_rumdensity" = "Livestock productivity and Ruminant Density",
-  "tradeeffect" = "International Demand")
+  "tradeeffect" = "International demand")
+
 
 pathway_colors <- c(  
   "GDP" = "yellow",  
@@ -234,11 +235,17 @@ dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 
 
 
-
-
 plots_list <- list()
 
 for (element in elements) {
+  
+  # Create custom label depending on the element
+  if (element == "GAS" || element == "CO2" || element == "CH4" || element == "N2O") {
+    y_label <- expression(Difference~"in"~Mt~CO[2]*e~per~year~compared~to~CT)
+  } else {
+    y_label <- paste("Difference in", units_labels[element], "compared to CT")
+  }
+  
   # Create the plot
   current_plot <- bra %>%
     group_by(Pathway_code) %>%
@@ -250,19 +257,16 @@ for (element in elements) {
     geom_point(data = filter(bra, Pathway %in% c("NC_complete", "GS_complete")),
                aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
                size = 3, shape = 16) + 
-    # geom_point(data = filter(bra, Pathway %in% c("NC_tradeeffect", "GS_tradeeffect")),
-    #            aes(y = !!sym(paste0("diff_", element)), x = Year, color = "NC/GS Trade adjustment effect on CT"),
-    #            size = 3, shape = 16, alpha =0.7) + 
     scale_color_manual(values = c("black"), name = "",
                        labels = c("All scenarios combined")) +
     labs(
       x = "",
-      y = paste("Difference in", units_labels[element], "compared to Current Trends")
+      y = y_label  # Use the correctly assigned y_label
     ) +
     facet_grid(. ~ Pathway_code, scales = "free_y",
                labeller = labeller(Pathway_code = c(
-                 "NC" = "National Commitments",
-                 "GS" = "Global Sustainability"
+                 "NC" = "National commitments",
+                 "GS" = "Global sustainability"
                ))) +
     scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "", labels = pathway_labels[pathway_labels != "complete"]) +
     scale_x_discrete(breaks = unique(bra$Year[!is.na(bra[, paste0("diff_", element)])])) +
@@ -274,7 +278,7 @@ for (element in elements) {
       legend.text = element_text(family = "Arial", size = 22),
       plot.title = element_text(color = "black", size = 22, face = "bold"), 
       axis.title.x = element_text(color = "black", size = 18),
-      axis.title.y = element_text(color = "black", size = 20),
+      axis.title.y = element_text(color = "black", size = 22),
       axis.text.x = element_text(color = "black", size = 18),
       axis.text.y = element_text(color = "black", size = 18),
       legend.position = "bottom",
@@ -290,10 +294,7 @@ for (element in elements) {
       legend.key.height = unit(8, "mm")
     )
   
-  
   filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_BRA_cum_" ,element, ".tiff")
-  
-  
   
   tiff(
     filename = here(figure_directory, filename),
@@ -305,7 +306,6 @@ for (element in elements) {
   # Append the current plot to the list
   plots_list[[element]] <- current_plot
 }
-
 # plots_list
 
 
@@ -417,11 +417,17 @@ figure_directory <- here("output", "decomposition", "BRA_othermethod_inverse", p
 dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 
 
-
-
 plots_list <- list()
 
 for (element in elements) {
+  
+  # Create custom label depending on the element
+  if (element == "GAS" || element == "CO2" || element == "CH4" || element == "N2O") {
+    y_label <- expression(Difference~"in"~Mt~CO[2]*e~per~year~compared~to~CT)
+  } else {
+    y_label <- paste("Difference in", units_labels[element], "compared to CT")
+  }
+  
   # Create the plot
   current_plot <- bra %>%
     group_by(Pathway_code) %>%
@@ -429,23 +435,23 @@ for (element in elements) {
     geom_bar(stat = "identity", data = filter(bra, !str_detect(Pathway, "complete")),
              aes(fill = scenarios), colour = "white", size = 0.5, width = 0.5) +
     geom_hline(yintercept = 0, linetype = "solid") +
-    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 3, byrow = T))+
+    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 3, byrow = T)) +
     geom_point(data = filter(bra, Pathway %in% c("NC_complete", "GS_complete")),
                aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
                size = 3, shape = 16) + 
     # geom_point(data = filter(bra, Pathway %in% c("NC_tradeeffect", "GS_tradeeffect")),
     #            aes(y = !!sym(paste0("diff_", element)), x = Year, color = "NC/GS Trade adjustment effect on CT"),
-    #            size = 3, shape = 16, alpha =0.7) + 
+    #            size = 3, shape = 16, alpha = 0.7) + 
     scale_color_manual(values = c("black"), name = "",
                        labels = c("All scenarios combined")) +
     labs(
       x = "",
-      y = paste("Difference in", units_labels[element], "compared to Current Trends")
+      y = y_label  # Use the correctly assigned y_label
     ) +
     facet_grid(. ~ Pathway_code, scales = "free_y",
                labeller = labeller(Pathway_code = c(
-                 "NC" = "National Commitments",
-                 "GS" = "Global Sustainability"
+                 "NC" = "National commitments",
+                 "GS" = "Global sustainability"
                ))) +
     scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "", labels = pathway_labels[pathway_labels != "complete"]) +
     scale_x_discrete(breaks = unique(bra$Year[!is.na(bra[, paste0("diff_", element)])])) +
@@ -457,12 +463,12 @@ for (element in elements) {
       legend.text = element_text(family = "Arial", size = 22),
       plot.title = element_text(color = "black", size = 22, face = "bold"), 
       axis.title.x = element_text(color = "black", size = 18),
-      axis.title.y = element_text(color = "black", size = 20),
+      axis.title.y = element_text(color = "black", size = 22),
       axis.text.x = element_text(color = "black", size = 18),
       axis.text.y = element_text(color = "black", size = 18),
       legend.position = "bottom",
       legend.direction = "horizontal",
-      legend.box= "vertical",
+      legend.box = "vertical",
       legend.box.spacing = unit(0.5, 'mm'),
       legend.spacing.x = unit(1, 'mm'),
       legend.spacing.y = unit(0.5, 'mm'),
@@ -473,10 +479,7 @@ for (element in elements) {
       legend.key.height = unit(8, "mm")
     )
   
-  
-  filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_BRA_cum_inverse_" ,element, ".tiff")
-  
-  
+  filename <- paste0(gsub("-", "", format(Sys.Date(), format = "%y%m%d")), "_BRA_cum_inverse_", element, ".tiff")
   
   tiff(
     filename = here(figure_directory, filename),
