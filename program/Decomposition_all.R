@@ -65,8 +65,7 @@ aus_data <- read_xlsx(here("data", "report_AUS_20240306_9H01.xlsx"), sheet = "In
   mutate(N2O = CalcCropN2O + CalcLiveN2O) %>% 
   mutate(GHG = CO2 + CH4 + N2O) %>% 
   mutate(TotalN = CalcN_synth + Nmanure)
-# left_join(N) %>% 
-# mutate(TotalN = CalcN_org + CalcN_synth + CalcNLeftPasture, na.rm =TRUE)
+
 
 
 aus_data$Pathway[aus_data$Pathway == "NationalCommitments"] <- "NC_complete"
@@ -84,7 +83,6 @@ aus_comm <- read_xlsx(here("data", "report_AUS_20240306_9H01.xlsx"), sheet = "Co
   select(Location, Pathway, Year, Product, kcalfeasprod) %>%
   unique()
 
-# write.xlsx(aus_comm, file = here("data", "Decomposition", "aus_tool.xlsx"))
 
 
 aus_comm$Pathway[aus_comm$Pathway == "NationalCommitments"] <- "NC_complete"
@@ -105,10 +103,6 @@ aus_kcal <- aus_comm %>%
   select(-kcalfeasprod, -PROD_GROUP, -Product) %>% 
   unique()
 
-# 
-# filter(Pathway %in% c("Current Trend_Yes", "GS_popactivity")) %>%
-#   filter(Year==2030) %>%
-#   distinct()
 
 
 aus_kcal_final <- aus_kcal %>%
@@ -179,7 +173,6 @@ pathway_labels <- c(
   "agroforestry" = "Agroforestry",
   "grassland" = "Intensive/ Extensive\n grassland share",
   "peatland" = "Peatland",
-  # "live_rumdensity" = "Livestock productivity and Ruminant Density",
   "tradeeffect" = "International Demand")
 
 pathway_colors <- c(  
@@ -203,7 +196,6 @@ pathway_colors <- c(
   "irri" = "#FFD700",  
   "agroforestry" = "black",  
   "grassland" = "#FF4500",  
-  # "peatland" = "#FF4500",
   "live_rumdensity" = "#8B008B",
   "tradeeffect" = "pink"
 )
@@ -260,7 +252,6 @@ elements <- c("CH4","CO2", "N2O", "GHG",
               "TotalN", "CalcWFblue"
 )
 
-# write.xlsx(aus, file = here("data", "Decomposition", "aus.xlsx"))
 
 #Reordering pathwyas + erasing CT
 aus$Pathway_code <- factor(aus$Pathway_code, levels = c("NC", "GS"))
@@ -272,8 +263,6 @@ aus<- aus %>%
                          "NC_agroforestry", "NC_peatland", "NC_popactivity", "NC_grassland")) %>% 
   mutate(Year = as.factor(Year))
 
-
-# write.xlsx(aus, file = here("data", "Decomposition", "aus.xlsx"))
 
 #Plot -------------------------------------------------------------------
 
@@ -297,9 +286,6 @@ for (element in elements) {
     geom_point(data = filter(aus, Pathway %in% c("NC_complete", "GS_complete")),
                aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
                size = 3, shape = 16) + 
-    # geom_point(data = filter(aus, Pathway %in% c("NC_tradeeffect", "GS_tradeeffect")),
-    #            aes(y = !!sym(paste0("diff_", element)), x = Year, color = "NC/GS Trade adjustment effect on CT"),
-    #            size = 3, shape = 16, alpha =0.7) + 
     scale_color_manual(values = c("black"), name = "",
                        labels = c("All scenarios combined")) +
     labs(
@@ -352,9 +338,6 @@ for (element in elements) {
 }
 
 # plots_list
-
-
-
 
 
 
@@ -517,9 +500,6 @@ dev.off()
 
 
 
-
-
-
 # KCAL FIGURE (kcal_plant, kcal_anim)
 for (element in elements) {
   # Create the plot
@@ -601,24 +581,6 @@ dev.off()
 rm(list = ls()) 
 
 
-
-
-# Libraries ---------------------------------------------------------------
-library(here)
-library(dplyr)
-library(readr)
-library(readxl)
-library(conflicted)
-library(readxl)
-library(ggplot2)
-library(hrbrthemes)
-library(stringr)
-library(writexl)
-library(RColorBrewer)
-library(tidyr)
-library(cowplot)
-
-
 conflict_prefer("filter", "dplyr")
 conflicts_prefer(dplyr::lag)
 
@@ -675,14 +637,12 @@ bra_data$Pathway[bra_data$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradee
 
 
 
-
 # Commodities -----------------------------
 bra_comm <- read_xlsx(here("data", "report_BRA_20240306_10H44.xlsx"), sheet = "Commodities") %>%
   rename(Pathway = `Current Trend`) %>%
   filter(Year %in% c("2030", "2050"))%>%
   select(Location, Pathway, Year, Product, kcalfeasprod) %>%
   unique()
-
 
 
 bra_comm$Pathway[bra_comm$Pathway == "NationalCommitments"] <- "NC_complete"
@@ -746,8 +706,6 @@ bra <- bra_data %>%
 bra$scenarios <- substring(bra_data$Pathway, 4)
 
 
-
-
 #Labelling --------------------------
 pathway_labels <- c(
   "GDP" = "GDP",
@@ -772,7 +730,6 @@ pathway_labels <- c(
   "agroforestry" = "Agroforestry",
   "grassland" = "Intensive/ Extensive\n grassland share",
   "peatland" = "Peatland",
-  # "live_rumdensity" = "Livestock productivity and Ruminant Density",
   "tradeeffect" = "International Demand")
 
 pathway_colors <- c(  
@@ -796,7 +753,6 @@ pathway_colors <- c(
   "irri" = "#FFD700",  
   "agroforestry" = "black",  
   "grassland" = "#FF4500",  
-  # "peatland" = "#FF4500",
   "live_rumdensity" = "#8B008B",
   "tradeeffect" = "pink"
 )
@@ -936,8 +892,6 @@ for (element in elements) {
   plots_list[[element]] <- current_plot
 }
 
-# plots_list
-
 
 
 # # MULTIPLE FIGURE ("kcal_feas", "CH4", "TotalN", "CalcWFblue")
@@ -1016,14 +970,6 @@ for (element in elements) {
 # )
 # print(final_plot)
 # dev.off()
-
-
-
-
-
-
-
-
 
 
 
@@ -1189,8 +1135,6 @@ dev.off()
 
 
 
-
-
 # KCAL FIGURE (kcal_plant, kcal_anim)
 for (element in elements) {
   # Create the plot
@@ -1272,24 +1216,7 @@ rm(list = ls())
 
 
 
-# Libraries ---------------------------------------------------------------
-library(here)
-library(dplyr)
-library(readr)
-library(readxl)
-library(conflicted)
-library(readxl)
-library(ggplot2)
-library(hrbrthemes)
-library(stringr)
-library(writexl)
-library(RColorBrewer)
-library(tidyr)
 
-conflict_prefer("filter", "dplyr")
-conflicts_prefer(dplyr::lag)
-
-here()
 
 #Data -------------------------------------------------------------------
 
@@ -1435,7 +1362,6 @@ pathway_labels <- c(
   "agroforestry" = "Agroforestry",
   "grassland" = "Intensive/ Extensive\n grassland share",
   "peatland" = "Peatland",
-  # "live_rumdensity" = "Livestock productivity and Ruminant Density",
   "tradeeffect" = "International Demand")
 
 pathway_colors <- c(  
@@ -1459,7 +1385,6 @@ pathway_colors <- c(
   "irri" = "#FFD700",  
   "agroforestry" = "black",  
   "grassland" = "#FF4500",  
-  # "peatland" = "#FF4500",
   "live_rumdensity" = "#8B008B",
   "tradeeffect" = "pink"
 )
@@ -1549,9 +1474,6 @@ for (element in elements) {
     geom_point(data = filter(col, Pathway %in% c("NC_complete", "GS_complete")),
                aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
                size = 3, shape = 16) + 
-    # geom_point(data = filter(col, Pathway %in% c("NC_tradeeffect", "GS_tradeeffect")),
-    #            aes(y = !!sym(paste0("diff_", element)), x = Year, color = "NC/GS Trade adjustment effect on CT"),
-    #            size = 3, shape = 16, alpha =0.7) + 
     scale_color_manual(values = c("black"), name = "",
                        labels = c("All scenarios combined")) +
     labs(
@@ -1604,8 +1526,6 @@ for (element in elements) {
   # Append the current plot to the list
   plots_list[[element]] <- current_plot
 }
-
-# plots_list
 
 
 
@@ -1685,10 +1605,6 @@ for (element in elements) {
 # )
 # print(final_plot)
 # dev.off()
-
-
-
-
 
 
 # LAND FIGURE (Cropland, Pasture, Other Land, Forest change)
@@ -1850,8 +1766,6 @@ dev.off()
 
 
 
-
-
 # KCAL FIGURE (kcal_plant, kcal_anim)
 for (element in elements) {
   # Create the plot
@@ -1933,24 +1847,7 @@ rm(list = ls())
 
 
 
-# Libraries ---------------------------------------------------------------
-library(here)
-library(dplyr)
-library(readr)
-library(readxl)
-library(conflicted)
-library(readxl)
-library(ggplot2)
-library(hrbrthemes)
-library(stringr)
-library(writexl)
-library(RColorBrewer)
-library(tidyr)
 
-conflict_prefer("filter", "dplyr")
-conflicts_prefer(dplyr::lag)
-
-here()
 
 #Data -------------------------------------------------------------------
 db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>% 
@@ -2095,7 +1992,6 @@ pathway_labels <- c(
   "agroforestry" = "Agroforestry",
   "grassland" = "Intensive/ Extensive\n grassland share",
   "peatland" = "Peatland",
-  # "live_rumdensity" = "Livestock productivity and Ruminant Density",
   "tradeeffect" = "International Demand")
 
 pathway_colors <- c(  
@@ -2119,7 +2015,6 @@ pathway_colors <- c(
   "irri" = "#FFD700",  
   "agroforestry" = "black",  
   "grassland" = "#FF4500",  
-  # "peatland" = "#FF4500",
   "live_rumdensity" = "#8B008B",
   "tradeeffect" = "pink"
 )
@@ -2207,9 +2102,6 @@ for (element in elements) {
     geom_point(data = filter(eth, Pathway %in% c("NC_complete", "GS_complete")),
                aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
                size = 3, shape = 16) + 
-    # geom_point(data = filter(eth, Pathway %in% c("NC_tradeeffect", "GS_tradeeffect")),
-    #            aes(y = !!sym(paste0("diff_", element)), x = Year, color = "NC/GS Trade adjustment effect on CT"),
-    #            size = 3, shape = 16, alpha =0.7) + 
     scale_color_manual(values = c("black"), name = "",
                        labels = c("All scenarios combined")) +
     labs(
@@ -2263,8 +2155,6 @@ for (element in elements) {
   # Append the current plot to the list
   plots_list[[element]] <- current_plot
 }
-
-# plots_list
 
 
 
@@ -2514,24 +2404,6 @@ rm(list = ls())
 
 
 
-# Libraries ---------------------------------------------------------------
-library(here)
-library(dplyr)
-library(readr)
-library(readxl)
-library(conflicted)
-library(readxl)
-library(ggplot2)
-library(hrbrthemes)
-library(stringr)
-library(writexl)
-library(RColorBrewer)
-library(tidyr)
-
-conflict_prefer("filter", "dplyr")
-conflicts_prefer(dplyr::lag)
-
-here()
 
 #Data -------------------------------------------------------------------
 
@@ -2675,7 +2547,6 @@ pathway_labels <- c(
   "agroforestry" = "Agroforestry",
   "grassland" = "Intensive/ Extensive\n grassland share",
   "peatland" = "Peatland",
-  # "live_rumdensity" = "Livestock productivity and Ruminant Density",
   "tradeeffect" = "International Demand")
 
 pathway_colors <- c(  
@@ -2699,7 +2570,6 @@ pathway_colors <- c(
   "irri" = "#FFD700",  
   "agroforestry" = "black",  
   "grassland" = "#FF4500",  
-  # "peatland" = "#FF4500",
   "live_rumdensity" = "#8B008B",
   "tradeeffect" = "pink"
 )
@@ -2751,7 +2621,6 @@ units_labels <- c(
 # List of elements for decomposition analysis
 elements <- c("CH4","CO2", "N2O", "GHG",
               "kcal_feas","kcal_anim", "kcal_plant"
-              
               ,"ForestChange",  "Cropland_change", "Pasture_change", "OtherLand_change",
               "CalcFarmLabourFTE", "LNPPMatureForest", "LNPPMatureOtherLand",
               "TotalN", "CalcWFblue"
@@ -2788,9 +2657,6 @@ for (element in elements) {
     geom_point(data = filter(gbr, Pathway %in% c("NC_complete", "GS_complete")),
                aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
                size = 3, shape = 16) + 
-    # geom_point(data = filter(gbr, Pathway %in% c("NC_tradeeffect", "GS_tradeeffect")),
-    #            aes(y = !!sym(paste0("diff_", element)), x = Year, color = "NC/GS Trade adjustment effect on CT"),
-    #            size = 3, shape = 16, alpha =0.7) + 
     scale_color_manual(values = c("black"), name = "",
                        labels = c("All scenarios combined")) +
     labs(
@@ -2843,8 +2709,6 @@ for (element in elements) {
 }
 
 plots_list
-
-
 
 
 
@@ -3008,9 +2872,6 @@ dev.off()
 
 
 
-
-
-
 # KCAL FIGURE (kcal_plant, kcal_anim)
 for (element in elements) {
   # Create the plot
@@ -3090,24 +2951,7 @@ dev.off()
 
 rm(list = ls()) 
 
-# Libraries ---------------------------------------------------------------
-library(here)
-library(dplyr)
-library(readr)
-library(readxl)
-library(conflicted)
-library(readxl)
-library(ggplot2)
-library(hrbrthemes)
-library(stringr)
-library(writexl)
-library(RColorBrewer)
-library(tidyr)
 
-conflict_prefer("filter", "dplyr")
-conflicts_prefer(dplyr::lag)
-
-here()
 
 
 
@@ -3131,7 +2975,6 @@ db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>%
 
 # Split the database into separate data frames based on the value of ALPHA3
 db_manure <- db_manure %>% filter(Location == "Australia")
-
 
 
 aus_data <- read_xlsx(here("data", "report_AUS_20240306_9H01.xlsx"), sheet = "Indicators") %>% 
@@ -3195,11 +3038,6 @@ aus_kcal <- aus_comm %>%
   mutate(kcal_anim_plant = sum(kcalfeasprod)) %>% 
   select(-kcalfeasprod, -PROD_GROUP, -Product) %>% 
   unique()
-
-# 
-# filter(Pathway %in% c("Current Trend_Yes", "GS_popactivity")) %>%
-#   filter(Year==2030) %>%
-#   distinct()
 
 
 aus_kcal_final <- aus_kcal %>%
@@ -3300,7 +3138,6 @@ bra_data$Pathway[bra_data$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradee
 
 
 
-
 # Commodities -----------------------------
 bra_comm <- read_xlsx(here("data", "report_BRA_20240306_10H44.xlsx"), sheet = "Commodities") %>%
   rename(Pathway = `Current Trend`) %>%
@@ -3338,7 +3175,6 @@ bra_kcal_final <- bra_kcal %>%
 #Final Database ---------------------------------------
 bra_data <- left_join(bra_data, bra_kcal_final %>% select(Pathway, Year, kcal_plant, kcal_anim), by = c("Pathway", "Year")) %>%
   unique() 
-
 
 
 bra <- bra_data %>%
@@ -3495,8 +3331,6 @@ col <- col_data %>%
 col$scenarios <- substring(col_data$Pathway, 4)
 
 
-
-
 #Reordering pathwyas + erasing CT
 col$Pathway_code <- factor(col$Pathway_code, levels = c("NC", "GS"))
 col <- col[complete.cases(col$Pathway_code), ]
@@ -3562,7 +3396,6 @@ eth_comm <- read_xlsx(here("data", "report_ETH_20240426_12H01.xlsx"), sheet = "C
   unique()
 
 
-
 eth_comm$Pathway[eth_comm$Pathway == "NationalCommitments"] <- "NC_complete"
 eth_comm$Pathway[eth_comm$Pathway == "GlobalSustainability"] <- "GS_complete"
 
@@ -3590,7 +3423,6 @@ eth_kcal_final <- eth_kcal %>%
 #Final Database ---------------------------------------
 eth_data <- left_join(eth_data, eth_kcal_final %>% select(Pathway, Year, kcal_plant, kcal_anim), by = c("Pathway", "Year")) %>%
   unique() 
-
 
 
 
@@ -3748,13 +3580,10 @@ gbr$scenarios <- substring(gbr_data$Pathway, 4)
 
 #Labelling -------------------------------------------------------------------
 
-
 #Reordering pathwyas + erasing CT
 gbr$Pathway_code <- factor(gbr$Pathway_code, levels = c("NC", "GS"))
 gbr <- gbr[complete.cases(gbr$Pathway_code), ]
 gbr$ALPHA3 <- "UK"
-
-
 
 
 all <- bind_rows(aus, bra, col, eth, gbr) %>% 
@@ -3762,8 +3591,6 @@ all <- bind_rows(aus, bra, col, eth, gbr) %>%
   filter(str_starts(Pathway, "GS_")) %>% 
   filter(!Pathway %in% c("GS_agroforestry", "GS_peatland", "GS_popactivity", "GS_grassland",
                          "NC_agroforestry", "NC_peatland", "NC_popactivity", "NC_grassland" ))  
-
-
 
 
 
@@ -3791,7 +3618,6 @@ pathway_labels <- c(
   "agroforestry" = "Agroforestry",
   "grassland" = "Intensive/ Extensive\n grassland share",
   "peatland" = "Peatland",
-  # "live_rumdensity" = "Livestock productivity and Ruminant Density",
   "tradeeffect" = "International Demand")
 
 pathway_colors <- c(  
@@ -3815,7 +3641,6 @@ pathway_colors <- c(
   "irri" = "#FFD700",  
   "agroforestry" = "black",  
   "grassland" = "#FF4500",  
-  # "peatland" = "#FF4500",
   "live_rumdensity" = "#8B008B",
   "tradeeffect" = "pink"
 )
@@ -3935,11 +3760,6 @@ for (element in elements) {
 }
 
 plots_list
-
-
-
-
-
 
 
 

@@ -29,7 +29,7 @@ db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>%
       ALPHA3 == "COL" ~ "Colombia",
       ALPHA3 == "ETH" ~ "Ethiopia",
       ALPHA3 == "GBR" ~ "UK",
-      TRUE ~ ALPHA3  # Keeps the original value if it doesn't match any of the specified cases
+      TRUE ~ ALPHA3  
     )
   ) %>%
   rename(Location = ALPHA3) %>%
@@ -289,8 +289,6 @@ for (element in elements) {
   # Append the current plot to the list
   plots_list[[element]] <- current_plot
 }
-# plots_list
-
 
 
 
@@ -304,7 +302,7 @@ db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>%
       ALPHA3 == "COL" ~ "Colombia",
       ALPHA3 == "ETH" ~ "Ethiopia",
       ALPHA3 == "GBR" ~ "UK",
-      TRUE ~ ALPHA3  # Keeps the original value if it doesn't match any of the specified cases
+      TRUE ~ ALPHA3 
     )
   ) %>%
   rename(Location = ALPHA3) %>%
@@ -312,7 +310,6 @@ db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>%
 
 # Split the database into separate data frames based on the value of ALPHA3
 db_manure <- db_manure %>% filter(Location == "Brazil")
-
 
 
 brazil_data_inverse <- read_xlsx(here("data", "report_BRA_20240424_11H45_cumulative_inverse.xlsx"), sheet = "Indicators") %>% 
