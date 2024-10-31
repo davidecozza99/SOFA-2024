@@ -616,6 +616,8 @@ library(stringr)
 library(writexl)
 library(RColorBrewer)
 library(tidyr)
+library(cowplot)
+
 
 conflict_prefer("filter", "dplyr")
 conflicts_prefer(dplyr::lag)
@@ -843,7 +845,6 @@ units_labels <- c(
 )
 
 
-
 # List of elements for decomposition analysis
 elements <- c("CH4","CO2", "N2O", "GHG",
               "kcal_feas","kcal_anim", "kcal_plant",
@@ -884,9 +885,6 @@ for (element in elements) {
     geom_point(data = filter(bra, Pathway %in% c("NC_complete", "GS_complete")),
                aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
                size = 3, shape = 16) + 
-    # geom_point(data = filter(bra, Pathway %in% c("NC_tradeeffect", "GS_tradeeffect")),
-    #            aes(y = !!sym(paste0("diff_", element)), x = Year, color = "NC/GS Trade adjustment effect on CT"),
-    #            size = 3, shape = 16, alpha =0.7) + 
     scale_color_manual(values = c("black"), name = "",
                        labels = c("All scenarios combined")) +
     labs(
@@ -907,7 +905,7 @@ for (element in elements) {
       legend.title = element_text(family = "Arial", color = "black", size = 30, face = "bold"),
       legend.text = element_text(family = "Arial", size = 18),
       plot.title = element_text(color = "black", size = 20, face = "bold"), 
-      axis.title.x = element_text(color = "black", size = 18),
+      axis.title = element_text(color = "black", size = 16),
       axis.text.x = element_text(color = "black", size = 16),
       axis.text.y = element_text(color = "black", size = 16),
       legend.position = "bottom",
@@ -923,12 +921,11 @@ for (element in elements) {
       legend.key.height = unit(8, "mm")
     )
   
+  # Adjust filename for JPEG
+  filename <- paste0(gsub("-", "", format(Sys.Date(), format = "%y%m%d")), "_", element, ".jpeg")
   
-  filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_" ,element, ".tiff")
-  
-  
-  
-  tiff(
+  # Save the plot as a JPEG
+  jpeg(
     filename = here(figure_directory, filename),
     units = "in", height = 10, width = 18, res = 600
   )
@@ -940,6 +937,90 @@ for (element in elements) {
 }
 
 # plots_list
+
+
+
+# MULTIPLE FIGURE ("kcal_feas", "CH4", "TotalN", "CalcWFblue")
+for (element in elements) {
+  # Create the plot
+  current_plot <- bra %>%
+    group_by(Pathway_code) %>%
+    ggplot(aes(x = Year, y = !!sym(paste0("diff_", element)))) +
+    geom_bar(stat = "identity", data = filter(bra, !str_detect(Pathway, "complete")),
+             aes(fill = scenarios), colour = "white", size = 0.2) +
+    geom_hline(yintercept = 0, linetype = "solid") +
+    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 3, byrow = T)) +
+    geom_point(data = filter(bra, Pathway %in% c("NC_complete", "GS_complete")),
+               aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
+               size = 3, shape = 16) +
+    scale_color_manual(values = c("black"), name = "",
+                       labels = c("All scenarios combined")) +
+    labs(
+      x = "",
+      y = paste("Difference in", units_labels[element], "\ncompared to Current Trends")
+    ) +
+    facet_grid(. ~ Pathway_code, scales = "free_y",
+               labeller = labeller(Pathway_code = c(
+                 "NC" = "NC",
+                 "GS" = "GS"
+               ))) +
+    scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "", labels = pathway_labels[pathway_labels != "complete"]) +
+    theme_minimal() +
+    theme(
+      text = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
+      legend.title = element_text(family = "Arial", color = "black", size = 14, face = "bold"),
+      legend.text = element_text(family = "Arial", size = 13),
+      axis.title.x = element_text(color = "black", size = 12),
+      axis.title.y = element_text(color = "black", size = 12),
+      legend.position = "none",
+      legend.direction = "horizontal",
+      legend.box = "vertical",
+      legend.box.spacing = unit(0.5, 'mm'),
+      legend.spacing.x = unit(3, 'mm'),
+      legend.spacing.y = unit(3, 'mm'),
+      legend.box.margin = unit(0.5, "lines"),
+      legend.key.size = unit(5, "mm"),
+      panel.spacing = unit(1, "lines"),
+      legend.key.width = unit(8, "mm"),
+      legend.key.height = unit(8, "mm")
+    )
+  
+  plots_list[[element]] <- current_plot
+}
+
+
+selected_elements <- c("kcal_feas", "CH4", "TotalN", "CalcWFblue")
+selected_plots <- lapply(selected_elements, function(element) plots_list[[element]])
+
+combined_plot <- plot_grid(plotlist = selected_plots, ncol = 2, align = "v")
+
+legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.position = "right"))
+
+# Create a dummy plot for the y-axis label
+# y_axis_label <- ggplot() +
+#   annotate("text", x = 0.5, y = 0.5, label = "Difference in 1000ha per year compared to Current Trends",
+#            angle = 90, family = "Arial", size = 6, fontface = "bold") +
+#   theme_void()
+
+# Combine the y-axis label, combined plots, and legend
+final_plot <- plot_grid(
+  plot_grid(combined_plot, ncol = 2),
+  legend, ncol = 1, rel_heights = c(1, 0.5)
+)
+
+filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_MULTIPLEPLOT.tiff")
+
+tiff(
+  filename = here(figure_directory, filename),
+  units = "in", height = 10, width = 16, res = 600
+)
+print(final_plot)
+dev.off()
+
+
+
+
+
 
 
 
