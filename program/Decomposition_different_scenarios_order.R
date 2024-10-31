@@ -19,8 +19,6 @@ conflicts_prefer(dplyr::lag)
 here()
 
 #Data -------------------------------------------------------------------
-# old: report_BRA_20240224_12H29
-
 db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>% 
   rename(Year = YEAR) %>%
   mutate(Year = as.double(Year)) %>%
@@ -62,11 +60,7 @@ brazil_data <- read_xlsx(here("data", "report_BRA_20240424_10H17_cumulative.xlsx
 brazil_data$scenarios <- substring(brazil_data$Pathway, 4)
 
 
-# write_xlsx(brazil_data, here("data", "Decomposition", "brazil_deco2.xlsx"))
-### On excel, added between each pathway the reference CT with Tradeadj, so when computing for the lag, we take in consideration again CT when passing from NC_xxx to GS_xxx
-
-
-brazil_data <- read_xlsx(here("data","Decomposition", "brazil_deco2.xlsx"))
+brazil_data <- read_xlsx(here("data","Decomposition", "brazil_deco.xlsx"))
 
 brazil_data$Pathway[brazil_data$Pathway == "NationalCommitments"] <- "NC_complete"
 brazil_data$Pathway[brazil_data$Pathway == "GlobalSustainability"] <- "GS_complete"
@@ -128,7 +122,6 @@ pathway_labels <- c(
   "agroforestry" = "Agroforestry",
   "grassland" = "Intensive/ Extensive\n grassland share",
   "peatland" = "Peatland",
-  # "live_rumdensity" = "Livestock productivity and Ruminant Density",
   "tradeeffect" = "International demand")
 
 
@@ -153,7 +146,6 @@ pathway_colors <- c(
   "irri" = "#FFD700",  
   "agroforestry" = "black",  
   "grassland" = "#FF4500",  
-  # "peatland" = "#FF4500",
   "live_rumdensity" = "#8B008B",
   "tradeeffect" = "pink"
 )
@@ -215,17 +207,8 @@ elements <- c("CH4"
 
 # # # Remove NA values
 brazil$Pathway_code <- factor(brazil$Pathway_code, levels = c("NC", "GS"))
-brazil <- brazil[complete.cases(brazil$Pathway_code), ]
+bra <- brazil[complete.cases(brazil$Pathway_code), ]
 
-
-# 
-bra <- brazil
-# %>% 
-#   filter(!Pathway %in% c("GS_agroforestry", "GS_peatland", "GS_popactivity", "GS_grassland",
-#                          "NC_agroforestry", "NC_peatland", "NC_popactivity", "NC_grassland")) %>% 
-#   mutate(Year = as.factor(Year))
-
-# write_xlsx(bra, here("data", "Decomposition", "brazil_prova.xlsx"))
 
 
 # folder to store the plots
@@ -310,10 +293,7 @@ for (element in elements) {
 
 
 
-#Need to add point for the NC and GS final difference
-#Need to adjust scale_y_continuous
-#Do not repeat the same label in Scenarios
-#Eliminate some years in the x-axis
+
 db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>% 
   rename(Year = YEAR) %>%
   mutate(Year = as.double(Year)) %>%
@@ -358,11 +338,7 @@ brazil_data_inverse$scenarios <- substring(brazil_data_inverse$Pathway, 4)
 
 
 
-# write_xlsx(brazil_data_inverse, here("data", "Decomposition", "brazil_deco2_inverse.xlsx"))
-### On excel, added between each pathway the reference CT with Tradeadj, so when computing for the lag, we take in consideration again CT when passing from NC_xxx to GS_xxx
-
-
-brazil_data_inverse <- read_xlsx(here("data","Decomposition", "brazil_deco2_inverse.xlsx"))
+brazil_data_inverse <- read_xlsx(here("data","Decomposition", "brazil_deco_inverse.xlsx"))
 
 brazil_data_inverse$Pathway[brazil_data_inverse$Pathway == "NationalCommitments"] <- "NC_complete"
 brazil_data_inverse$Pathway[brazil_data_inverse$Pathway == "GlobalSustainability"] <- "GS_complete"
@@ -410,8 +386,6 @@ bra <- brazil_inverse
 
 
 
-# write_xlsx(bra, here("data", "Decomposition", "brazil_prova_inverse.xlsx"))
-
 # folder to store the plots
 figure_directory <- here("output", "decomposition", "BRA_othermethod_inverse", paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d"))))
 dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
@@ -439,14 +413,11 @@ for (element in elements) {
     geom_point(data = filter(bra, Pathway %in% c("NC_complete", "GS_complete")),
                aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
                size = 3, shape = 16) + 
-    # geom_point(data = filter(bra, Pathway %in% c("NC_tradeeffect", "GS_tradeeffect")),
-    #            aes(y = !!sym(paste0("diff_", element)), x = Year, color = "NC/GS Trade adjustment effect on CT"),
-    #            size = 3, shape = 16, alpha = 0.7) + 
     scale_color_manual(values = c("black"), name = "",
                        labels = c("All scenarios combined")) +
     labs(
       x = "",
-      y = y_label  # Use the correctly assigned y_label
+      y = y_label 
     ) +
     facet_grid(. ~ Pathway_code, scales = "free_y",
                labeller = labeller(Pathway_code = c(
