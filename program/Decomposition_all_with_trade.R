@@ -162,25 +162,25 @@ pathway_labels <- c(
   "diet" = "Diet",
   "import" = "Import",
   "export" = "Export",
-  "postharvloss" = "Post harvest loss",
-  "foodwaste" = "Food waste",
-  "live" = "Livestock productivity",
-  "crop" = "Crop productivity",
-  "popactivity" = "Population activity",
-  "agrexp" = "Deforestation control",
+  "postharvloss" = "Post Harvest Loss",
+  "foodwaste" = "Food Waste",
+  "live" = "Livestock Productivity",
+  "crop" = "Crop Productivity",
+  "popactivity" = "Population Activity",
+  "agrexp" = "Deforestation Control",
   "affor" = "Afforestation",
   "urban" = "Urbanization",
-  "rumdensity" = "Ruminant density",
-  "pa" = "Protected areas",
+  "rumdensity" = "Ruminant Density",
+  "pa" = "Protected Areas",
   "biofuel" = "Biofuel",
-  "agropra" = "Agroecological practices",
+  "agropra" = "Agroecological Practices",
   "irri" = "Irrigation",
   "final" = "Final",
   "agroforestry" = "Agroforestry",
   "grassland" = "Intensive/ Extensive\n grassland share",
   "peatland" = "Peatland",
   # "live_rumdensity" = "Livestock productivity and Ruminant Density",
-  "tradeeffect" = "International demand")
+  "tradeeffect" = "International Demand")
 
 pathway_colors <- c(  
   "GDP" = "yellow",  
@@ -219,10 +219,10 @@ element_labels <- c(
   "kcal_plant" = "Feasible Kcal from Plant-based products",
   "kcal_anim" = "Feasible Kcal from Animal-based products",
   "kcal_mder" = "MDER Kcal", 
-  "ForestChange" = "Forest change", 
-  "Cropland_change" = "Cropland change", 
-  "Pasture_change" = "Pasture change", 
-  "OtherLand_change" = "Other Land change", 
+  "ForestChange" = "Forest Change", 
+  "Cropland_change" = "Cropland Change", 
+  "Pasture_change" = "Pasture Change", 
+  "OtherLand_change" = "Other Land Change", 
   "CalcFarmLabourFTE" = "Farm Labour FTE",
   "LNPPMatureForest" = "LNPP Mature Forest", 
   "LNPPMatureOtherLand" = "LNPP Mature Other Land", 
@@ -286,14 +286,6 @@ dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 plots_list <- list()
 
 for (element in elements) {
-  
-  # Create custom label depending on the element
-  if (element == "GAS" || element == "CO2" || element == "CH4" || element == "N2O") {
-    y_label <- expression(Difference~"in"~Mt~CO[2]*e~compared~to~CT)
-  } else {
-    y_label <- paste("Difference in", units_labels[element], "compared to CT")
-  }
-  
   # Create the plot
   current_plot <- aus %>%
     group_by(Pathway_code) %>%
@@ -301,23 +293,23 @@ for (element in elements) {
     geom_bar(stat = "identity", data = filter(aus, !str_detect(Pathway, "complete")),
              aes(fill = scenarios), colour = "white", size = 0.5, width = 0.5) +
     geom_hline(yintercept = 0, linetype = "solid") +
-    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 3, byrow = T)) +
+    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 3, byrow = T))+
     geom_point(data = filter(aus, Pathway %in% c("NC_complete", "GS_complete")),
                aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
                size = 3, shape = 16) + 
     # geom_point(data = filter(aus, Pathway %in% c("NC_tradeeffect", "GS_tradeeffect")),
     #            aes(y = !!sym(paste0("diff_", element)), x = Year, color = "NC/GS Trade adjustment effect on CT"),
-    #            size = 3, shape = 16, alpha = 0.7) + 
+    #            size = 3, shape = 16, alpha =0.7) + 
     scale_color_manual(values = c("black"), name = "",
                        labels = c("All scenarios combined")) +
     labs(
       x = "",
-      y = y_label  # Use the dynamically generated y_label
+      y = paste("Difference in", units_labels[element], "compared to Current Trends")
     ) +
     facet_grid(. ~ Pathway_code, scales = "free_y",
                labeller = labeller(Pathway_code = c(
-                 "NC" = "National commitments",
-                 "GS" = "Global sustainability"
+                 "NC" = "National Commitments",
+                 "GS" = "Global Sustainability"
                ))) +
     scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "", labels = pathway_labels[pathway_labels != "complete"]) +
     scale_x_discrete(breaks = unique(aus$Year[!is.na(aus[, paste0("diff_", element)])])) +
@@ -327,14 +319,14 @@ for (element in elements) {
       strip.text = element_text(size = 28, face = "bold"),
       legend.title = element_text(family = "Arial", color = "black", size = 26, face = "bold"),
       legend.text = element_text(family = "Arial", size = 25),
-      plot.title = element_text(color = "black", size = 28, face = "bold"), 
+      plot.title = element_text(color = "black", size = 26, face = "bold"), 
       axis.title.x = element_text(color = "black", size = 22),
-      axis.title.y = element_text(color = "black", size = 26),
+      axis.title.y = element_text(color = "black", size = 23),
       axis.text.x = element_text(color = "black", size = 20),
       axis.text.y = element_text(color = "black", size = 20),
       legend.position = "bottom",
       legend.direction = "horizontal",
-      legend.box = "vertical",
+      legend.box= "vertical",
       legend.box.spacing = unit(0.5, 'mm'),
       legend.spacing.x = unit(1, 'mm'),
       legend.spacing.y = unit(0.5, 'mm'),
@@ -345,9 +337,9 @@ for (element in elements) {
       legend.key.height = unit(8, "mm")
     )
   
-  filename <- paste0(gsub("-", "", format(Sys.Date(), format = "%y%m%d")), "_", element, ".tiff")
+  filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_" ,element, ".tiff")
   
-  # Save the current plot as TIFF
+  # # # # Save the current plot as TIFF
   tiff(
     filename = here(figure_directory, filename),
     units = "in", height = 13, width = 20, res = 600
@@ -358,6 +350,8 @@ for (element in elements) {
   # Append the current plot to the list
   plots_list[[element]] <- current_plot
 }
+
+# plots_list
 
 
 
@@ -422,7 +416,7 @@ legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.
 
 # Create a dummy plot for the y-axis label
 y_axis_label <- ggplot() +
-  annotate("text", x = 0.5, y = 0.5, label = "Difference in 1000ha per year compared to CT",
+  annotate("text", x = 0.5, y = 0.5, label = "Difference in 1000ha per year compared to Current Trends",
            angle = 90, family = "Arial", size = 6, fontface = "bold") +
   theme_void()
 
@@ -502,7 +496,7 @@ legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.
 
 # Create a dummy plot for the y-axis label
 y_axis_label <- ggplot() +
-  annotate("text", x = 0.5, y = 0.5, label = "Difference in Mt CO2e per year compared to CT",
+  annotate("text", x = 0.5, y = 0.5, label = "Difference in Mt CO2e per year compared to Current Trends",
            angle = 90, family = "Arial", size = 6, fontface = "bold") +
   theme_void() 
 
@@ -584,7 +578,7 @@ legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.
 
 # Create a dummy plot for the y-axis label
 y_axis_label <- ggplot() +
-  annotate("text", x = 0.5, y = 0.5, label = "Difference in kcal per capita per day compared to CT",
+  annotate("text", x = 0.5, y = 0.5, label = "Difference in kcal per capita per day compared to Current Trends",
            angle = 90, family = "Arial", size = 6, fontface = "bold") +
   theme_void()
 
@@ -759,25 +753,25 @@ pathway_labels <- c(
   "diet" = "Diet",
   "import" = "Import",
   "export" = "Export",
-  "postharvloss" = "Post harvest loss",
-  "foodwaste" = "Food waste",
-  "live" = "Livestock productivity",
-  "crop" = "Crop productivity",
-  "popactivity" = "Population activity",
-  "agrexp" = "Deforestation control",
+  "postharvloss" = "Post Harvest Loss",
+  "foodwaste" = "Food Waste",
+  "live" = "Livestock Productivity",
+  "crop" = "Crop Productivity",
+  "popactivity" = "Population Activity",
+  "agrexp" = "Deforestation Control",
   "affor" = "Afforestation",
   "urban" = "Urbanization",
-  "rumdensity" = "Ruminant density",
-  "pa" = "Protected areas",
+  "rumdensity" = "Ruminant Density",
+  "pa" = "Protected Areas",
   "biofuel" = "Biofuel",
-  "agropra" = "Agroecological practices",
+  "agropra" = "Agroecological Practices",
   "irri" = "Irrigation",
   "final" = "Final",
   "agroforestry" = "Agroforestry",
   "grassland" = "Intensive/ Extensive\n grassland share",
   "peatland" = "Peatland",
   # "live_rumdensity" = "Livestock productivity and Ruminant Density",
-  "tradeeffect" = "International demand")
+  "tradeeffect" = "International Demand")
 
 pathway_colors <- c(  
   "GDP" = "yellow",  
@@ -807,8 +801,8 @@ pathway_colors <- c(
 
 
 element_labels <- c(
-  "GHG" = "AFOLU GHG (CO2 + CH4 + N2O)",
   "GAS" = "GHG",
+  "GHG" = "AFOLU GHG (CO2 + CH4 + N2O)",
   "CO2" = "CO2 Emissions", 
   "CH4" = "Methane (CH4) Emissions", 
   "N2O" = "Nitrous Oxide (N2O) Emissions", 
@@ -816,17 +810,16 @@ element_labels <- c(
   "kcal_plant" = "Feasible Kcal from Plant-based products",
   "kcal_anim" = "Feasible Kcal from Animal-based products",
   "kcal_mder" = "MDER Kcal", 
-  "ForestChange" = "Forest change", 
-  "Cropland_change" = "Cropland change", 
-  "Pasture_change" = "Pasture change", 
-  "OtherLand_change" = "Other land change", 
+  "ForestChange" = "Forest Change", 
+  "Cropland_change" = "Cropland Change", 
+  "Pasture_change" = "Pasture Change", 
+  "OtherLand_change" = "Other Land Change", 
   "CalcFarmLabourFTE" = "Farm Labour FTE",
   "LNPPMatureForest" = "LNPP Mature Forest", 
   "LNPPMatureOtherLand" = "LNPP Mature Other Land", 
   "TotalN" = "Total Nitrogen", 
   "CalcWFblue" = "Water Irrigation Requirements"
 )
-
 
 units_labels <- c(
   "GHG" = "Mt CO2e per year",
@@ -880,14 +873,6 @@ dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 plots_list <- list()
 
 for (element in elements) {
-  
-  # Create custom y-axis label depending on the element
-  if (element == "GAS" || element == "CO2" || element == "CH4" || element == "N2O") {
-    y_label <- expression(Difference~"in"~Mt~CO[2]*e~compared~to~Current~Trends)
-  } else {
-    y_label <- paste("Difference in", units_labels[element], "compared to CT")
-  }
-  
   # Create the plot
   current_plot <- bra %>%
     group_by(Pathway_code) %>%
@@ -895,18 +880,18 @@ for (element in elements) {
     geom_bar(stat = "identity", data = filter(bra, !str_detect(Pathway, "complete")),
              aes(fill = scenarios), colour = "white", size = 0.5, width = 0.5) +
     geom_hline(yintercept = 0, linetype = "solid") +
-    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 2, byrow = T)) +
+    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 3, byrow = T))+
     geom_point(data = filter(bra, Pathway %in% c("NC_complete", "GS_complete")),
                aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
                size = 3, shape = 16) + 
     # geom_point(data = filter(bra, Pathway %in% c("NC_tradeeffect", "GS_tradeeffect")),
     #            aes(y = !!sym(paste0("diff_", element)), x = Year, color = "NC/GS Trade adjustment effect on CT"),
-    #            size = 3, shape = 16, alpha = 0.7) + 
+    #            size = 3, shape = 16, alpha =0.7) + 
     scale_color_manual(values = c("black"), name = "",
                        labels = c("All scenarios combined")) +
     labs(
       x = "",
-      y = y_label  # Use the dynamically generated y_label
+      y = paste("Difference in", units_labels[element], "compared to Current Trends")
     ) +
     facet_grid(. ~ Pathway_code, scales = "free_y",
                labeller = labeller(Pathway_code = c(
@@ -917,17 +902,17 @@ for (element in elements) {
     scale_x_discrete(breaks = unique(bra$Year[!is.na(bra[, paste0("diff_", element)])])) +
     theme_minimal() +
     theme(
-      text = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
-      strip.text = element_text(size = 18, face = "bold"),
-      legend.title = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
-      legend.text = element_text(family = "Arial", size = 15),
-      plot.title = element_text(color = "black", size = 16, face = "bold"), 
-      axis.title.x = element_text(color = "black", size = 14),
-      axis.text.x = element_text(color = "black", size = 13),
-      axis.text.y = element_text(color = "black", size = 13),
+      text = element_text(family = "Arial", color = "black", size = 20, face = "bold"),
+      strip.text = element_text(size = 22, face = "bold"),
+      legend.title = element_text(family = "Arial", color = "black", size = 30, face = "bold"),
+      legend.text = element_text(family = "Arial", size = 18),
+      plot.title = element_text(color = "black", size = 20, face = "bold"), 
+      axis.title.x = element_text(color = "black", size = 18),
+      axis.text.x = element_text(color = "black", size = 16),
+      axis.text.y = element_text(color = "black", size = 16),
       legend.position = "bottom",
       legend.direction = "horizontal",
-      legend.box = "vertical",
+      legend.box= "vertical",
       legend.box.spacing = unit(0.5, 'mm'),
       legend.spacing.x = unit(1, 'mm'),
       legend.spacing.y = unit(0.5, 'mm'),
@@ -938,8 +923,11 @@ for (element in elements) {
       legend.key.height = unit(8, "mm")
     )
   
-  # Save the plot
-  filename <- paste0(gsub("-", "", format(Sys.Date(), format = "%y%m%d")), "_", element, ".tiff")
+  
+  filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_" ,element, ".tiff")
+  
+  
+  
   tiff(
     filename = here(figure_directory, filename),
     units = "in", height = 10, width = 18, res = 600
@@ -989,8 +977,8 @@ for (element in elements) {
     theme(
       text = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
       legend.title = element_text(family = "Arial", color = "black", size = 14, face = "bold"),
-      legend.text = element_text(family = "Arial", size = 16),
-      plot.title = element_text(color = "black", size = 24, face = "bold", hjust = 0.5),  
+      legend.text = element_text(family = "Arial", size = 13),
+      plot.title = element_text(color = "black", size = 20, face = "bold", hjust = 0.5),  
       axis.title.x = element_text(color = "black", size = 12),
       legend.position = "none",
       legend.direction = "horizontal",
@@ -1018,8 +1006,8 @@ legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.
 
 # Create a dummy plot for the y-axis label
 y_axis_label <- ggplot() +
-  annotate("text", x = 0.5, y = 0.5, label = "Difference in 1000 ha per year compared to CT",
-           angle = 90, family = "Arial", size = 8, fontface = "bold") +
+  annotate("text", x = 0.5, y = 0.5, label = "Difference in 1000ha per year compared to Current Trends",
+           angle = 90, family = "Arial", size = 6, fontface = "bold") +
   theme_void()
 
 # Combine the y-axis label, combined plots, and legend
@@ -1070,7 +1058,7 @@ for (element in elements) {
       text = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
       legend.title = element_text(family = "Arial", color = "black", size = 14, face = "bold"),
       legend.text = element_text(family = "Arial", size = 13),
-      plot.title = element_text(color = "black", size = 24, face = "bold", hjust = 0.5), 
+      plot.title = element_text(color = "black", size = 20, face = "bold", hjust = 0.5), 
       axis.title.x = element_text(color = "black", size = 12),
       legend.position = "none",
       legend.direction = "horizontal",
@@ -1098,8 +1086,8 @@ legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.
 
 # Create a dummy plot for the y-axis label
 y_axis_label <- ggplot() +
-  annotate("text", x = 0.5, y = 0.5, label = "Difference in Mt CO2e per year compared to CT",
-           angle = 90, family = "Arial", size = 8, fontface = "bold") +
+  annotate("text", x = 0.5, y = 0.5, label = "Difference in Mt CO2e per year compared to Current Trends",
+           angle = 90, family = "Arial", size = 6, fontface = "bold") +
   theme_void() 
 
 # Combine the y-axis label, combined plots, and legend
@@ -1180,7 +1168,7 @@ legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.
 
 # Create a dummy plot for the y-axis label
 y_axis_label <- ggplot() +
-  annotate("text", x = 0.5, y = 0.5, label = "Difference in kcal per capita per day compared to CT",
+  annotate("text", x = 0.5, y = 0.5, label = "Difference in kcal per capita per day compared to Current Trends",
            angle = 90, family = "Arial", size = 6, fontface = "bold") +
   theme_void()
 
@@ -1349,25 +1337,25 @@ pathway_labels <- c(
   "diet" = "Diet",
   "import" = "Import",
   "export" = "Export",
-  "postharvloss" = "Post harvest loss",
-  "foodwaste" = "Food waste",
-  "live" = "Livestock productivity",
-  "crop" = "Crop productivity",
-  "popactivity" = "Population activity",
-  "agrexp" = "Deforestation control",
+  "postharvloss" = "Post Harvest Loss",
+  "foodwaste" = "Food Waste",
+  "live" = "Livestock Productivity",
+  "crop" = "Crop Productivity",
+  "popactivity" = "Population Activity",
+  "agrexp" = "Deforestation Control",
   "affor" = "Afforestation",
   "urban" = "Urbanization",
-  "rumdensity" = "Ruminant density",
-  "pa" = "Protected areas",
+  "rumdensity" = "Ruminant Density",
+  "pa" = "Protected Areas",
   "biofuel" = "Biofuel",
-  "agropra" = "Agroecological practices",
+  "agropra" = "Agroecological Practices",
   "irri" = "Irrigation",
   "final" = "Final",
   "agroforestry" = "Agroforestry",
   "grassland" = "Intensive/ Extensive\n grassland share",
   "peatland" = "Peatland",
   # "live_rumdensity" = "Livestock productivity and Ruminant Density",
-  "tradeeffect" = "International demand")
+  "tradeeffect" = "International Demand")
 
 pathway_colors <- c(  
   "GDP" = "yellow",  
@@ -1397,19 +1385,19 @@ pathway_colors <- c(
 
 
 element_labels <- c(
-  "GHG" = expression("AFOLU GHG (CO"[2]~"+"~CH[4]~"+"~N[2]*"O)"),
-  "GAS" = expression("GHG"),
-  "CO2" = expression(CO[2]~"emissions"), 
-  "CH4" = expression("Methane (CH"[4]*") emissions"), 
-  "N2O" = expression("Nitrous oxide (N"[2]*"O) emissions"), 
+  "GAS" = "GHG",
+  "GHG" = "AFOLU GHG (CO2 + CH4 + N2O)",
+  "CO2" = "CO2 Emissions", 
+  "CH4" = "Methane (CH4) Emissions", 
+  "N2O" = "Nitrous Oxide (N2O) Emissions", 
   "kcal_feas" = "Feasible Kcal", 
-  "kcal_plant" = "Feasible Kcal from plant-based products",
-  "kcal_anim" = "Feasible Kcal from animal-based products",
+  "kcal_plant" = "Feasible Kcal from Plant-based products",
+  "kcal_anim" = "Feasible Kcal from Animal-based products",
   "kcal_mder" = "MDER Kcal", 
-  "ForestChange" = "Forest change", 
-  "Cropland_change" = "Cropland change", 
-  "Pasture_change" = "Pasture change", 
-  "OtherLand_change" = "Other land change", 
+  "ForestChange" = "Forest Change", 
+  "Cropland_change" = "Cropland Change", 
+  "Pasture_change" = "Pasture Change", 
+  "OtherLand_change" = "Other Land Change", 
   "CalcFarmLabourFTE" = "Farm Labour FTE",
   "LNPPMatureForest" = "LNPP Mature Forest", 
   "LNPPMatureOtherLand" = "LNPP Mature Other Land", 
@@ -1469,14 +1457,6 @@ dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 plots_list <- list()
 
 for (element in elements) {
-  
-  # Create custom y-axis label depending on the element
-  if (element == "GAS" || element == "CO2" || element == "CH4" || element == "N2O") {
-    y_label <- expression(Difference~"in"~Mt~CO[2]*e~compared~to~CT)
-  } else {
-    y_label <- paste("Difference in", units_labels[element], "compared to CT")
-  }
-  
   # Create the plot
   current_plot <- col %>%
     group_by(Pathway_code) %>%
@@ -1495,12 +1475,12 @@ for (element in elements) {
                        labels = c("All scenarios combined")) +
     labs(
       x = "",
-      y = y_label  # Use the dynamically generated y_label
+      y = paste("Difference in", units_labels[element], "compared to Current Trends")
     ) +
     facet_grid(. ~ Pathway_code, scales = "free_y",
                labeller = labeller(Pathway_code = c(
-                 "NC" = "National commitments",
-                 "GS" = "Global sustainability"
+                 "NC" = "National Commitments",
+                 "GS" = "Global Sustainability"
                ))) +
     scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "", labels = pathway_labels[pathway_labels != "complete"]) +
     scale_x_discrete(breaks = unique(col$Year[!is.na(col[, paste0("diff_", element)])])) +
@@ -1512,12 +1492,12 @@ for (element in elements) {
       legend.text = element_text(family = "Arial", size = 25),
       plot.title = element_text(color = "black", size = 26, face = "bold"), 
       axis.title.x = element_text(color = "black", size = 22),
-      axis.title.y = element_text(color = "black", size = 26),
+      axis.title.y = element_text(color = "black", size = 23),
       axis.text.x = element_text(color = "black", size = 20),
       axis.text.y = element_text(color = "black", size = 20),
       legend.position = "bottom",
       legend.direction = "horizontal",
-      legend.box = "vertical",
+      legend.box= "vertical",
       legend.box.spacing = unit(0.5, 'mm'),
       legend.spacing.x = unit(1, 'mm'),
       legend.spacing.y = unit(0.5, 'mm'),
@@ -1528,8 +1508,10 @@ for (element in elements) {
       legend.key.height = unit(8, "mm")
     )
   
-  # Save the plot
-  filename <- paste0(gsub("-", "", format(Sys.Date(), format = "%y%m%d")), "_", element, ".tiff")
+  filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_" ,element, ".tiff")
+  
+  
+  
   tiff(
     filename = here(figure_directory, filename),
     units = "in", height = 13, width = 18, res = 600
@@ -1537,11 +1519,15 @@ for (element in elements) {
   print(current_plot)
   dev.off()
   
+  
   # Append the current plot to the list
   plots_list[[element]] <- current_plot
 }
 
 # plots_list
+
+
+
 
 
 
@@ -1573,11 +1559,11 @@ for (element in elements) {
     scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "", labels = pathway_labels[pathway_labels != "complete"]) +
     theme_minimal() +
     theme(
-      text = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
-      legend.title = element_text(family = "Arial", color = "black", size = 14, face = "bold"),
-      legend.text = element_text(family = "Arial", size = 16),
+      text = element_text(family = "Arial", color = "black", size = 20, face = "bold"),
+      legend.title = element_text(family = "Arial", color = "black", size = 18, face = "bold"),
+      legend.text = element_text(family = "Arial", size = 20),
       plot.title = element_text(color = "black", size = 24, face = "bold", hjust = 0.5),  
-      axis.title.x = element_text(color = "black", size = 12),
+      axis.title.x = element_text(color = "black", size = 16),
       legend.position = "none",
       legend.direction = "horizontal",
       legend.box= "vertical",
@@ -1604,8 +1590,8 @@ legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.
 
 # Create a dummy plot for the y-axis label
 y_axis_label <- ggplot() +
-  annotate("text", x = 0.5, y = 0.5, label = "Difference in 1000 ha per year compared to CT",
-           angle = 90, family = "Arial", size = 8, fontface = "bold") +
+  annotate("text", x = 0.5, y = 0.5, label = "Difference in 1000ha per year compared to Current Trends",
+           angle = 90, family = "Arial", size = 7.5, fontface = "bold") +
   theme_void()
 
 # Combine the y-axis label, combined plots, and legend
@@ -1618,7 +1604,7 @@ filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_Landch
 
 tiff(
   filename = here(figure_directory, filename),
-  units = "in", height = 10, width = 16, res = 600
+  units = "in", height = 13, width = 16, res = 600
 )
 print(final_plot)
 dev.off()
@@ -1683,8 +1669,8 @@ legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.
 
 # Create a dummy plot for the y-axis label
 y_axis_label <- ggplot() +
-  annotate("text", x = 0.5, y = 0.5, label = expression("Difference in Mt CO"[2]*"e per year compared to CT"),
-           angle = 90, family = "Arial", size = 8, fontface = "bold") +
+  annotate("text", x = 0.5, y = 0.5, label = "Difference in Mt CO2e per year compared to Current Trends",
+           angle = 90, family = "Arial", size = 7.5, fontface = "bold") +
   theme_void() 
 
 # Combine the y-axis label, combined plots, and legend
@@ -1737,7 +1723,7 @@ for (element in elements) {
       text = element_text(family = "Arial", color = "black", size = 20, face = "bold"),
       legend.title = element_text(family = "Arial", color = "black", size = 18, face = "bold"),
       legend.text = element_text(family = "Arial", size = 20),
-      plot.title = element_text(color = "black", size = 26, face = "bold", hjust = 0.5),  
+      plot.title = element_text(color = "black", size = 24, face = "bold", hjust = 0.5),  
       axis.title.x = element_text(color = "black", size = 16),
       legend.position = "none",
       legend.direction = "horizontal",
@@ -1765,7 +1751,7 @@ legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.
 
 # Create a dummy plot for the y-axis label
 y_axis_label <- ggplot() +
-  annotate("text", x = 0.5, y = 0.5, label = "Difference in kcal per capita per day compared to CT",
+  annotate("text", x = 0.5, y = 0.5, label = "Difference in kcal per capita per day compared to Current Trends",
            angle = 90, family = "Arial", size = 7, fontface = "bold") +
   theme_void()
 
@@ -1933,25 +1919,25 @@ pathway_labels <- c(
   "diet" = "Diet",
   "import" = "Import",
   "export" = "Export",
-  "postharvloss" = "Post harvest loss",
-  "foodwaste" = "Food waste",
-  "live" = "Livestock productivity",
-  "crop" = "Crop productivity",
-  "popactivity" = "Population activity",
-  "agrexp" = "Deforestation control",
+  "postharvloss" = "Post Harvest Loss",
+  "foodwaste" = "Food Waste",
+  "live" = "Livestock Productivity",
+  "crop" = "Crop Productivity",
+  "popactivity" = "Population Activity",
+  "agrexp" = "Deforestation Control",
   "affor" = "Afforestation",
   "urban" = "Urbanization",
-  "rumdensity" = "Ruminant density",
-  "pa" = "Protected areas",
+  "rumdensity" = "Ruminant Density",
+  "pa" = "Protected Areas",
   "biofuel" = "Biofuel",
-  "agropra" = "Agroecological practices",
+  "agropra" = "Agroecological Practices",
   "irri" = "Irrigation",
   "final" = "Final",
   "agroforestry" = "Agroforestry",
   "grassland" = "Intensive/ Extensive\n grassland share",
   "peatland" = "Peatland",
   # "live_rumdensity" = "Livestock productivity and Ruminant Density",
-  "tradeeffect" = "International demand")
+  "tradeeffect" = "International Demand")
 
 pathway_colors <- c(  
   "GDP" = "yellow",  
@@ -1981,19 +1967,19 @@ pathway_colors <- c(
 
 
 element_labels <- c(
-  "GHG" = expression("AFOLU GHG (CO"[2]~"+"~CH[4]~"+"~N[2]*"O)"),
-  "GAS" = expression("GHG"),
-  "CO2" = expression(CO[2]~"emissions"), 
-  "CH4" = expression("Methane (CH"[4]*") emissions"), 
-  "N2O" = expression("Nitrous oxide (N"[2]*"O) emissions"), 
+  "GAS" = "GHG",
+  "GHG" = "AFOLU GHG (CO2 + CH4 + N2O)",
+  "CO2" = "CO2 Emissions", 
+  "CH4" = "Methane (CH4) Emissions", 
+  "N2O" = "Nitrous Oxide (N2O) Emissions", 
   "kcal_feas" = "Feasible Kcal", 
-  "kcal_plant" = "Feasible Kcal from plant-based products",
-  "kcal_anim" = "Feasible Kcal from animal-based products",
+  "kcal_plant" = "Feasible Kcal from Plant-based products",
+  "kcal_anim" = "Feasible Kcal from Animal-based products",
   "kcal_mder" = "MDER Kcal", 
-  "ForestChange" = "Forest change", 
-  "Cropland_change" = "Cropland change", 
-  "Pasture_change" = "Pasture change", 
-  "OtherLand_change" = "Other land change", 
+  "ForestChange" = "Forest Change", 
+  "Cropland_change" = "Cropland Change", 
+  "Pasture_change" = "Pasture Change", 
+  "OtherLand_change" = "Other Land Change", 
   "CalcFarmLabourFTE" = "Farm Labour FTE",
   "LNPPMatureForest" = "LNPP Mature Forest", 
   "LNPPMatureOtherLand" = "LNPP Mature Other Land", 
@@ -2051,14 +2037,6 @@ dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 plots_list <- list()
 
 for (element in elements) {
-  
-  # Create custom y-axis label depending on the element
-  if (element == "GAS" || element == "CO2" || element == "CH4" || element == "N2O") {
-    y_label <- expression(Difference~"in"~Mt~CO[2]*e~compared~to~CT)
-  } else {
-    y_label <- paste("Difference in", units_labels[element], "compared to CT")
-  }
-  
   # Create the plot
   current_plot <- eth %>%
     group_by(Pathway_code) %>%
@@ -2066,22 +2044,25 @@ for (element in elements) {
     geom_bar(stat = "identity", data = filter(eth, !str_detect(Pathway, "complete")),
              aes(fill = scenarios), colour = "white", size = 0.5, width = 0.5) +
     geom_hline(yintercept = 0, linetype = "solid") +
-    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 3, byrow = T)) +
+    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 3, byrow = T))+
     geom_point(data = filter(eth, Pathway %in% c("NC_complete", "GS_complete")),
                aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
-               size = 3, shape = 16) +
-    scale_color_manual(values = c("black"), name = "", labels = c("All scenarios combined")) +
+               size = 3, shape = 16) + 
+    # geom_point(data = filter(eth, Pathway %in% c("NC_tradeeffect", "GS_tradeeffect")),
+    #            aes(y = !!sym(paste0("diff_", element)), x = Year, color = "NC/GS Trade adjustment effect on CT"),
+    #            size = 3, shape = 16, alpha =0.7) + 
+    scale_color_manual(values = c("black"), name = "",
+                       labels = c("All scenarios combined")) +
     labs(
       x = "",
-      y = y_label  # Use the dynamically generated y_label
+      y = paste("Difference in", units_labels[element], "compared to Current Trends")
     ) +
     facet_grid(. ~ Pathway_code, scales = "free_y",
                labeller = labeller(Pathway_code = c(
-                 "NC" = "National commitments",
-                 "GS" = "Global sustainability"
+                 "NC" = "National Commitments",
+                 "GS" = "Global Sustainability"
                ))) +
-    scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "", 
-                      labels = pathway_labels[pathway_labels != "complete"]) +
+    scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "", labels = pathway_labels[pathway_labels != "complete"]) +
     scale_x_discrete(breaks = unique(eth$Year[!is.na(eth[, paste0("diff_", element)])])) +
     theme_minimal() +
     theme(
@@ -2091,12 +2072,12 @@ for (element in elements) {
       legend.text = element_text(family = "Arial", size = 25),
       plot.title = element_text(color = "black", size = 26, face = "bold"), 
       axis.title.x = element_text(color = "black", size = 22),
-      axis.title.y = element_text(color = "black", size = 26),
+      axis.title.y = element_text(color = "black", size = 23),
       axis.text.x = element_text(color = "black", size = 20),
       axis.text.y = element_text(color = "black", size = 20),
       legend.position = "bottom",
       legend.direction = "horizontal",
-      legend.box = "vertical",
+      legend.box= "vertical",
       legend.box.spacing = unit(0.5, 'mm'),
       legend.spacing.x = unit(1, 'mm'),
       legend.spacing.y = unit(0.5, 'mm'),
@@ -2107,7 +2088,10 @@ for (element in elements) {
       legend.key.height = unit(8, "mm")
     )
   
-  filename <- paste0(gsub("-", "", format(Sys.Date(), format = "%y%m%d")), "_", element, ".tiff")
+  
+  filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_" ,element, ".tiff")
+  
+  
   
   tiff(
     filename = here(figure_directory, filename),
@@ -2116,9 +2100,11 @@ for (element in elements) {
   print(current_plot)
   dev.off()
   
+  
   # Append the current plot to the list
   plots_list[[element]] <- current_plot
 }
+
 # plots_list
 
 
@@ -2182,7 +2168,7 @@ legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.
 
 # Create a dummy plot for the y-axis label
 y_axis_label <- ggplot() +
-  annotate("text", x = 0.5, y = 0.5, label = "Difference in 1000ha per year compared to CT",
+  annotate("text", x = 0.5, y = 0.5, label = "Difference in 1000ha per year compared to Current Trends",
            angle = 90, family = "Arial", size = 6, fontface = "bold") +
   theme_void()
 
@@ -2262,7 +2248,7 @@ legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.
 
 # Create a dummy plot for the y-axis label
 y_axis_label <- ggplot() +
-  annotate("text", x = 0.5, y = 0.5, label = "Difference in Mt CO2e per year compared to CT",
+  annotate("text", x = 0.5, y = 0.5, label = "Difference in Mt CO2e per year compared to Current Trends",
            angle = 90, family = "Arial", size = 6, fontface = "bold") +
   theme_void() 
 
@@ -2344,7 +2330,7 @@ legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.
 
 # Create a dummy plot for the y-axis label
 y_axis_label <- ggplot() +
-  annotate("text", x = 0.5, y = 0.5, label = "Difference in kcal per capita per day compared to CT",
+  annotate("text", x = 0.5, y = 0.5, label = "Difference in kcal per capita per day compared to Current Trends",
            angle = 90, family = "Arial", size = 6, fontface = "bold") +
   theme_void()
 
@@ -2513,25 +2499,25 @@ pathway_labels <- c(
   "diet" = "Diet",
   "import" = "Import",
   "export" = "Export",
-  "postharvloss" = "Post harvest loss",
-  "foodwaste" = "Food waste",
-  "live" = "Livestock productivity",
-  "crop" = "Crop productivity",
-  "popactivity" = "Population activity",
-  "agrexp" = "Deforestation control",
+  "postharvloss" = "Post Harvest Loss",
+  "foodwaste" = "Food Waste",
+  "live" = "Livestock Productivity",
+  "crop" = "Crop Productivity",
+  "popactivity" = "Population Activity",
+  "agrexp" = "Deforestation Control",
   "affor" = "Afforestation",
   "urban" = "Urbanization",
-  "rumdensity" = "Ruminant density",
-  "pa" = "Protected areas",
+  "rumdensity" = "Ruminant Density",
+  "pa" = "Protected Areas",
   "biofuel" = "Biofuel",
-  "agropra" = "Agroecological practices",
+  "agropra" = "Agroecological Practices",
   "irri" = "Irrigation",
   "final" = "Final",
   "agroforestry" = "Agroforestry",
   "grassland" = "Intensive/ Extensive\n grassland share",
   "peatland" = "Peatland",
   # "live_rumdensity" = "Livestock productivity and Ruminant Density",
-  "tradeeffect" = "International demand")
+  "tradeeffect" = "International Demand")
 
 pathway_colors <- c(  
   "GDP" = "yellow",  
@@ -2561,19 +2547,19 @@ pathway_colors <- c(
 
 
 element_labels <- c(
-  "GHG" = expression("AFOLU GHG (CO"[2]~"+"~CH[4]~"+"~N[2]*"O)"),
-  "GAS" = expression("GHG"),
-  "CO2" = expression(CO[2]~"emissions"), 
-  "CH4" = expression("Methane (CH"[4]*") emissions"), 
-  "N2O" = expression("Nitrous oxide (N"[2]*"O) emissions"), 
+  "GAS" = "GHG",
+  "GHG" = "AFOLU GHG (CO2 + CH4 + N2O)",
+  "CO2" = "CO2 Emissions", 
+  "CH4" = "Methane (CH4) Emissions", 
+  "N2O" = "Nitrous Oxide (N2O) Emissions", 
   "kcal_feas" = "Feasible Kcal", 
-  "kcal_plant" = "Feasible Kcal from plant-based products",
-  "kcal_anim" = "Feasible Kcal from animal-based products",
+  "kcal_plant" = "Feasible Kcal from Plant-based products",
+  "kcal_anim" = "Feasible Kcal from Animal-based products",
   "kcal_mder" = "MDER Kcal", 
-  "ForestChange" = "Forest change", 
-  "Cropland_change" = "Cropland change", 
-  "Pasture_change" = "Pasture change", 
-  "OtherLand_change" = "Other land change", 
+  "ForestChange" = "Forest Change", 
+  "Cropland_change" = "Cropland Change", 
+  "Pasture_change" = "Pasture Change", 
+  "OtherLand_change" = "Other Land Change", 
   "CalcFarmLabourFTE" = "Farm Labour FTE",
   "LNPPMatureForest" = "LNPP Mature Forest", 
   "LNPPMatureOtherLand" = "LNPP Mature Other Land", 
@@ -2632,14 +2618,7 @@ dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 plots_list <- list()
 
 for (element in elements) {
-  
-  # Create custom y-axis label depending on the element
-  if (element == "GAS" || element == "CO2" || element == "CH4" || element == "N2O") {
-    y_label <- expression(Difference~"in"~Mt~CO[2]*e~compared~to~CT)
-  } else {
-    y_label <- paste("Difference in", units_labels[element], "compared to CT")
-  }
-  
+  # Create the plot
   current_plot <- gbr %>%
     group_by(Pathway_code) %>%
     ggplot(aes(x = Year, y = !!sym(paste0("diff_", element)))) +
@@ -2657,12 +2636,12 @@ for (element in elements) {
                        labels = c("All scenarios combined")) +
     labs(
       x = "Year",
-      y = y_label
+      y = paste("Difference in", units_labels[element], "compared to Current Trends")
     ) +
     facet_grid(. ~ Pathway_code, scales = "free_y",
                labeller = labeller(Pathway_code = c(
-                 "NC" = "National commitments",
-                 "GS" = "Global sustainability"
+                 "NC" = "National Commitments",
+                 "GS" = "Global Sustainability"
                ))) +
     scale_fill_manual(values = pathway_colors[pathway_colors != "complete"], name = "", labels = pathway_labels[pathway_labels != "complete"]) +
     scale_x_discrete(breaks = unique(gbr$Year[!is.na(gbr[, paste0("diff_", element)])])) +
@@ -2769,7 +2748,7 @@ legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.
 
 # Create a dummy plot for the y-axis label
 y_axis_label <- ggplot() +
-  annotate("text", x = 0.5, y = 0.5, label = "Difference in 1000ha per year compared to CT",
+  annotate("text", x = 0.5, y = 0.5, label = "Difference in 1000ha per year compared to Current Trends",
            angle = 90, family = "Arial", size = 6, fontface = "bold") +
   theme_void()
 
@@ -2849,7 +2828,7 @@ legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.
 
 # Create a dummy plot for the y-axis label
 y_axis_label <- ggplot() +
-  annotate("text", x = 0.5, y = 0.5, label = "Difference in Mt CO2e per year compared to CT",
+  annotate("text", x = 0.5, y = 0.5, label = "Difference in Mt CO2e per year compared to Current Trends",
            angle = 90, family = "Arial", size = 7.5, fontface = "bold") +
   theme_void() 
 
@@ -2931,7 +2910,7 @@ legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.
 
 # Create a dummy plot for the y-axis label
 y_axis_label <- ggplot() +
-  annotate("text", x = 0.5, y = 0.5, label = "Difference in kcal per capita per day compared to CT",
+  annotate("text", x = 0.5, y = 0.5, label = "Difference in kcal per capita per day compared to Current Trends",
            angle = 90, family = "Arial", size = 7, fontface = "bold") +
   theme_void()
 
@@ -3636,25 +3615,25 @@ pathway_labels <- c(
   "diet" = "Diet",
   "import" = "Import",
   "export" = "Export",
-  "postharvloss" = "Post harvest loss",
-  "foodwaste" = "Food waste",
-  "live" = "Livestock productivity",
-  "crop" = "Crop productivity",
-  "popactivity" = "Population activity",
-  "agrexp" = "Deforestation control",
+  "postharvloss" = "Post Harvest Loss",
+  "foodwaste" = "Food Waste",
+  "live" = "Livestock Productivity",
+  "crop" = "Crop Productivity",
+  "popactivity" = "Population Activity",
+  "agrexp" = "Deforestation Control",
   "affor" = "Afforestation",
   "urban" = "Urbanization",
-  "rumdensity" = "Ruminant density",
-  "pa" = "Protected areas",
+  "rumdensity" = "Ruminant Density",
+  "pa" = "Protected Areas",
   "biofuel" = "Biofuel",
-  "agropra" = "Agroecological practices",
+  "agropra" = "Agroecological Practices",
   "irri" = "Irrigation",
   "final" = "Final",
   "agroforestry" = "Agroforestry",
   "grassland" = "Intensive/ Extensive\n grassland share",
   "peatland" = "Peatland",
   # "live_rumdensity" = "Livestock productivity and Ruminant Density",
-  "tradeeffect" = "International demand")
+  "tradeeffect" = "International Demand")
 
 pathway_colors <- c(  
   "GDP" = "yellow",  
@@ -3692,10 +3671,10 @@ element_labels <- c(
   "kcal_plant" = "Feasible Kcal from Plant-based products",
   "kcal_anim" = "Feasible Kcal from Animal-based products",
   "kcal_mder" = "MDER Kcal", 
-  "ForestChange" = "Forest change", 
-  "Cropland_change" = "Cropland change", 
-  "Pasture_change" = "Pasture change", 
-  "OtherLand_change" = "Other Land change", 
+  "ForestChange" = "Forest Change", 
+  "Cropland_change" = "Cropland Change", 
+  "Pasture_change" = "Pasture Change", 
+  "OtherLand_change" = "Other Land Change", 
   "CalcFarmLabourFTE" = "Farm Labour FTE",
   "LNPPMatureForest" = "LNPP Mature Forest", 
   "LNPPMatureOtherLand" = "LNPP Mature Other Land", 
@@ -3723,6 +3702,7 @@ units_labels <- c(
   "CalcWFblue" = "1000 tonnes"
 )
 
+
 # List of elements for decomposition analysis
 elements <- c("GAS",
               "kcal_feas",
@@ -3741,20 +3721,13 @@ plots_list <- list()
 
 for (element in elements) {
   
-  # Create custom label depending on the element
-  y_label <- if (element == "GAS" || element == "CO2" || element == "CH4" || element == "N2O") {
-    expression(Difference~"in"~Mt~CO[2]*e~per~year~compared~to~CT)
-  } else {
-    paste("Difference in", units_labels[element], "compared to CT")
-  }
-  
   current_plot <- all %>%
     group_by(Pathway_code) %>%
     ggplot(aes(x = ALPHA3, y = !!sym(paste0("diff_", element)))) +
     geom_bar(stat = "identity", data = filter(all, !str_detect(Pathway, "complete")),
              aes(fill = scenarios), colour = "white", size = 0.5) +
     geom_hline(yintercept = 0, linetype = "solid") +
-    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 4, byrow = T)) +
+    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 4, byrow = T))+
     geom_point(data = filter(all, Pathway == "GS_complete"),
                aes(y = !!sym(paste0("diff_", element)), x = ALPHA3, color = "All scenarios combined"),
                size = 3, shape = 16) + 
@@ -3762,7 +3735,7 @@ for (element in elements) {
                        labels = c("All scenarios combined")) +
     labs(
       x = "",
-      y = y_label  # Use conditional label
+      y = paste("Difference in", units_labels[element], "compared to Current Trends")
     ) +
     facet_grid(. ~ Pathway_code, scales = "free_y",
                labeller = labeller(Pathway_code = c(
@@ -3776,10 +3749,10 @@ for (element in elements) {
       legend.title = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
       legend.text = element_text(family = "Arial", size = 18),
       plot.title = element_text(color = "black", size = 20, face = "bold"), 
-      axis.title.x = element_text(color = "black", size = 20),
+      axis.title.x = element_text(color = "black", size = 18),
       legend.position = "bottom",
       legend.direction = "horizontal",
-      legend.box = "vertical",
+      legend.box= "vertical",
       legend.box.spacing = unit(0.5, 'mm'),
       legend.spacing.x = unit(1, 'mm'),
       legend.spacing.y = unit(0.5, 'mm'),
@@ -3850,7 +3823,7 @@ for (element in elements) {
       text = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
       legend.title = element_text(family = "Arial", color = "black", size = 14, face = "bold"),
       legend.text = element_text(family = "Arial", size = 13),
-      plot.title = element_text(color = "black", size = 18, face = "bold"),
+      plot.title = element_text(color = "black", size = 14, face = "bold"),
       axis.title.x = element_text(color = "black", size = 12),
       legend.position = "none",
       legend.direction = "horizontal",
@@ -3878,7 +3851,7 @@ legend <- cowplot::get_legend(plots_list[[selected_elements[1]]] + theme(legend.
 
 # Create a dummy plot for the y-axis label
 y_axis_label <- ggplot() +
-  annotate("text", x = 0.5, y = 0.5, label = "Difference in 1000 ha per year compared to CT",
+  annotate("text", x = 0.5, y = 0.5, label = "Difference in 1000ha per year compared to Current Trends",
            angle = 90, family = "Arial", size = 6, fontface = "bold") +
   theme_void()  # Remove all other plot elements
 
@@ -3888,7 +3861,6 @@ final_plot <- plot_grid(
   legend, ncol = 1, rel_heights = c(1, 0.3)
 )
 
-# filename <- paste0(gsub("-", "", ), "_Landchange_all_country2050.tiff")
 filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_Landchange_all_country2050.tiff")
 
 tiff(

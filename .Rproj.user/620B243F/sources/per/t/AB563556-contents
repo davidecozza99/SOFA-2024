@@ -278,7 +278,7 @@ aus<- aus %>%
 #Plot -------------------------------------------------------------------
 
 # folder to store the plots
-figure_directory <- here("output", "decomposition", "AUS_with_trade", paste0(gsub("-", "", Sys.Date())))
+figure_directory <- here("output", "decomposition", "AUS_with_trade", paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d"))))
 dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 
 
@@ -337,7 +337,7 @@ for (element in elements) {
       legend.key.height = unit(8, "mm")
     )
   
-  filename <- paste0(gsub("-", "", Sys.Date()), "_" ,element, ".tiff")
+  filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_" ,element, ".tiff")
   
   # # # # Save the current plot as TIFF
   tiff(
@@ -426,7 +426,7 @@ final_plot <- plot_grid(
   legend, ncol = 1, rel_heights = c(1, 0.3)
 )
 
-filename <- paste0(gsub("-", "", Sys.Date()), "_Landchange.tiff")
+filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_Landchange.tiff")
 # 
 tiff(
   filename = here(figure_directory, filename),
@@ -506,7 +506,7 @@ final_plot <- plot_grid(
   legend, ncol = 1, rel_heights = c(1, 0.3)
 )
 
-filename <- paste0(gsub("-", "", Sys.Date()), "_4GHG.tiff")
+filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_4GHG.tiff")
 
 tiff(
   filename = here(figure_directory, filename),
@@ -588,7 +588,7 @@ final_plot <- plot_grid(
   legend, ncol = 1, rel_heights = c(1, 0.3)
 )
 
-filename <- paste0(gsub("-", "", Sys.Date()), "_kcal_anim_plant.tiff")
+filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_kcal_anim_plant.tiff")
 
 tiff(
   filename = here(figure_directory, filename),
@@ -738,7 +738,7 @@ bra <- bra_data %>%
   ) 
 
 
-# write.xlsx(bra, file = here("data", "Decomposition", paste0(gsub("-", "",Sys.Date()), "_", "bra.xlsx")))
+# write.xlsx(bra, file = here("data", "Decomposition", paste0(gsub("-", "",format(Sys.Date(),format = "%y%m%d")), "_", "bra.xlsx")))
 
 
 bra$scenarios <- substring(bra_data$Pathway, 4)
@@ -866,7 +866,7 @@ bra<- bra %>%
 #Plot -------------------------------------------------------------------
 
 # folder to store the plots
-figure_directory <- here("output", "decomposition", "BRA_with_trade", paste0(gsub("-", "", Sys.Date())))
+figure_directory <- here("output", "decomposition", "BRA_with_trade", paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d"))))
 dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 
 #Loop
@@ -880,7 +880,7 @@ for (element in elements) {
     geom_bar(stat = "identity", data = filter(bra, !str_detect(Pathway, "complete")),
              aes(fill = scenarios), colour = "white", size = 0.5, width = 0.5) +
     geom_hline(yintercept = 0, linetype = "solid") +
-    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 2, byrow = T))+
+    guides(fill = guide_legend(override.aes = list(shape = NA), nrow = 3, byrow = T))+
     geom_point(data = filter(bra, Pathway %in% c("NC_complete", "GS_complete")),
                aes(y = !!sym(paste0("diff_", element)), x = Year, color = "All scenarios combined"),
                size = 3, shape = 16) + 
@@ -902,14 +902,14 @@ for (element in elements) {
     scale_x_discrete(breaks = unique(bra$Year[!is.na(bra[, paste0("diff_", element)])])) +
     theme_minimal() +
     theme(
-      text = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
-      strip.text = element_text(size = 18, face = "bold"),
-      legend.title = element_text(family = "Arial", color = "black", size = 16, face = "bold"),
-      legend.text = element_text(family = "Arial", size = 15),
-      plot.title = element_text(color = "black", size = 16, face = "bold"), 
-      axis.title.x = element_text(color = "black", size = 14),
-      axis.text.x = element_text(color = "black", size = 13),
-      axis.text.y = element_text(color = "black", size = 13),
+      text = element_text(family = "Arial", color = "black", size = 20, face = "bold"),
+      strip.text = element_text(size = 22, face = "bold"),
+      legend.title = element_text(family = "Arial", color = "black", size = 30, face = "bold"),
+      legend.text = element_text(family = "Arial", size = 18),
+      plot.title = element_text(color = "black", size = 20, face = "bold"), 
+      axis.title.x = element_text(color = "black", size = 18),
+      axis.text.x = element_text(color = "black", size = 16),
+      axis.text.y = element_text(color = "black", size = 16),
       legend.position = "bottom",
       legend.direction = "horizontal",
       legend.box= "vertical",
@@ -924,7 +924,7 @@ for (element in elements) {
     )
   
   
-  filename <- paste0(gsub("-", "", Sys.Date()), "_" ,element, ".tiff")
+  filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_" ,element, ".tiff")
   
   
   
@@ -1016,7 +1016,7 @@ final_plot <- plot_grid(
   legend, ncol = 1, rel_heights = c(1, 0.3)
 )
 
-filename <- paste0(gsub("-", "", Sys.Date()), "_Landchange.tiff")
+filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_Landchange.tiff")
 
 tiff(
   filename = here(figure_directory, filename),
@@ -1096,7 +1096,7 @@ final_plot <- plot_grid(
   legend, ncol = 1, rel_heights = c(1, 0.3)
 )
 
-filename <- paste0(gsub("-", "", Sys.Date()), "_4GHG.tiff")
+filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_4GHG.tiff")
 
 tiff(
   filename = here(figure_directory, filename),
@@ -1178,7 +1178,7 @@ final_plot <- plot_grid(
   legend, ncol = 1, rel_heights = c(1, 0.3)
 )
 
-filename <- paste0(gsub("-", "", Sys.Date()), "_kcal_anim_plant.tiff")
+filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_kcal_anim_plant.tiff")
 
 tiff(
   filename = here(figure_directory, filename),
@@ -1450,7 +1450,7 @@ col<- col %>%
 #Plot -------------------------------------------------------------------
 
 # folder to store the plots
-figure_directory <- here("output", "decomposition", "COL_with_trade", paste0(gsub("-", "", Sys.Date())))
+figure_directory <- here("output", "decomposition", "COL_with_trade", paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d"))))
 dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 
 #Loop
@@ -1508,7 +1508,7 @@ for (element in elements) {
       legend.key.height = unit(8, "mm")
     )
   
-  filename <- paste0(gsub("-", "", Sys.Date()), "_" ,element, ".tiff")
+  filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_" ,element, ".tiff")
   
   
   
@@ -1600,7 +1600,7 @@ final_plot <- plot_grid(
   legend, ncol = 1, rel_heights = c(1, 0.3)
 )
 
-filename <- paste0(gsub("-", "", Sys.Date()), "_Landchange.tiff")
+filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_Landchange.tiff")
 
 tiff(
   filename = here(figure_directory, filename),
@@ -1679,7 +1679,7 @@ final_plot <- plot_grid(
   legend, ncol = 1, rel_heights = c(1, 0.3)
 )
 
-filename <- paste0(gsub("-", "", Sys.Date()), "_4GHG.tiff")
+filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_4GHG.tiff")
 
 tiff(
   filename = here(figure_directory, filename),
@@ -1761,7 +1761,7 @@ final_plot <- plot_grid(
   legend, ncol = 1, rel_heights = c(1, 0.3)
 )
 
-filename <- paste0(gsub("-", "", Sys.Date()), "_kcal_anim_plant.tiff")
+filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_kcal_anim_plant.tiff")
 
 tiff(
   filename = here(figure_directory, filename),
@@ -2030,7 +2030,7 @@ eth<- eth %>%
 #Plot -------------------------------------------------------------------
 
 # folder to store the plots
-figure_directory <- here("output", "decomposition", "ETH_with_trade", paste0(gsub("-", "", Sys.Date())))
+figure_directory <- here("output", "decomposition", "ETH_with_trade", paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d"))))
 dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 
 #Loop
@@ -2089,7 +2089,7 @@ for (element in elements) {
     )
   
   
-  filename <- paste0(gsub("-", "", Sys.Date()), "_" ,element, ".tiff")
+  filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_" ,element, ".tiff")
   
   
   
@@ -2178,7 +2178,7 @@ final_plot <- plot_grid(
   legend, ncol = 1, rel_heights = c(1, 0.3)
 )
 
-filename <- paste0(gsub("-", "", Sys.Date()), "_Landchange.tiff")
+filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_Landchange.tiff")
 
 tiff(
   filename = here(figure_directory, filename),
@@ -2258,7 +2258,7 @@ final_plot <- plot_grid(
   legend, ncol = 1, rel_heights = c(1, 0.3)
 )
 
-filename <- paste0(gsub("-", "", Sys.Date()), "_4GHG.tiff")
+filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_4GHG.tiff")
 
 tiff(
   filename = here(figure_directory, filename),
@@ -2340,7 +2340,7 @@ final_plot <- plot_grid(
   legend, ncol = 1, rel_heights = c(1, 0.3)
 )
 
-filename <- paste0(gsub("-", "", Sys.Date()), "_kcal_anim_plant.tiff")
+filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_kcal_anim_plant.tiff")
 
 tiff(
   filename = here(figure_directory, filename),
@@ -2611,7 +2611,7 @@ gbr<- gbr %>%
 #Plot -------------------------------------------------------------------
 
 # folder to store the plots
-figure_directory <- here("output", "decomposition", "GBR_with_trade", paste0(gsub("-", "", Sys.Date())))
+figure_directory <- here("output", "decomposition", "GBR_with_trade", paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d"))))
 dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 
 #Loop
@@ -2669,7 +2669,7 @@ for (element in elements) {
       legend.key.height = unit(8, "mm")
     )
   
-  filename <- paste0(gsub("-", "", Sys.Date()), "_" ,element, ".tiff")
+  filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_" ,element, ".tiff")
   
   
   tiff(
@@ -2758,7 +2758,7 @@ final_plot <- plot_grid(
   legend, ncol = 1, rel_heights = c(1, 0.3)
 )
 
-filename <- paste0(gsub("-", "", Sys.Date()), "_Landchange.tiff")
+filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_Landchange.tiff")
 
 tiff(
   filename = here(figure_directory, filename),
@@ -2838,7 +2838,7 @@ final_plot <- plot_grid(
   legend, ncol = 1, rel_heights = c(1, 0.3)
 )
 
-filename <- paste0(gsub("-", "", Sys.Date()), "_4GHG.tiff")
+filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_4GHG.tiff")
 
 tiff(
   filename = here(figure_directory, filename),
@@ -2920,7 +2920,7 @@ final_plot <- plot_grid(
   legend, ncol = 1, rel_heights = c(1, 0.3)
 )
 
-filename <- paste0(gsub("-", "", Sys.Date()), "_kcal_anim_plant.tiff")
+filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_kcal_anim_plant.tiff")
 
 tiff(
   filename = here(figure_directory, filename),
@@ -3713,7 +3713,7 @@ elements <- c("GAS",
 
 
 # Create the directory for saving plotss
-figure_directory <- here("output", "decomposition", "all_country_with_trade", gsub("-", "", Sys.Date()))
+figure_directory <- here("output", "decomposition", "all_country_with_trade", gsub("-", "", format(Sys.Date(),format = "%y%m%d")))
 dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 
 # Loop to create and save plots
@@ -3763,7 +3763,7 @@ for (element in elements) {
       legend.key.height = unit(6, "mm")
     )
   
-  filename <- paste0(gsub("-", "", Sys.Date()), "_" ,element, "_all_country2050.tiff")
+  filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_" ,element, "_all_country2050.tiff")
   
   tiff(
     filename = here(figure_directory, filename),
@@ -3787,7 +3787,7 @@ plots_list
 
 
 # Create the directory for saving plots
-figure_directory <- here("output", "decomposition", "all_country_with_trade", gsub("-", "", Sys.Date()))
+figure_directory <- here("output", "decomposition", "all_country_with_trade", gsub("-", "", format(Sys.Date(),format = "%y%m%d")))
 dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 
 plots_list <- list()
@@ -3861,7 +3861,7 @@ final_plot <- plot_grid(
   legend, ncol = 1, rel_heights = c(1, 0.3)
 )
 
-filename <- paste0(gsub("-", "", Sys.Date()), "_Landchange_all_country2050.tiff")
+filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_Landchange_all_country2050.tiff")
 
 tiff(
   filename = here(figure_directory, filename),
