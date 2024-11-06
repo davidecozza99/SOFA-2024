@@ -19,9 +19,26 @@ conflicts_prefer(dplyr::lag)
 here()
 
 
+# Outline for each country (Australia, Brazil, Colombia, Ethiopia, India and UK):
+#1) Correcting Nitrogen results in the SOFA countries
+#2) Calling country aggregated data on the decomposition analysis and selecting the interestng indicators
+#3) Calling country commodities data on the decomposition analysis
+#4) Separate kcal intake in two main groups: kcal from plant-based products and kcal from animal-based products
+#5) Integrating kcal computation to the aggregated country database
+#6) Computing the difference of our indicators between all the pathways and the current trends
+#7) Labelling 
+#8) Cleaning data and preparation for plotting
+#9) Plots
+
+# Outline for computing figures with country comparisons
+
+
+
+
 
 #Data -------------------------------------------------------------------
 
+#1) Correcting Nitrogen results in the SOFA countries
 db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>% 
   rename(Year = YEAR) %>%
   mutate(Year = as.double(Year)) %>%
@@ -43,6 +60,7 @@ db_manure <- db_manure %>% filter(Location == "Australia")
 
 
 
+#2) Calling country aggregated data on the decomposition analysis and selecting the interestng indicators
 aus_data <- read_xlsx(here("data", "report_AUS_20240306_9H01.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
   filter(Pathway!= "Current Trend") %>% 
@@ -76,7 +94,7 @@ aus_data$Pathway[aus_data$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradee
 
 
 
-# Commodities -----------------------------
+#3) Calling country commodities data on the decomposition analysis
 aus_comm <- read_xlsx(here("data", "report_AUS_20240306_9H01.xlsx"), sheet = "Commodities") %>%
   rename(Pathway = `Current Trend`) %>%
   filter(Year %in% c("2030", "2050"))%>%
@@ -91,6 +109,8 @@ aus_comm$Pathway[aus_comm$Pathway == "GlobalSustainability"] <- "GS_complete"
 aus_comm$Pathway[aus_comm$Pathway == "Current Trend_Yes_NC_trade"] <- "NC_tradeeffect"
 aus_comm$Pathway[aus_comm$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradeeffect"
 
+
+#4) Separate kcal intake in two main groups: kcal from plant-based products and kcal from animal-based products
 mapping<- read_excel(here("data", "mapping_product_group.xlsx")) %>% 
   rename(Product = PRODUCT)
 
@@ -104,20 +124,19 @@ aus_kcal <- aus_comm %>%
   unique()
 
 
-
 aus_kcal_final <- aus_kcal %>%
   pivot_wider(names_from = Anim_Plant, values_from = kcal_anim_plant, values_fn = list(kcal_anim_plant = function(x) x[which.min(!is.na(x))])) %>%
   rename(kcal_anim = ANIM, kcal_plant = PLANT) %>%
   replace(is.na(.), 0)
 
-#Final Database ---------------------------------------
+#5) Integrating kcal computation to the aggregated country database 
 aus_data <- left_join(aus_data, aus_kcal_final %>% select(Pathway, Year, kcal_plant, kcal_anim), by = c("Pathway", "Year")) %>%
   unique() %>% 
   filter(Pathway != "GS_live_rumdensity") 
 
 
-
-
+#6) Computing the difference of our indicators between all the pathways and the current trends (baseline in which no new scenarios have been implemented),
+# i.e., kcal_feas in CT - kcal_feas in NC_crop, in order to understand the impact of crop productivity selected in a National Commitment pathway on kcal intake
 aus <- aus_data %>%
   group_by(Year) %>%
   mutate(
@@ -149,7 +168,7 @@ aus$scenarios <- substring(aus_data$Pathway, 4)
 
 
 
-#Labelling --------------------------
+#7) Labelling 
 pathway_labels <- c(
   "GDP" = "GDP",
   "pop" = "Population",
@@ -253,10 +272,9 @@ elements <- c("CH4","CO2", "N2O", "GHG",
 )
 
 
-#Reordering pathwyas + erasing CT
+#8) Cleaning data and preparation for plotting (Reordering pathwyas + erasing CT values)
 aus$Pathway_code <- factor(aus$Pathway_code, levels = c("NC", "GS"))
 aus <- aus[complete.cases(aus$Pathway_code), ]
-
 
 aus<- aus %>% 
   filter(!Pathway %in% c("GS_agroforestry", "GS_peatland", "GS_popactivity", "GS_grassland",
@@ -264,14 +282,15 @@ aus<- aus %>%
   mutate(Year = as.factor(Year))
 
 
-#Plot -------------------------------------------------------------------
+#9) Plots -------------------------------------------------------------------
 
 # folder to store the plots
 figure_directory <- here("output", "decomposition", "AUS_with_trade", paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d"))))
 dir.create(figure_directory, recursive = TRUE, showWarnings = FALSE)
 
 
-#Loop
+#Loop to compute the figures and show the decomposition analysis and the impact of each scenario changes on our indicators of interests
+
 plots_list <- list()
 
 for (element in elements) {
@@ -325,7 +344,7 @@ for (element in elements) {
   
   filename <- paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d")), "_" ,element, ".tiff")
   
-  # # # # Save the current plot as TIFF
+  # Save the current plot as TIFF
   tiff(
     filename = here(figure_directory, filename),
     units = "in", height = 13, width = 20, res = 600
