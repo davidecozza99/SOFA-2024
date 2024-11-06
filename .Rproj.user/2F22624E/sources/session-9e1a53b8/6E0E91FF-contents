@@ -1,3 +1,13 @@
+#"Decomposition_all": 
+#Contains code to generate decomposition figures for multiple countries, excluding India, 
+#displaying the isolated impacts of single scenarios. This includes code for five countries 
+#in the following order: Australia, Brazil, Colombia, Ethiopia, and the UK (i.e., Figure 2-7). 
+#The final part of the script creates decomposition graphs for all countries, focusing 
+#on a single indicator to illustrate the impact of each scenario parameter across the five countries (i.e., Figure 1-8)
+
+
+
+
 # Libraries ---------------------------------------------------------------
 library(here)
 library(dplyr)
@@ -19,7 +29,7 @@ conflicts_prefer(dplyr::lag)
 here()
 
 
-# Outline for each country (Australia, Brazil, Colombia, Ethiopia, India and UK):
+# Outline:
 #1) Correcting Nitrogen results in the SOFA countries
 #2) Calling country aggregated data on the decomposition analysis and selecting the interestng indicators
 #3) Calling country commodities data on the decomposition analysis
@@ -30,13 +40,11 @@ here()
 #8) Cleaning data and preparation for plotting
 #9) Plots
 
-# Outline for computing figures with country comparisons
 
 
+#AUSTRALIA
 
-
-
-#Data -------------------------------------------------------------------
+#Data
 
 #1) Correcting Nitrogen results in the SOFA countries
 db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>% 
@@ -282,7 +290,7 @@ aus<- aus %>%
   mutate(Year = as.factor(Year))
 
 
-#9) Plots -------------------------------------------------------------------
+#9) Plots
 
 # folder to store the plots
 figure_directory <- here("output", "decomposition", "AUS_with_trade", paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d"))))
@@ -605,7 +613,11 @@ conflicts_prefer(dplyr::lag)
 
 here()
 
-#Data -------------------------------------------------------------------
+
+# BRAZIL-----------------------------
+
+#Data
+#1) Correcting Nitrogen results in the SOFA countries
 db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>% 
   rename(Year = YEAR) %>%
   mutate(Year = as.double(Year)) %>%
@@ -625,6 +637,7 @@ db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>%
 # Split the database into separate data frames based on the value of ALPHA3
 db_manure <- db_manure %>% filter(Location == "Brazil")
 
+#2) Calling country aggregated data on the decomposition analysis and selecting the interestng indicators
 bra_data <- read_xlsx(here("data", "report_BRA_20240306_10H44.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
   filter(Pathway!= "Current Trend") %>% 
@@ -656,7 +669,7 @@ bra_data$Pathway[bra_data$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradee
 
 
 
-# Commodities -----------------------------
+#3) Calling country commodities data on the decomposition analysis
 bra_comm <- read_xlsx(here("data", "report_BRA_20240306_10H44.xlsx"), sheet = "Commodities") %>%
   rename(Pathway = `Current Trend`) %>%
   filter(Year %in% c("2030", "2050"))%>%
@@ -670,6 +683,9 @@ bra_comm$Pathway[bra_comm$Pathway == "GlobalSustainability"] <- "GS_complete"
 bra_comm$Pathway[bra_comm$Pathway == "Current Trend_Yes_NC_trade"] <- "NC_tradeeffect"
 bra_comm$Pathway[bra_comm$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradeeffect"
 
+
+#4) Separate kcal intake in two main groups: kcal from plant-based products and kcal from animal-based products
+
 mapping<- read_excel(here("data", "mapping_product_group.xlsx")) %>% 
   rename(Product = PRODUCT)
 
@@ -682,18 +698,17 @@ bra_kcal <- bra_comm %>%
   select(-kcalfeasprod, -PROD_GROUP, -Product) %>% 
   unique()
 
-
+#5) Integrating kcal computation to the aggregated country database
 bra_kcal_final <- bra_kcal %>%
   pivot_wider(names_from = Anim_Plant, values_from = kcal_anim_plant, values_fn = list(kcal_anim_plant = function(x) x[which.min(!is.na(x))])) %>%
   rename(kcal_anim = ANIM, kcal_plant = PLANT) %>%
   replace(is.na(.), 0)
 
-
-#Final Database ---------------------------------------
 bra_data <- left_join(bra_data, bra_kcal_final %>% select(Pathway, Year, kcal_plant, kcal_anim), by = c("Pathway", "Year")) %>%
   unique() 
 
 
+#6) Computing the difference of our indicators between all the pathways and the current trends
 
 bra <- bra_data %>%
   group_by(Year) %>%
@@ -725,7 +740,8 @@ bra <- bra_data %>%
 bra$scenarios <- substring(bra_data$Pathway, 4)
 
 
-#Labelling --------------------------
+
+#7) Labelling 
 pathway_labels <- c(
   "GDP" = "GDP",
   "pop" = "Population",
@@ -828,8 +844,7 @@ elements <- c("CH4","CO2", "N2O", "GHG",
               "TotalN", "CalcWFblue"
 )
 
-
-#Reordering pathwyas + erasing CT
+#8) Cleaning data and preparation for plotting (Reordering pathwyas + erasing CT)
 bra$Pathway_code <- factor(bra$Pathway_code, levels = c("NC", "GS"))
 bra <- bra[complete.cases(bra$Pathway_code), ]
 
@@ -839,7 +854,7 @@ bra<- bra %>%
   mutate(Year = as.factor(Year))
 
 
-#Plot -------------------------------------------------------------------
+#9) Plots
 
 # folder to store the plots
 figure_directory <- here("output", "decomposition", "BRA_with_trade", paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d"))))
@@ -1237,8 +1252,10 @@ rm(list = ls())
 
 
 
-#Data -------------------------------------------------------------------
+# COLOMBIA------------------------------------------------------------------
 
+#Data
+#1) Correcting Nitrogen results in the SOFA countries
 db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>% 
   rename(Year = YEAR) %>%
   mutate(Year = as.double(Year)) %>%
@@ -1259,6 +1276,7 @@ db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>%
 db_manure <- db_manure %>% filter(Location == "Colombia")
 
 
+#2) Calling country aggregated data on the decomposition analysis and selecting the interesting indicators
 col_data <- read_xlsx(here("data", "report_COL_20240516_9H40.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
   filter(Pathway!= "Current Trend") %>% 
@@ -1293,7 +1311,8 @@ col_data$Pathway[col_data$Pathway == "Current Trend_Yes_NC_trade"] <- "NC_tradee
 col_data$Pathway[col_data$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradeeffect"
 
 
-# Commodities -----------------------------
+#3) Calling country commodities data on the decomposition analysis
+
 col_comm <- read_xlsx(here("data", "report_COL_20240516_9H40.xlsx"), sheet = "Commodities") %>% 
   rename(Pathway = `Current Trend`) %>% 
   filter(Year %in% c("2030", "2050"))%>% 
@@ -1305,6 +1324,7 @@ col_comm$Pathway[col_comm$Pathway == "GlobalSustainability"] <- "GS_complete"
 col_comm$Pathway[col_comm$Pathway == "Current Trend_Yes_NC_trade"] <- "NC_tradeeffect"
 col_comm$Pathway[col_comm$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradeeffect"
 
+#4) Separate kcal intake in two main groups: kcal from plant-based products and kcal from animal-based products
 mapping<- read_excel(here("data", "mapping_product_group.xlsx")) %>% 
   rename(Product = PRODUCT)
 
@@ -1317,17 +1337,17 @@ col_kcal <- col_comm %>%
   select(-kcalfeasprod, -PROD_GROUP, -Product) %>% 
   unique()
 
-
 col_kcal_final <- col_kcal %>%
   pivot_wider(names_from = Anim_Plant, values_from = kcal_anim_plant, values_fn = list(kcal_anim_plant = function(x) x[which.min(!is.na(x))])) %>%
   rename(kcal_anim = ANIM, kcal_plant = PLANT) %>%
   replace(is.na(.), 0)
 
-#Final Database ---------------------------------------
+#5) Integrating kcal computation to the aggregated country database
 col_data <- left_join(col_data, col_kcal_final %>% select(Pathway, Year, kcal_plant, kcal_anim), by = c("Pathway", "Year")) %>%
   unique() 
 
 
+#6) Computing the difference of our indicators between all the pathways and the current trends
 col <- col_data %>%
   group_by(Year) %>%
   mutate(
@@ -1357,7 +1377,7 @@ col$scenarios <- substring(col_data$Pathway, 4)
 
 
 
-#Labelling --------------------------
+#7) Labelling 
 pathway_labels <- c(
   "GDP" = "GDP",
   "pop" = "Population",
@@ -1462,7 +1482,7 @@ elements <- c("CH4","CO2", "N2O","GHG",
               "TotalN", "CalcWFblue"
 )
 
-#Reordering pathwyas + erasing CT
+#8) Cleaning data and preparation for plotting (Reordering pathwyas + erasing CT)
 col$Pathway_code <- factor(col$Pathway_code, levels = c("NC", "GS"))
 col <- col[complete.cases(col$Pathway_code), ]
 
@@ -1472,7 +1492,7 @@ col<- col %>%
   mutate(Year = as.factor(Year))
 
 
-#Plot -------------------------------------------------------------------
+#9) Plots
 
 # folder to store the plots
 figure_directory <- here("output", "decomposition", "COL_with_trade", paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d"))))
@@ -1866,9 +1886,11 @@ rm(list = ls())
 
 
 
+# ETHIOPIA-------------------------------------------------------------------
 
+#Data 
+#1) Correcting Nitrogen results in the SOFA countries
 
-#Data -------------------------------------------------------------------
 db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>% 
   rename(Year = YEAR) %>%
   mutate(Year = as.double(Year)) %>%
@@ -1889,6 +1911,7 @@ db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>%
 db_manure <- db_manure %>% filter(Location == "Ethiopia")
 
 
+#2) Calling country aggregated data on the decomposition analysis and selecting the interestng indicators
 eth_data <- read_xlsx(here("data", "report_ETH_20240426_12H01.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
   filter(Pathway!= "Current Trend") %>% 
@@ -1918,14 +1941,13 @@ eth_data$Pathway[eth_data$Pathway == "GlobalSustainability"] <- "GS_complete"
 eth_data$Pathway[eth_data$Pathway == "Current Trend_Yes_NC_trade"] <- "NC_tradeeffect"
 eth_data$Pathway[eth_data$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradeeffect"
 
-# Commodities -----------------------------
+
+#3) Calling country commodities data on the decomposition analysis
 eth_comm <- read_xlsx(here("data", "report_ETH_20240426_12H01.xlsx"), sheet = "Commodities") %>%
   rename(Pathway = `Current Trend`) %>%
   filter(Year %in% c("2030", "2050"))%>%
   select(Location, Pathway, Year, Product, kcalfeasprod) %>%
   unique()
-
-
 
 eth_comm$Pathway[eth_comm$Pathway == "NationalCommitments"] <- "NC_complete"
 eth_comm$Pathway[eth_comm$Pathway == "GlobalSustainability"] <- "GS_complete"
@@ -1933,6 +1955,8 @@ eth_comm$Pathway[eth_comm$Pathway == "GlobalSustainability"] <- "GS_complete"
 eth_comm$Pathway[eth_comm$Pathway == "Current Trend_Yes_NC_trade"] <- "NC_tradeeffect"
 eth_comm$Pathway[eth_comm$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradeeffect"
 
+
+#4) Separate kcal intake in two main groups: kcal from plant-based products and kcal from animal-based products
 mapping<- read_excel(here("data", "mapping_product_group.xlsx")) %>% 
   rename(Product = PRODUCT)
 
@@ -1945,20 +1969,18 @@ eth_kcal <- eth_comm %>%
   select(-kcalfeasprod, -PROD_GROUP, -Product) %>% 
   unique()
 
-
 eth_kcal_final <- eth_kcal %>%
   pivot_wider(names_from = Anim_Plant, values_from = kcal_anim_plant, values_fn = list(kcal_anim_plant = function(x) x[which.min(!is.na(x))])) %>%
   rename(kcal_anim = ANIM, kcal_plant = PLANT) %>%
   replace(is.na(.), 0)
 
-#Final Database ---------------------------------------
+
+#5) Integrating kcal computation to the aggregated country database
 eth_data <- left_join(eth_data, eth_kcal_final %>% select(Pathway, Year, kcal_plant, kcal_anim), by = c("Pathway", "Year")) %>%
   unique() 
 
 
-
-
-
+#6) Computing the difference of our indicators between all the pathways and the current trends
 eth <- eth_data %>%
   group_by(Year) %>%
   mutate(
@@ -1987,7 +2009,7 @@ eth$scenarios <- substring(eth_data$Pathway, 4)
 
 
 
-#Labelling --------------------------
+#7) Labelling 
 pathway_labels <- c(
   "GDP" = "GDP",
   "pop" = "Population",
@@ -2090,7 +2112,7 @@ elements <- c("CH4","CO2", "N2O","GHG",
 )
 
 
-#Reordering pathwyas + erasing CT
+#8) Cleaning data and preparation for plotting (Reordering pathwyas + erasing CT)
 eth$Pathway_code <- factor(eth$Pathway_code, levels = c("NC", "GS"))
 eth <- eth[complete.cases(eth$Pathway_code), ]
 
@@ -2100,7 +2122,7 @@ eth<- eth %>%
   mutate(Year = as.factor(Year))
 
 
-#Plot -------------------------------------------------------------------
+#9) Plots
 
 # folder to store the plots
 figure_directory <- here("output", "decomposition", "ETH_with_trade", paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d"))))
@@ -2423,9 +2445,10 @@ rm(list = ls())
 
 
 
+#UK --------------------------------------------------------------------
 
-#Data -------------------------------------------------------------------
-
+#Data
+#1) Correcting Nitrogen results in the SOFA countries
 db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>% 
   rename(Year = YEAR) %>%
   mutate(Year = as.double(Year)) %>%
@@ -2446,6 +2469,8 @@ db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>%
 db_manure <- db_manure %>% filter(Location == "UK")
 
 
+
+#2) Calling country aggregated data on the decomposition analysis and selecting the interestng indicators
 gbr_data <- read_xlsx(here("data", "report_GBR_20240306_10H43.xlsx"), sheet = "Indicators") %>% 
   rename(Pathway = `Current Trend`) %>% 
   filter(Pathway!= "Current Trend") %>% 
@@ -2478,7 +2503,7 @@ gbr_data$Pathway[gbr_data$Pathway == "Current Trend_Yes_NC_trade"] <- "NC_tradee
 gbr_data$Pathway[gbr_data$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradeeffect"
 
 
-
+#3) Calling country commodities data on the decomposition analysis
 gbr_comm <- read_xlsx(here("data", "report_GBR_20240306_10H43.xlsx"), sheet = "Commodities") %>% 
   rename(Pathway = `Current Trend`) %>% 
   filter(Year %in% c("2030", "2050"))%>% 
@@ -2491,6 +2516,7 @@ gbr_comm$Pathway[gbr_comm$Pathway == "Current Trend_Yes_NC_trade"] <- "NC_tradee
 gbr_comm$Pathway[gbr_comm$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradeeffect"
 
 
+#4) Separate kcal intake in two main groups: kcal from plant-based products and kcal from animal-based products
 mapping<- read_excel(here("data", "mapping_product_group.xlsx")) %>% 
   rename(Product = PRODUCT)
 
@@ -2509,10 +2535,14 @@ gbr_kcal_final <- gbr_kcal %>%
   rename(kcal_anim = ANIM, kcal_plant = PLANT) %>%
   replace(is.na(.), 0)
 
+
+#5) Integrating kcal computation to the aggregated country database
 gbr_data <- left_join(gbr_data, gbr_kcal_final %>% select(Pathway, Year, kcal_plant, kcal_anim), by = c("Pathway", "Year")) %>%
   unique() 
 
 
+
+#6) Computing the difference of our indicators between all the pathways and the current trends
 gbr <- gbr_data %>%
   group_by(Year) %>%
   mutate(
@@ -2542,7 +2572,7 @@ gbr$scenarios <- substring(gbr_data$Pathway, 4)
 
 
 
-#Labelling --------------------------
+#7) Labelling 
 pathway_labels <- c(
   "GDP" = "GDP",
   "pop" = "Population",
@@ -2645,7 +2675,7 @@ elements <- c("CH4","CO2", "N2O", "GHG",
               "TotalN", "CalcWFblue"
 )
 
-#Reordering pathwyas + erasing CT
+#8) Cleaning data and preparation for plotting (Reordering pathwyas + erasing CT)
 gbr$Pathway_code <- factor(gbr$Pathway_code, levels = c("NC", "GS"))
 gbr <- gbr[complete.cases(gbr$Pathway_code), ]
 
@@ -2655,7 +2685,7 @@ gbr<- gbr %>%
   mutate(Year = as.factor(Year))
 
 
-#Plot -------------------------------------------------------------------
+#9) Plots
 
 # folder to store the plots
 figure_directory <- here("output", "decomposition", "GBR_with_trade", paste0(gsub("-", "", format(Sys.Date(),format = "%y%m%d"))))
@@ -2974,7 +3004,7 @@ rm(list = ls())
 
 
 
-#Data -------------------------------------------------------------------
+#AUSTRALIA (all_country graph) -------------------------------------------------------------------
 
 db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>% 
   rename(Year = YEAR) %>%
@@ -3030,7 +3060,7 @@ aus_data$Pathway[aus_data$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradee
 
 
 
-# Commodities -----------------------------
+# Commodities
 aus_comm <- read_xlsx(here("data", "report_AUS_20240306_9H01.xlsx"), sheet = "Commodities") %>%
   rename(Pathway = `Current Trend`) %>%
   filter(Year %in% c("2030", "2050"))%>%
@@ -3064,7 +3094,7 @@ aus_kcal_final <- aus_kcal %>%
   rename(kcal_anim = ANIM, kcal_plant = PLANT) %>%
   replace(is.na(.), 0)
 
-#Final Database ---------------------------------------
+#Final Database
 aus_data <- left_join(aus_data, aus_kcal_final %>% select(Pathway, Year, kcal_plant, kcal_anim), by = c("Pathway", "Year")) %>%
   unique() %>% 
   filter(Pathway != "GS_live_rumdensity") 
@@ -3106,7 +3136,13 @@ aus <- aus[complete.cases(aus$Pathway_code), ]
 
 aus$ALPHA3 <- "AUS"
 
-#Data -------------------------------------------------------------------
+
+
+
+#BRAZIL (all_country graph) ------------------------------------------
+
+
+#Data
 db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>% 
   rename(Year = YEAR) %>%
   mutate(Year = as.double(Year)) %>%
@@ -3157,14 +3193,12 @@ bra_data$Pathway[bra_data$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradee
 
 
 
-# Commodities -----------------------------
+# Commodities
 bra_comm <- read_xlsx(here("data", "report_BRA_20240306_10H44.xlsx"), sheet = "Commodities") %>%
   rename(Pathway = `Current Trend`) %>%
   filter(Year %in% c("2030", "2050"))%>%
   select(Location, Pathway, Year, Product, kcalfeasprod) %>%
   unique()
-
-
 
 bra_comm$Pathway[bra_comm$Pathway == "NationalCommitments"] <- "NC_complete"
 bra_comm$Pathway[bra_comm$Pathway == "GlobalSustainability"] <- "GS_complete"
@@ -3184,14 +3218,13 @@ bra_kcal <- bra_comm %>%
   select(-kcalfeasprod, -PROD_GROUP, -Product) %>% 
   unique()
 
-
 bra_kcal_final <- bra_kcal %>%
   pivot_wider(names_from = Anim_Plant, values_from = kcal_anim_plant, values_fn = list(kcal_anim_plant = function(x) x[which.min(!is.na(x))])) %>%
   rename(kcal_anim = ANIM, kcal_plant = PLANT) %>%
   replace(is.na(.), 0)
 
 
-#Final Database ---------------------------------------
+#Final Database 
 bra_data <- left_join(bra_data, bra_kcal_final %>% select(Pathway, Year, kcal_plant, kcal_anim), by = c("Pathway", "Year")) %>%
   unique() 
 
@@ -3231,8 +3264,9 @@ bra <- bra[complete.cases(bra$Pathway_code), ]
 bra$ALPHA3 <- "BRA"
 
 
+#COLOMBIA (all_country graph)----------------------------------
 
-#Data -------------------------------------------------------------------
+#Data
 
 db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>% 
   rename(Year = YEAR) %>%
@@ -3280,7 +3314,6 @@ col_data <- read_xlsx(here("data", "report_COL_20240516_9H40.xlsx"), sheet = "In
   mutate(TotalN = CalcN_org + CalcN_synth)
 
 
-
 col_data$Pathway[col_data$Pathway == "NationalCommitments"] <- "NC_complete"
 col_data$Pathway[col_data$Pathway == "GlobalSustainability"] <- "GS_complete"
 
@@ -3288,7 +3321,7 @@ col_data$Pathway[col_data$Pathway == "Current Trend_Yes_NC_trade"] <- "NC_tradee
 col_data$Pathway[col_data$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradeeffect"
 
 
-# Commodities -----------------------------
+# Commodities
 col_comm <- read_xlsx(here("data", "report_COL_20240516_9H40.xlsx"), sheet = "Commodities") %>% 
   rename(Pathway = `Current Trend`) %>% 
   filter(Year %in% c("2030", "2050"))%>% 
@@ -3318,7 +3351,8 @@ col_kcal_final <- col_kcal %>%
   rename(kcal_anim = ANIM, kcal_plant = PLANT) %>%
   replace(is.na(.), 0)
 
-#Final Database ---------------------------------------
+
+#Final Database 
 col_data <- left_join(col_data, col_kcal_final %>% select(Pathway, Year, kcal_plant, kcal_anim), by = c("Pathway", "Year")) %>%
   unique() 
 
@@ -3357,7 +3391,11 @@ col <- col[complete.cases(col$Pathway_code), ]
 col$ALPHA3 <- "COL"
 
 
-#Data -------------------------------------------------------------------
+
+
+#ETHIOPIA (all_country graph)------------------------------
+
+#Data 
 db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>% 
   rename(Year = YEAR) %>%
   mutate(Year = as.double(Year)) %>%
@@ -3407,6 +3445,7 @@ eth_data$Pathway[eth_data$Pathway == "GlobalSustainability"] <- "GS_complete"
 eth_data$Pathway[eth_data$Pathway == "Current Trend_Yes_NC_trade"] <- "NC_tradeeffect"
 eth_data$Pathway[eth_data$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradeeffect"
 
+
 # Commodities -----------------------------
 eth_comm <- read_xlsx(here("data", "report_ETH_20240426_12H01.xlsx"), sheet = "Commodities") %>%
   rename(Pathway = `Current Trend`) %>%
@@ -3444,8 +3483,6 @@ eth_data <- left_join(eth_data, eth_kcal_final %>% select(Pathway, Year, kcal_pl
   unique() 
 
 
-
-
 eth <- eth_data %>%
   group_by(Year) %>%
   mutate(
@@ -3479,7 +3516,9 @@ eth <- eth[complete.cases(eth$Pathway_code), ]
 
 eth$ALPHA3 <- "ETH"
 
-#Data -------------------------------------------------------------------
+
+#UK (all_country graph)------------------------------
+#Data 
 
 db_manure <- read_excel("data/Manure/240517_db_Nmanure_live.xlsx") %>% 
   rename(Year = YEAR) %>%
@@ -3525,13 +3564,11 @@ gbr_data <- read_xlsx(here("data", "report_GBR_20240306_10H43.xlsx"), sheet = "I
   mutate(TotalN = CalcN_org + CalcN_synth)
 
 
-
 gbr_data$Pathway[gbr_data$Pathway == "NationalCommitments"] <- "NC_complete"
 gbr_data$Pathway[gbr_data$Pathway == "GlobalSustainability"] <- "GS_complete"
 
 gbr_data$Pathway[gbr_data$Pathway == "Current Trend_Yes_NC_trade"] <- "NC_tradeeffect"
 gbr_data$Pathway[gbr_data$Pathway == "Current Trend_Yes_GS_trade"] <- "GS_tradeeffect"
-
 
 
 gbr_comm <- read_xlsx(here("data", "report_GBR_20240306_10H43.xlsx"), sheet = "Commodities") %>% 
@@ -3596,9 +3633,6 @@ gbr$scenarios <- substring(gbr_data$Pathway, 4)
 
 
 
-
-#Labelling -------------------------------------------------------------------
-
 #Reordering pathwyas + erasing CT
 gbr$Pathway_code <- factor(gbr$Pathway_code, levels = c("NC", "GS"))
 gbr <- gbr[complete.cases(gbr$Pathway_code), ]
@@ -3612,8 +3646,7 @@ all <- bind_rows(aus, bra, col, eth, gbr) %>%
                          "NC_agroforestry", "NC_peatland", "NC_popactivity", "NC_grassland" ))  
 
 
-
-#Labelling --------------------------
+#Labelling 
 pathway_labels <- c(
   "GDP" = "GDP",
   "pop" = "Population",
@@ -3779,8 +3812,6 @@ for (element in elements) {
 }
 
 plots_list
-
-
 
 
 
